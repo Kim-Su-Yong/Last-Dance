@@ -59,6 +59,9 @@ public class PlayerAction : MonoBehaviour
 
     void Update()
     {
+        // 캐릭터가 죽은 상태에서는 공격불가
+        if (GetComponent<PlayerDamage>().isDie)
+            return;
         if(Form.curForm == ChangeForm.FormType.FOX)
         {
             if (Input.GetButtonDown("Fire1") && Time.time > nextFire)

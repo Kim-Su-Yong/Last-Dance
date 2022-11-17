@@ -9,15 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 922aa4f72e6cca141b3c433b06829774, type: 3}
   m_Name: SampleData_c
   m_EditorClassIdentifier: CommonAD::CharacterData
   charName: "\uB85C\uAC2C"
-  charForm: FOX
-  charImage: {fileID: 21300000, guid: 9aebd705574f9e642aef1e5f59b3e4d8, type: 3}
+  charForm: "\uC5EC\uC6B0"
+  charImage: {fileID: 0}
+  comment: "\uD558\uD558\uD558\uD558"
   damage: 10
   atkSpeed: 1
   maxHp: 100
+  curHp: 100
   def: 10
   moveSpeed: 6
-  comment: "\uCE90\uB9AD\uD130 \uC0D8\uD50C \uB370\uC774\uD130"

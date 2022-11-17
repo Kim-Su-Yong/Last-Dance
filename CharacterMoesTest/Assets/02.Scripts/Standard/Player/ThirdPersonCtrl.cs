@@ -190,7 +190,9 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     void Move()
     {
-        
+        if (GetComponent<PlayerDamage>().isDie)
+            return;
+
         // 걷기 유무에 따른 이동속도 할당
         float targetSpeed = input.isWalk ? WalkSpeed : MoveSpeed;
 

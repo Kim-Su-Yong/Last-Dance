@@ -23,6 +23,7 @@ public class ChangeForm : MonoBehaviour
 
     void Update()
     {
+        if (GetComponent<PlayerDamage>().isDie) return;
         FormChange();
     }
 
