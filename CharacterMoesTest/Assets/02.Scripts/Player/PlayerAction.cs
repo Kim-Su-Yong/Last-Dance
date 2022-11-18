@@ -1,14 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-
-//// [아리 여우불]
-// 스킬 사용시 캐릭터 주위에 3개의 여우불 오브젝트가 활성화되며
-// 각 여우불은 캐릭터를 중심으로 공전한다.
-// 짧은 시간(대략 1~1.5초)뒤에 주변에 적이 있다면 자동으로 발사되며
-// 발사체는 적을 유도탄 처럼 따라가 공격한다
-// 이때 캐릭터 주변을 공전하는 여우불이 발사된다
 
 public class PlayerAction : MonoBehaviour
 {
@@ -16,17 +8,17 @@ public class PlayerAction : MonoBehaviour
     Animator animator;
     CharacterController controller;
 
-    [Header("여우불 던지기")]
-    public Transform FirePos;              // 여우불이 던져질 최초 위치
+    [Header("파이어볼 발사")]
+    public Transform FirePos;       // 파이어볼 던져질 발사 위치
     [SerializeField]
-    GameObject FireBall;            // 여우불 오브젝트
+    GameObject FireBall;            // 파이어볼 오브젝트
     readonly string playerTag = "Player";
     float fireRate = 1f;          // 발사 대기 시간
     float nextFire = 0f;
 
     [Header("여우불 가드")]
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
-    public bool canSkill = true;           // 스킬 사용 가능 상태 유무
+    public bool canSkill = true;    // 스킬 사용 가능 상태 유무
     float skill1_CoolTime = 10f;
     float skill_CoolTimer;
 
@@ -45,8 +37,7 @@ public class PlayerAction : MonoBehaviour
         FireBall = Resources.Load("Magic fire") as GameObject;
         animator = GetComponent<Animator>();
 
-        AttackCollider(false);
-
+        AttackCollider(false);                  // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
     }
 
     private void AttackCollider(bool isActive)
@@ -64,39 +55,31 @@ public class PlayerAction : MonoBehaviour
             return;
         if(Form.curForm == ChangeForm.FormType.FOX)
         {
-            if (Input.GetButtonDown("Fire1") && Time.time > nextFire)
+            // 왼쪽 마우스 버튼 누르면 기본 공격(fireRate는 발사 대기 시간)
+            if (Input.GetButtonDown("Fire1") && Time.time > nextFire)   
             {
-                Fire();
+                StartCoroutine(FoxBaseAttack());
             }
+            // 마우스 오른쪽 버튼 누르면 스킬 사용(단, 스킬 사용 가능 상태일때만 발동된다)
             else if (Input.GetButtonDown("Fire2"))
             {
-                if (canSkill)
-                {
-                    Debug.Log("Hi");
-                    foreach (GameObject fire in FoxFires)
-                    {
-                        fire.SetActive(true);
-                        animator.SetTrigger("Fox_FireGuard");
-                    }
-                }
-                canSkill = false;
+                //FoxSkill_1();
+                StartCoroutine(FoxSkill_1());
             }
-            CoolDown();
+            CoolDown(); // 스킬 쿨타임 관련 코드 추가 필요
         }
         else if(Form.curForm == ChangeForm.FormType.TIGER)
         {
             if(Input.GetButtonDown("Fire1"))
             {
-                isPunching = true;
-                AttackCollider(true);
-                animator.SetBool(hashCombo, true);
-                StartCoroutine(StartPunch());
+                TigerBaseAttack(true);
             }
             else if(Input.GetButtonUp("Fire1"))
             {
-                isPunching = false;
-                AttackCollider(false);
-                animator.SetBool(hashCombo, isPunching);
+                TigerBaseAttack(false);
+                //isPunching = false;
+                //AttackCollider(false);
+                //animator.SetBool(hashCombo, isPunching);
                 punchCount = 0;
             }
         }
@@ -106,13 +89,39 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
-    private void Fire()
+    private void TigerBaseAttack(bool isPunching)
+    {
+        //isPunching = true;
+        AttackCollider(isPunching);
+        animator.SetBool(hashCombo, isPunching);
+        StartCoroutine(StartPunch());
+    }
+
+    IEnumerator FoxSkill_1()
+    {
+        if (canSkill)
+        {
+            //animator.SetTrigger("Fox_FireGuard");
+            animator.SetInteger("SkillState", 1);
+            yield return new WaitForSeconds(0.5f);
+            foreach (GameObject fire in FoxFires)
+            {
+                fire.SetActive(true);                
+            }
+        }
+        canSkill = false;
+        animator.SetInteger("SkillState", 0);
+    }
+
+    IEnumerator FoxBaseAttack()
     {
         nextFire = Time.time + fireRate;
-        GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
-        //Fire.GetComponent<Rigidbody>().velocity = Fire.transform.forward * throwPower;
         animator.SetTrigger("Fox_Attack");
+        yield return new WaitForSeconds(0.4f);
+        GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
+        
     }
+
     void CoolDown()
     {
         if(!canSkill)

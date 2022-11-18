@@ -16,10 +16,16 @@ public class ChangeForm : MonoBehaviour
     public Sprite[] FormIcons;  // 폼 스프라이트 아이콘(여우, 호랑이, 독수리)
     public Image FormImage;     // UI로 표시될 이미지(폼 전환시 변함)
     public MeshRenderer Staff;  // 스태프 모델 메쉬 렌더러
+    Animator animator;
     
     public bool canFormChange = true;      // 폼 전환 가능 상태
     public float charForm_CoolTime = 7.0f;  // 폼 전환 쿨타임
     public float charForm_Timer;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     void Update()
     {
@@ -48,6 +54,7 @@ public class ChangeForm : MonoBehaviour
                  * 다른 폼에서 무기를 사용한다면 코드 추가
                 */
                 curForm = FormType.FOX;
+                animator.SetInteger("FormState", 1);
 
                 ChangeFormSprite();
                 /*
@@ -57,6 +64,7 @@ public class ChangeForm : MonoBehaviour
             }
             else
             {
+                // 폼전환 쿨타임시 UI로 메시지를 띄울 코드
                 Debug.Log("쿨타임 중입니다.");
             }
             canFormChange = false;
@@ -76,6 +84,7 @@ public class ChangeForm : MonoBehaviour
                  * 다른 폼에서 무기를 사용한다면 코드 추가
                 */
                 curForm = FormType.TIGER;
+                animator.SetInteger("FormState", 2);
                 ChangeFormSprite();
             }
             else
@@ -87,7 +96,7 @@ public class ChangeForm : MonoBehaviour
         // 상단의 숫자3을 누르면 독수리 폼으로 전환
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            if (curForm == FormType.TIGER) return;
+            if (curForm == FormType.EAGLE) return;
             if (canFormChange)
             {
                 /* 
@@ -98,6 +107,7 @@ public class ChangeForm : MonoBehaviour
                  * 다른 폼에서 무기를 사용한다면 코드 추가
                 */
                 curForm = FormType.EAGLE;
+                animator.SetInteger("FormState", 3);
                 ChangeFormSprite();
             }
             else

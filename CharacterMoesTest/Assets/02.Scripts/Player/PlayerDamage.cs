@@ -17,6 +17,7 @@ public class PlayerDamage : MonoBehaviour
 
     Animator animator;    
 
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -44,9 +45,7 @@ public class PlayerDamage : MonoBehaviour
         // P키 누르면 맞는 애니메이션 및 체력 감소 구현
         if (Input.GetKeyDown(KeyCode.P))
         {
-            animator.SetTrigger("Hit");     // 피격 애니메이션 재생
             Hit();
-
             if (curHp <= 0)
             {
                 Die();
@@ -56,6 +55,9 @@ public class PlayerDamage : MonoBehaviour
 
     private void Hit()
     {
+        if (isDie) return;
+
+        animator.SetTrigger("Hit");     // 피격 애니메이션 재생
         curHp -= 10;                    // 몬스터의 공격력과 캐릭터의 방어력에 따라 받는 데미지가 달라짐
         curHp = Mathf.Clamp(curHp, 0, maxHp);
         HpBar.fillAmount = (float)curHp / maxHp;
@@ -65,12 +67,14 @@ public class PlayerDamage : MonoBehaviour
 
         if (HpBar.fillAmount <= 0.3f)
             HpBar.color = Color.red;
-        if (HpBar.fillAmount <= 0.5f)
+        else if (HpBar.fillAmount <= 0.5f)
             HpBar.color = Color.yellow;
     }
 
     void Die()
     {
+        if (isDie) return;
+
         // 게임 매니저에 플레이어가 죽었다고 전달
         animator.SetTrigger("Die");     // 사망 애니메이션 실행
         // 사망시 UI 띄우기 또는 게임 오버 씬으로 전환
@@ -83,13 +87,13 @@ public class PlayerDamage : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 적에게 공격받으면 체력이 감소하는 스크립트들
-        if (other.CompareTag("E_BULLET")) // 에너미 원거리 공격
-        {
+        //if (other.CompareTag("E_BULLET")) // 에너미 원거리 공격
+        //{
 
-        }
-        if(other.CompareTag("E_MELEE")) // 에너미 근접 공격
-        {
+        //}
+        //if(other.CompareTag("E_MELEE")) // 에너미 근접 공격
+        //{
 
-        }
+        //}
     }
 }
