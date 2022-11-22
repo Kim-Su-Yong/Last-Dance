@@ -54,7 +54,7 @@ public class ChangeForm : MonoBehaviour
                  * 다른 폼에서 무기를 사용한다면 코드 추가
                 */
                 curForm = FormType.FOX;
-                animator.SetInteger("FormState", 1);
+                animator.SetInteger("Form", 1);
 
                 ChangeFormSprite();
                 /*
@@ -84,7 +84,7 @@ public class ChangeForm : MonoBehaviour
                  * 다른 폼에서 무기를 사용한다면 코드 추가
                 */
                 curForm = FormType.TIGER;
-                animator.SetInteger("FormState", 2);
+                animator.SetInteger("Form", 2);
                 ChangeFormSprite();
             }
             else
@@ -107,7 +107,7 @@ public class ChangeForm : MonoBehaviour
                  * 다른 폼에서 무기를 사용한다면 코드 추가
                 */
                 curForm = FormType.EAGLE;
-                animator.SetInteger("FormState", 3);
+                animator.SetInteger("Form", 3);
                 ChangeFormSprite();
             }
             else

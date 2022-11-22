@@ -862,8 +862,8 @@ MonoBehaviour:
   m_distanceFromEnd: 3
   m_shotCount: 12
   m_interval: 0.15
-  m_shotCountEveryInterval: 2
-  NextFire: 2
+  m_shotCountEveryInterval: 1
+  NextFire: 1
   Skill_1_CoolTime: 7
 --- !u!82 &1036334576
 AudioSource:
