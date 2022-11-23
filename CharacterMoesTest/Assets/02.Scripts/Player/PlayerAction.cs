@@ -30,6 +30,10 @@ public class PlayerAction : MonoBehaviour
     readonly int hashCombo = Animator.StringToHash("Combo");
     public GameObject thirdEffect;
 
+    //[Header("상호작용)"]
+
+
+
     void Start()
     {
         Form = GetComponent<ChangeForm>();

@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638040983853077459
-    m_Hash: 2606262559
+      ticks: 638047849439599871
+    m_Hash: 1562030678
   m_LockFileStatus:
     m_FilePath: "C:/Users/\uC11C\uC6B8IT/Documents/EndSmile-Studio/CharacterMoesTest/Packages/packages-lock.json"
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638040983853157458
-    m_Hash: 2710721339
+      ticks: 638047849439609876
+    m_Hash: 673572277
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_PackageAssets:
