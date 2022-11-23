@@ -7,6 +7,7 @@ public class Shooter : MonoBehaviour
     public Transform FirePos;
     public GameObject m_bulletPrefab; // 미사일 프리팹.
     public GameObject m_target; // 도착 지점.
+    Animator animator;
 
     [Header("미사일 기능 관련")]
     public float m_speed = 2; // 미사일 속도.
@@ -34,6 +35,7 @@ public class Shooter : MonoBehaviour
     {
         playerctrl = GetComponent<ThirdPersonCtrl>();
         Form = GetComponent<ChangeForm>();
+        animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -57,7 +59,8 @@ public class Shooter : MonoBehaviour
                     m_distanceFromEnd = 1;
                     m_shotCount = 1;
                     m_shotCountEveryInterval = 1;
-                    StartCoroutine(CreateMissile());
+                    animator.SetTrigger("Attack");
+                    StartCoroutine(CreateMissile());                    
                 }
                 CanFire = false;
             }
@@ -105,6 +108,7 @@ public class Shooter : MonoBehaviour
     IEnumerator CreateMissile()
     {
         int _shotCount = m_shotCount;
+        yield return new WaitForSeconds(0.3f);
         while (_shotCount > 0)
         {
             for (int i = 0; i < m_shotCountEveryInterval; i++)

@@ -835,7 +835,7 @@ MonoBehaviour:
   FormImage: {fileID: 1389480191}
   Staff: {fileID: 186621705}
   canFormChange: 1
-  charForm_CoolTime: 7
+  charForm_CoolTime: 3
   charForm_Timer: 0
 --- !u!4 &1036334574 stripped
 Transform:
@@ -1561,7 +1561,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 220, y: 220}
+  m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1389480191
 MonoBehaviour:
@@ -1946,11 +1946,11 @@ RectTransform:
   m_Father: {fileID: 1726844916}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 250}
-  m_Pivot: {x: 1, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -284, y: 0}
+  m_SizeDelta: {x: 150, y: 150}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1623140436
 MonoBehaviour:
   m_ObjectHideFlags: 0

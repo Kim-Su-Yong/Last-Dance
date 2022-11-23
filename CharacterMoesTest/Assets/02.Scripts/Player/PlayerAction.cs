@@ -25,7 +25,7 @@ public class PlayerAction : MonoBehaviour
     [Header("호랑이 펀치")]
     public CapsuleCollider[] punchColliders;
     float lastAttackTime = 0f;  // 마지막으로 공격한 시간
-    bool isPunching;            // 공격중 인지 확인
+    bool isPunching;            // 공격 중 인지 확인
     int punchCount = 0;
     readonly int hashCombo = Animator.StringToHash("Combo");
     public GameObject thirdEffect;
@@ -103,7 +103,7 @@ public class PlayerAction : MonoBehaviour
         {
             //animator.SetTrigger("Fox_FireGuard");
             animator.SetInteger("SkillState", 1);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.8f);
             foreach (GameObject fire in FoxFires)
             {
                 fire.SetActive(true);                
@@ -116,10 +116,9 @@ public class PlayerAction : MonoBehaviour
     IEnumerator FoxBaseAttack()
     {
         nextFire = Time.time + fireRate;
-        animator.SetTrigger("Fox_Attack");
+        animator.SetTrigger("Attack");
         yield return new WaitForSeconds(0.4f);
         GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
-        
     }
 
     void CoolDown()
