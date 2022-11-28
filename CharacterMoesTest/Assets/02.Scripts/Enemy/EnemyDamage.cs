@@ -14,7 +14,7 @@ public class EnemyDamage : MonoBehaviour
     public float hp = 0f;
     public float hpMax = 100f;
 
-    PlayerAction playerAction;
+    PlayerAttack playerAction;
     CapsuleCollider capsuleCollider;
 
     void Start()
@@ -22,7 +22,7 @@ public class EnemyDamage : MonoBehaviour
         hp = hpMax;
         rb = GetComponent<Rigidbody>();
         renderer = GetComponent<MeshRenderer>();
-        playerAction = GetComponent<PlayerAction>();
+        playerAction = GetComponent<PlayerAttack>();
         capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
