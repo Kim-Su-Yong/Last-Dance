@@ -17,6 +17,7 @@ public class EnemyDamage : MonoBehaviour
     PlayerAction playerAction;
     CapsuleCollider capsuleCollider;
 
+    private PlayerStat thePlayerStat;
     void Start()
     {
         hp = hpMax;
@@ -24,6 +25,8 @@ public class EnemyDamage : MonoBehaviour
         renderer = GetComponent<MeshRenderer>();
         playerAction = GetComponent<PlayerAction>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+
+        thePlayerStat = FindObjectOfType<PlayerStat>();
     }
 
     void Update()
@@ -37,6 +40,7 @@ public class EnemyDamage : MonoBehaviour
         {
             renderer.material.color = Color.red;
             hp -= 10f;
+            //thePlayerStat.Hit(thePlayerStat.atk);
             StartCoroutine(ResetColor());
         }
         if (other.CompareTag(bulletTag))

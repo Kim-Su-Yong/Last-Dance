@@ -95,7 +95,7 @@ MonoBehaviour:
   icon: {fileID: 8321400905374051399}
   itemName_Text: {fileID: 1239815091178448154}
   itemCount_Text: {fileID: 7282886813174612688}
-  selected_item: {fileID: 0}
+  selected_item: {fileID: 6578578898666489173}
 --- !u!1 &2886611314638090020
 GameObject:
   m_ObjectHideFlags: 0
