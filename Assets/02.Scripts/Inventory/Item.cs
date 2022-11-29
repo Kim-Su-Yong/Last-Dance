@@ -27,12 +27,4 @@ public class Item
         itemCount = _itemCount;
         itemIcon = Resources.Load("ItemIcon/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
     }
-    void Start()
-    {
-        
-    }
-    void Update()
-    {
-        
-    }
 }

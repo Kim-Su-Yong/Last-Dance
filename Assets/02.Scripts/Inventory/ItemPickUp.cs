@@ -8,7 +8,7 @@ public class ItemPickUp : MonoBehaviour
     public int _count;
     public string pickUpSound;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if(Input.GetKeyDown(KeyCode.Z))
         {

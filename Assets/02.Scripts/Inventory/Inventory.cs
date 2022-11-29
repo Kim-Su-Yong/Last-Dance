@@ -14,7 +14,7 @@ public class Inventory : MonoBehaviour
     public string cancel_sound;
     public string open_sound;
     public string beep_sound;
-
+    [SerializeField]
     private InventorySlot[] slots; //인벤토리 슬롯들
 
     private List<Item> inventoryItemList; //플레이어가 소지한 아이템 리스트
