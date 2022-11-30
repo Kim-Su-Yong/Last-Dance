@@ -13,6 +13,7 @@ TagManager:
   - FLYATTACKRANGE
   - PUNCH
   - NPC
+  - InventorySlot
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - UI
   - ENEMY
   - Player
-  - 
+  - GROUND
   - 
   - 
   - 
