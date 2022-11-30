@@ -7,7 +7,7 @@ public class PlayerStat : MonoBehaviour
     public static PlayerStat instance;
 
     public int character_Lv;
-    public int[] needExp;
+    public int[] needExp; //¸¸·¦ ¼³Á¤
     public int currentEXP;
 
     public int hp;
@@ -21,7 +21,7 @@ public class PlayerStat : MonoBehaviour
     public string dmgSound;
 
     [SerializeField]
-    public GameObject prefabs_Floating_text;
+    public GameObject prefabs_floating_text;
     [SerializeField]
     public GameObject parent;
     void Start()
@@ -48,7 +48,7 @@ public class PlayerStat : MonoBehaviour
         Vector3 vector = this.transform.position;
         vector.y += 60;
 
-        GameObject clone = Instantiate(prefabs_Floating_text, vector, Quaternion.Euler(Vector3.zero));
+        GameObject clone = Instantiate(prefabs_floating_text, vector, Quaternion.Euler(Vector3.zero));
         clone.GetComponent<FloatingText>().text.text = dmg.ToString();
         clone.GetComponent<FloatingText>().text.color = Color.red;
         clone.GetComponent<FloatingText>().text.fontSize = 25;
@@ -79,6 +79,16 @@ public class PlayerStat : MonoBehaviour
     }
     void Update()
     {
-        
+        if(currentEXP >= needExp[character_Lv])
+        {
+            character_Lv++;
+            hp += character_Lv * 2;
+            mp += character_Lv + 2;
+
+            currentHP = hp;
+            currentMP = mp;
+            atk++;
+            def++;
+        }
     }
 }

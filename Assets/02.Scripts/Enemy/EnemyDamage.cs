@@ -39,8 +39,8 @@ public class EnemyDamage : MonoBehaviour
         if(other.CompareTag(fireBallTag))
         {
             renderer.material.color = Color.red;
-            hp -= 10f;
-            //thePlayerStat.Hit(thePlayerStat.atk);
+            //hp -= 10f;
+            thePlayerStat.Hit(GetComponent<EnemyStat>().atk);
             StartCoroutine(ResetColor());
         }
         if (other.CompareTag(bulletTag))

@@ -30,6 +30,13 @@ public class PlayerAction : MonoBehaviour
     readonly int hashCombo = Animator.StringToHash("Combo");
     public GameObject thirdEffect;
 
+
+    public static PlayerAction instance;
+
+    //삭제할수도 있음
+    private bool attacking = false;
+    private float attackDelay;
+    private float currentAttackDelay;
     //[Header("상호작용)"]
 
 
