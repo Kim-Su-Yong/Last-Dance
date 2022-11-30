@@ -56,7 +56,7 @@ public class Inventory : MonoBehaviour
         {
             if(_itemID == theDatabase.itemList[i].itemID) //데이터베이스에 아이템 발견
             {
-                var clone = Instantiate(prefab_floating_text, PlayerAction.instance.transform.position, Quaternion.Euler(Vector3.zero));
+                GameObject clone = Instantiate(prefab_floating_text, PlayerAction.instance.transform.position, Quaternion.Euler(Vector3.zero));
                 clone.GetComponent<FloatingText>().text.text = theDatabase.itemList[i].itemName + " " + _count + "개 획득 +";
                 clone.transform.SetParent(this.transform);
 

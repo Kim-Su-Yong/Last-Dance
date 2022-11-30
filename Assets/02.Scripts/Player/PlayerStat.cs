@@ -49,12 +49,12 @@ public class PlayerStat : MonoBehaviour
         vector.y += 60;
 
         GameObject clone = Instantiate(prefabs_floating_text, vector, Quaternion.Euler(Vector3.zero));
-        clone.GetComponent<FloatingText>().text.text = dmg.ToString();
-        clone.GetComponent<FloatingText>().text.color = Color.red;
-        clone.GetComponent<FloatingText>().text.fontSize = 25;
-        clone.transform.SetParent(parent.transform);
-        StopAllCoroutines();
-        StartCoroutine(HitCoroutine());
+        //clone.GetComponent<FloatingText>().text.text = dmg.ToString();
+        //clone.GetComponent<FloatingText>().text.color = Color.red;
+        //clone.GetComponent<FloatingText>().text.fontSize = 25;
+        //clone.transform.SetParent(parent.transform);
+        //StopAllCoroutines();
+        //StartCoroutine(HitCoroutine());
     }
     IEnumerator HitCoroutine()
     {
