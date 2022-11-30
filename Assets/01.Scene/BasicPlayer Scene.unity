@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2212,7 +2212,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e3c08560a58c443905bdd8872cb978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - name: footsteps 1
+    clip: {fileID: 8300000, guid: f4bc9f0dc3b5a8d44b8b26b7037f2df5, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: footsteps 2
+    clip: {fileID: 8300000, guid: 3815ac593c7329942b9979f270f55470, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: footsteps 3
+    clip: {fileID: 8300000, guid: 3066da6eaa58bcb48b416f1a6f9bab5c, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: footsteps 4
+    clip: {fileID: 8300000, guid: 24d812f3be4133e4c9319fe6e8c0314b, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: type_sound
+    clip: {fileID: 8300000, guid: 58a5dd5888761af4dbff225d52caf926, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: enter_sound
+    clip: {fileID: 8300000, guid: 4fbc62a75b72f6d42b33069b6c067e1d, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: cancel_sound
+    clip: {fileID: 8300000, guid: 78935ca4e39c99f4b9f4febda20cc21c, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: ok
+    clip: {fileID: 8300000, guid: 249fea91aaf0ed147b02df3d43a2dc10, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: beep
+    clip: {fileID: 8300000, guid: cf54ce8ed2959fa489875707c14ff522, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: item_pickup
+    clip: {fileID: 8300000, guid: b70a459e0f67f024e818bafe2c88e0e0, type: 3}
+    Volumn: 1
+    loop: 0
 --- !u!4 &1690424504
 Transform:
   m_ObjectHideFlags: 0
@@ -3497,11 +3537,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d92409b5425e8334b80528b68fca4c3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key_sound: 
-  enter_sound: 
-  cancel_sound: 
-  open_sound: 
-  beep_sound: 
+  key_sound: type_sound
+  enter_sound: enter_sound
+  cancel_sound: cancel_sound
+  open_sound: ok
+  beep_sound: beep
   slots: []
   Description_Text: {fileID: 8409486911211557708}
   tabDescription:
