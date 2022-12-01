@@ -11,6 +11,7 @@ public class Inventory : MonoBehaviour
     private SoundManager theSound;
     private OrderManager theOrder;
     private OkOrCancel theOOC;
+    private Equipment theEquip;
 
     public string key_sound;
     public string enter_sound;
@@ -51,10 +52,15 @@ public class Inventory : MonoBehaviour
         theSound = FindObjectOfType<SoundManager>();
         theOrder = FindObjectOfType<OrderManager>();
         theOOC = FindObjectOfType<OkOrCancel>();
+        theEquip = FindObjectOfType<Equipment>();
 
         inventoryItemList = new List<Item>();
         inventoryTabList = new List<Item>();
         slots = tf.GetComponentsInChildren<InventorySlot>();
+    }
+    public void EquipToInventory(Item _item)
+    {
+        inventoryItemList.Add(_item);
     }
     public void GetAnItem(int _itemID, int _count = 1)
     {
@@ -319,14 +325,12 @@ public class Inventory : MonoBehaviour
                     {
                         if(selectedTab == 0) //소모품
                         {
-                            theSound.Play(enter_sound);
-                            stopKeyInput = true;
                             //물약을 마실 거냐? 같은 선택지 호출
-                            StartCoroutine(OOCCoroutine());
+                            StartCoroutine(OOCCoroutine("사용", "취소"));
                         }
                         else if(selectedTab == 1)
                         {
-                            //장비 장착
+                            StartCoroutine(OOCCoroutine("장착", "취소"));
                         }
                         else //비프음 출력
                         {
@@ -347,22 +351,39 @@ public class Inventory : MonoBehaviour
             }
         }
     }
-    IEnumerator OOCCoroutine()
+    IEnumerator OOCCoroutine(string _up, string _down)
     {
+        theSound.Play(enter_sound);
+        stopKeyInput = true;
+
         go_OOC.SetActive(true);
-        theOOC.ShowTwoChoice("사용", "취소");
+        theOOC.ShowTwoChoice(_up, _down);
         yield return new WaitUntil(() => !theOOC.activated);
         if(theOOC.GetResult())
         {
             for(int i =0; i< inventoryItemList.Count; i++)
             {
-                if(inventoryItemList[i].itemID == inventoryTabList[selectedItem].itemID)
+                if(selectedTab == 0)
                 {
-                    if (inventoryItemList[i].itemCount > 1)
-                        inventoryItemList[i].itemCount--;
-                    else
-                        inventoryItemList.RemoveAt(i);
+                    theDatabase.UseItem(inventoryItemList[i].itemID);
 
+                    if (inventoryItemList[i].itemID == inventoryTabList[selectedItem].itemID)
+                    {
+                        if (inventoryItemList[i].itemCount > 1)
+                            inventoryItemList[i].itemCount--;
+                        else
+                            inventoryItemList.RemoveAt(i);
+
+                        //theSound.Play() //아이템 먹는 소리 출력
+
+                        ShowItem();
+                        break;
+                    }
+                }
+                else if(selectedTab == 1)
+                {
+                    theEquip.EquipItem(inventoryItemList[i]);
+                    inventoryItemList.RemoveAt(i);
                     ShowItem();
                     break;
                 }

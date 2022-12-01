@@ -801,6 +801,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 572444836}
+  - component: {fileID: 572444837}
   m_Layer: 5
   m_Name: Equipment
   m_TagString: Untagged
@@ -828,6 +829,114 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &572444837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572444835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b0ef2768371cb4f80ce037cfb779e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key_sound: type_sound
+  enter_sound: enter_sound
+  open_sound: ok
+  close_sound: cancel_sound
+  takeoff_sound: switch3_sound
+  go: {fileID: 1499321924}
+  go_OOC: {fileID: 0}
+  text: []
+  img_slots:
+  - {fileID: 126508535}
+  - {fileID: 1223014507}
+  - {fileID: 1235319971}
+  - {fileID: 739528139}
+  - {fileID: 1662447651}
+  - {fileID: 1654430537}
+  - {fileID: 1615678805}
+  - {fileID: 888883770}
+  - {fileID: 1916673943}
+  - {fileID: 445707202}
+  - {fileID: 1954069174}
+  - {fileID: 1175678791}
+  go_selected_Slot_UI: {fileID: 0}
+  equipItemList:
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  - itemID: 0
+    itemName: 
+    itemDescription: 
+    itemCount: 0
+    itemIcon: {fileID: 0}
+    itemType: 0
+  activated: 0
 --- !u!1001 &695218497
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3269,16 +3378,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 306bcf4bf46d9064893d022dec7cc51b, type: 3}
     Volumn: 1
     loop: 0
-  - name: open_sound
-    clip: {fileID: 0}
-    Volumn: 1
-    loop: 0
-  - name: close_sound
-    clip: {fileID: 0}
-    Volumn: 1
-    loop: 0
-  - name: key_sound
-    clip: {fileID: 0}
+  - name: switch3_sound
+    clip: {fileID: 8300000, guid: 73eba3fcf5a6d1645af103fc0d7258b9, type: 3}
     Volumn: 1
     loop: 0
 --- !u!4 &1690424504
@@ -3582,7 +3683,7 @@ GameObject:
   - component: {fileID: 1846624765}
   - component: {fileID: 1846624766}
   m_Layer: 0
-  m_Name: Equipment UI - select
+  m_Name: Selected_slot(UI)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
