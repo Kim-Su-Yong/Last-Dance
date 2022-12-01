@@ -12,14 +12,4 @@ public class Drop : MonoBehaviour, IDropHandler
             Drag.draggingItem.transform.SetParent(this.transform);
         }
     }
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 }
