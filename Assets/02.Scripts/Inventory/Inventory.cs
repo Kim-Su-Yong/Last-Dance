@@ -6,9 +6,12 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance;
+
     private DatabaseManager theDatabase;
     private SoundManager theSound;
     private OrderManager theOrder;
+    private OkOrCancel theOOC;
+
     public string key_sound;
     public string enter_sound;
     public string cancel_sound;
@@ -27,6 +30,7 @@ public class Inventory : MonoBehaviour
 
     public GameObject go; //인벤토리 활성화 비활성화
     public GameObject[] selectedTabImages;
+    public GameObject go_OOC; //선택지 활성화 비활성화
     public GameObject prefab_floating_text;
 
     private int selectedItem; //선택된 아이템
@@ -46,6 +50,8 @@ public class Inventory : MonoBehaviour
         theDatabase = FindObjectOfType<DatabaseManager>();
         theSound = FindObjectOfType<SoundManager>();
         theOrder = FindObjectOfType<OrderManager>();
+        theOOC = FindObjectOfType<OkOrCancel>();
+
         inventoryItemList = new List<Item>();
         inventoryTabList = new List<Item>();
         slots = tf.GetComponentsInChildren<InventorySlot>();
@@ -316,6 +322,7 @@ public class Inventory : MonoBehaviour
                             theSound.Play(enter_sound);
                             stopKeyInput = true;
                             //물약을 마실 거냐? 같은 선택지 호출
+                            StartCoroutine(OOCCoroutine());
                         }
                         else if(selectedTab == 1)
                         {
@@ -339,5 +346,29 @@ public class Inventory : MonoBehaviour
                     preventExec = false;
             }
         }
+    }
+    IEnumerator OOCCoroutine()
+    {
+        go_OOC.SetActive(true);
+        theOOC.ShowTwoChoice("사용", "취소");
+        yield return new WaitUntil(() => !theOOC.activated);
+        if(theOOC.GetResult())
+        {
+            for(int i =0; i< inventoryItemList.Count; i++)
+            {
+                if(inventoryItemList[i].itemID == inventoryTabList[selectedItem].itemID)
+                {
+                    if (inventoryItemList[i].itemCount > 1)
+                        inventoryItemList[i].itemCount--;
+                    else
+                        inventoryItemList.RemoveAt(i);
+
+                    ShowItem();
+                    break;
+                }
+            }
+        }
+        stopKeyInput = false;
+        go_OOC.SetActive(false);
     }
 }

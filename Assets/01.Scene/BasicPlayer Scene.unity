@@ -3269,6 +3269,18 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 306bcf4bf46d9064893d022dec7cc51b, type: 3}
     Volumn: 1
     loop: 0
+  - name: open_sound
+    clip: {fileID: 0}
+    Volumn: 1
+    loop: 0
+  - name: close_sound
+    clip: {fileID: 0}
+    Volumn: 1
+    loop: 0
+  - name: key_sound
+    clip: {fileID: 0}
+    Volumn: 1
+    loop: 0
 --- !u!4 &1690424504
 Transform:
   m_ObjectHideFlags: 0
@@ -4806,6 +4818,7 @@ MonoBehaviour:
   - {fileID: 8409486911422755068}
   - {fileID: 8409486911876041264}
   - {fileID: 8409486909849891278}
+  go_OOC: {fileID: 0}
   prefab_floating_text: {fileID: 4175866122574188138, guid: 4f5172c569e50a841aade790c98e203b, type: 3}
 --- !u!1 &8409486910733501065
 GameObject:
