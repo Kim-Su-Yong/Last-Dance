@@ -49,7 +49,7 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     // 드래그가 종료됐을 때 한 번 호출되는 이벤트
     public void OnEndDrag(PointerEventData eventData)
     {
-        // 슬롯에 드래그하지 않았을 때 원래대로 ItemList로 되돌린다.
+        // 슬롯에 드래그하지 않았을 때 초기 위치로 되돌린다.
         if (itemTr.parent == slotTr)
         {
             itemTr.SetParent(originTr);
