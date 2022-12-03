@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -862,7 +862,7 @@ MonoBehaviour:
   - {fileID: 445707202}
   - {fileID: 1954069174}
   - {fileID: 1175678791}
-  go_selected_Slot_UI: {fileID: 0}
+  go_selected_Slot_UI: {fileID: 1846624764}
   equipItemList:
   - itemID: 0
     itemName: 
@@ -2600,7 +2600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1499321925
 Transform:
   m_ObjectHideFlags: 0

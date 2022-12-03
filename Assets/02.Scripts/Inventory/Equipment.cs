@@ -115,6 +115,7 @@ public class Equipment : MonoBehaviour
                     theSound.Play(open_sound);
                     go.SetActive(true);
                     selectedSlot = 0;
+                    SelectedSlot();
                     ClearEquip();
                     ShowEquip();
                 }
@@ -167,9 +168,12 @@ public class Equipment : MonoBehaviour
                 }
                 else if (Input.GetKeyDown(KeyCode.Z))
                 {
-                    theSound.Play(enter_sound);
-                    inputKey = false;
-                    StartCoroutine(OOCCoroutine("¹þ±â", "Ãë¼Ò"));
+                    if (equipItemList[selectedSlot].itemID != 0)
+                    {
+                        theSound.Play(enter_sound);
+                        inputKey = false;
+                        StartCoroutine(OOCCoroutine("¹þ±â", "Ãë¼Ò"));
+                    }
                 }
             }
         }

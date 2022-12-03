@@ -37,6 +37,10 @@ public class Inventory : MonoBehaviour
     private int selectedItem; //선택된 아이템
     private int selectedTab; //선택된 탭
 
+    private int page; //페이지
+    private int slotCount;  //활성화된 슬롯의 개수
+    private const int MAX_SLOTS_COUNT = 12;
+
     private bool activated; //인벤토리 활성화시 true
     private bool tabActivated; //탭 활성화시 true
     private bool itemActivated; //아이템 활성화시 true
@@ -144,6 +148,7 @@ public class Inventory : MonoBehaviour
         inventoryTabList.Clear();
         RemoveSlot();
         selectedItem = 0;
+        page = 0;
 
         switch (selectedTab)
         {
@@ -177,21 +182,31 @@ public class Inventory : MonoBehaviour
                 break;
         } //탭에 따른 아이템 분류, 그것을 인벤토리 탭 리스트에 추가
 
-        for (int i = 0; i < inventoryTabList.Count; i++)
-        {
-            slots[i].gameObject.SetActive(true);
-            slots[i].Additem(inventoryTabList[i]);
-        } //인벤토리 탭 리스트의 내용을, 인벤토리 슬롯에 추가
+        ShowPage();
         SelectedItem();
     } //아이템 활성화 (inventoryTabList에 조정에 맞는 아이템들만 넣어주고 인벤토리 슬롯에 출력)
+    public void ShowPage()
+    {
+        slotCount = -1;
+
+        for (int i = page + MAX_SLOTS_COUNT; i < inventoryTabList.Count; i++)
+        {
+            slotCount = i - (page * MAX_SLOTS_COUNT);
+            slots[slotCount].gameObject.SetActive(true);
+            slots[slotCount].Additem(inventoryTabList[i]);
+
+            if (slotCount == MAX_SLOTS_COUNT - 1)
+                break;
+        } //인벤토리 탭 리스트의 내용을, 인벤토리 슬롯에 추가
+    }
     public void SelectedItem()
     {
         StopAllCoroutines();
-        if (inventoryTabList.Count > 0)
+        if (slotCount > -1)
         {
             Color color = slots[0].selected_item.GetComponent<Image>().color;
             color.a = 0f;
-            for (int i = 0; i < inventoryTabList.Count; i++)
+            for (int i = 0; i <= slotCount; i++)
             {
                 slots[i].selected_item.GetComponent<Image>().color = color;
             }
@@ -287,7 +302,18 @@ public class Inventory : MonoBehaviour
                 {
                     if(Input.GetKeyDown(KeyCode.DownArrow))
                     {
-                        if (selectedItem < inventoryTabList.Count - 2)
+                        if(selectedItem + 2 > slotCount)
+                        {
+                            if(page < (inventoryItemList.Count - 1) / MAX_SLOTS_COUNT)
+                                page++;
+                            else
+                                page = 0;
+
+                            RemoveSlot();
+                            ShowPage();
+                            selectedItem = -2;
+                        }
+                        if (selectedItem < slotCount - 1)
                             selectedItem += 2;
                         else
                             selectedItem %= 2;
@@ -296,16 +322,37 @@ public class Inventory : MonoBehaviour
                     }
                     else if (Input.GetKeyDown(KeyCode.UpArrow))
                     {
+                        if (selectedItem - 2 < 0)
+                        {
+                            if (page != 0)
+                                page--;
+                            else
+                                page = ((inventoryItemList.Count - 1) / MAX_SLOTS_COUNT);
+
+                            RemoveSlot();
+                            ShowPage();
+                        }
                         if (selectedItem > 1)
                             selectedItem -= 2;
                         else
-                            selectedItem = inventoryTabList.Count - 1 - selectedItem;
+                            selectedItem = slotCount - selectedItem;
                         theSound.Play(key_sound);
                         SelectedItem();
                     }
                     else if (Input.GetKeyDown(KeyCode.RightArrow))
                     {
-                        if (selectedItem < inventoryTabList.Count - 1)
+                        if (selectedItem + 1 > slotCount)
+                        {
+                            if (page < (inventoryItemList.Count - 1) / MAX_SLOTS_COUNT)
+                                page++;
+                            else
+                                page = 0;
+
+                            RemoveSlot();
+                            ShowPage();
+                            selectedItem = -1;
+                        }
+                        if (selectedItem < slotCount)
                             selectedItem++;
                         else
                             selectedItem = 0;
@@ -314,10 +361,20 @@ public class Inventory : MonoBehaviour
                     }
                     else if (Input.GetKeyDown(KeyCode.LeftArrow))
                     {
+                        if (selectedItem - 1 < 0)
+                        {
+                            if (page != 0)
+                                page--;
+                            else
+                                page = ((inventoryItemList.Count - 1) / MAX_SLOTS_COUNT);
+
+                            RemoveSlot();
+                            ShowPage();
+                        }
                         if (selectedItem > 0)
                             selectedItem--;
                         else
-                            selectedItem = inventoryTabList.Count - 1;
+                            selectedItem = slotCount;
                         theSound.Play(key_sound);
                         SelectedItem();
                     }
