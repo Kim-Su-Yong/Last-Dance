@@ -41,7 +41,6 @@ public class equipDrag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDra
         itemTr.position = Input.mousePosition;
     }
 
-
     // 드래그가 종료됐을 때 한 번 호출되는 이벤트
     public void OnEndDrag(PointerEventData eventData)
     {

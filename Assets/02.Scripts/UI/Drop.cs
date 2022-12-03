@@ -5,13 +5,28 @@ using UnityEngine.EventSystems;
 
 public class Drop : MonoBehaviour, IDropHandler
 {
+    public enum Type { Equipment, Inventory };
+    public Type SlotType;
     public void OnDrop(PointerEventData eventData)
     {
         GameObject dropped = eventData.pointerDrag;
         Drag dragItem = dropped.GetComponent<Drag>();
-        if (transform.childCount == 0)
+
+        // ★ 추후 장비 장착 데이터 적용을 위해 Type으로 분류하였음
+        switch (SlotType)
         {
-            Drag.draggingItem.transform.SetParent(this.transform);
+            case Type.Inventory:
+                if (transform.childCount == 0)
+                {
+                    Drag.draggingItem.transform.SetParent(this.transform);
+                }
+                break;
+            case Type.Equipment:
+                if (transform.childCount == 0)
+                {
+                    Drag.draggingItem.transform.SetParent(this.transform);
+                }
+                break;
         }
     }
 }
