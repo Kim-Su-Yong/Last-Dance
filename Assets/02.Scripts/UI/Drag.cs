@@ -10,7 +10,6 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     private Transform slotTr;
     private Transform originTr;
     [SerializeField]
-    private Transform itemListTr;
     private CanvasGroup canvasGroup;
 
     public static GameObject draggingItem = null;
@@ -18,9 +17,7 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     void Start()
     {
         itemTr = GetComponent<Transform>();
-        //inventoryTr = GameObject.Find("Inventory").GetComponent<Transform>();
         slotTr = GameObject.Find("SlotList").GetComponent<Transform>();
-        itemListTr = GameObject.Find("ItemList").GetComponent<Transform>();
 
         // Canvas Group 컴포넌트 추출
         canvasGroup = GetComponent<CanvasGroup>();
