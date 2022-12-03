@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class equipDrag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     private Transform itemTr;
-    private Transform InventorySlotTr;
+    private Transform equipSlotTr;
     private Transform originTr;
     [SerializeField]
     private CanvasGroup canvasGroup;
@@ -16,7 +16,7 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     void Start()
     {
         itemTr = GetComponent<Transform>();
-        InventorySlotTr = GameObject.Find("SlotList").GetComponent<Transform>();
+        equipSlotTr = GameObject.Find("EquipmentList").GetComponent<Transform>();
 
         // Canvas Group 컴포넌트 추출
         canvasGroup = GetComponent<CanvasGroup>();
@@ -27,7 +27,7 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     {
         originTr = transform.parent;
         // 부모를 Inventory로 변경
-        this.transform.SetParent(InventorySlotTr);
+        this.transform.SetParent(equipSlotTr);
         // 드래그가 시작되면 드래그되는 아이템 정보를 저장함
         draggingItem = this.gameObject;
         // 드래그가 시작되면 다른 UI 이벤트를 받지 않도록 설정
@@ -46,7 +46,7 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     public void OnEndDrag(PointerEventData eventData)
     {
         // 슬롯에 드래그하지 않았을 때 초기 위치로 되돌린다.
-        if (itemTr.parent == InventorySlotTr)
+        if (itemTr.parent == equipSlotTr)
         {
             itemTr.SetParent(originTr);
         }
