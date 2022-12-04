@@ -14,9 +14,9 @@ public class StandardInput : MonoBehaviour
     [Header("이동 설정")]
     public bool analogMovement; // ????
 
-    //[Header("마우스 커서 설정")]
-    //public bool cursorLocked = true;
-    //public bool cursorInputForLook = true;
+    [Header("마우스 커서 설정")]
+    public bool cursorLocked = true;
+    public bool cursorInputForLook = true;
 
     public void OnMove(InputValue value)
     {
@@ -24,10 +24,10 @@ public class StandardInput : MonoBehaviour
     }
     public void OnLook(InputValue value)
     {
-        //if(cursorInputForLook)
-        //{
-        //    LookInput(value.Get<Vector2>());
-        //}
+        if(cursorInputForLook)
+        {
+            LookInput(value.Get<Vector2>());
+        }
     }
     public void OnJump(InputValue value)
     {
@@ -58,14 +58,14 @@ public class StandardInput : MonoBehaviour
         isWalk = newSprintState;
     }
 
-    //private void OnApplicationFocus(bool hasFocus)
-    //{
-    //    SetCursorState(cursorLocked);
-    //}
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        SetCursorState(cursorLocked);
+    }
 
-    //private void SetCursorState(bool newState)
-    //{
-    //    Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
-    //}
+    private void SetCursorState(bool newState)
+    {
+        Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+    }
 
 }
