@@ -12,18 +12,20 @@ public class ItemInfo : MonoBehaviour
     public static ItemInfo itemInfo;
 
     // 아이템 2차 분류
-    public enum ItemType { 
-        Goggles, 
-        Helmet,
-        Totem, 
-        Weapon, 
-        Armor, 
-        Gloves, 
-        Shield, 
-        Boots, 
-        Backpack, 
-        Potion, 
-        etc };
+    public enum ItemType
+    {
+        Goggles     = 0,
+        Helmet      = 1,
+        Totem       = 2,
+        Weapon      = 3,
+        Armor       = 4,
+        Gloves      = 5,
+        Shield      = 6,
+        Boots       = 7,
+        Backpack    = 8,
+        Potion      = 9,
+        etc         = 11
+    };
     public ItemType itemType;
 
 
