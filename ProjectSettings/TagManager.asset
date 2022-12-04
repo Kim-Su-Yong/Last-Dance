@@ -4,12 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - FIREBALL
   - Ground
   - ENEMY
   - BULLET
-  - PUNCH
   - FOX_FIRE
-  - FIREBALL
+  - Enemy
+  - FLYATTACKRANGE
+  - PUNCH
+  - NPC
+  - InventorySlot
   layers:
   - Default
   - TransparentFX
@@ -17,9 +21,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - ENEMY
+  - Player
+  - GROUND
   - 
   - 
   - 
@@ -46,7 +50,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: UI
-    uniqueID: 2221807185
     locked: 0

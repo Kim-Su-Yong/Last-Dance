@@ -51,25 +51,28 @@ public class ThirdPersonCtrl : MonoBehaviour
     [Tooltip("땅 레이어")]
     public LayerMask GroundLayers;
 
-    //[Header("Cinemachine")]
-    //[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-    //public GameObject CinemachineCameraTarget;
+    [Header("Cinemachine")]
+    [Tooltip("타겟을 설정하면 가상 카메라가 따라감")]
+    public GameObject CinemachineCameraTarget;
 
-    //[Tooltip("How far in degrees can you move the camera up")]
-    //public float TopClamp = 70.0f;
+    [Tooltip("How far in degrees can you move the camera up")]
+    public float TopClamp = 70.0f;
 
-    //[Tooltip("How far in degrees can you move the camera down")]
-    //public float BottomClamp = -30.0f;
+    [Tooltip("How far in degrees can you move the camera down")]
+    public float BottomClamp = -30.0f;
 
-    //[Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
-    //public float CameraAngleOverride = 0.0f;
+    [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
+    public float CameraAngleOverride = 0.0f;
 
-    //[Tooltip("For locking the camera position on all axis")]
-    //public bool LockCameraPosition = false;
+    [Tooltip("For locking the camera position on all axis")]
+    public bool LockCameraPosition = false;
 
-    //// cinemachine
-    //private float _cinemachineTargetYaw;
-    //private float _cinemachineTargetPitch;
+    // cinemachine
+    private float _cinemachineTargetYaw;
+    private float _cinemachineTargetPitch;
+
+    [Header("제어 변수")]
+    public bool IsAction;
 
     // 플레이어
     private float _speed;
@@ -117,7 +120,7 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     private void Start()
     {
-        //_cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+        _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
         hasAnimator = TryGetComponent(out animator);
         controller = GetComponent<CharacterController>();
         input = GetComponent<StandardInput>(); 
@@ -141,7 +144,7 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     void LateUpdate()
     {
-        //CameraRotation();
+        CameraRotation();
     }
 
     private void AssignAnimationIDs()
@@ -167,30 +170,32 @@ public class ThirdPersonCtrl : MonoBehaviour
         }
     }
 
-    //private void CameraRotation()
-    //{
-    //    // if there is an input and camera position is not fixed
-    //    if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
-    //    {
-    //        //Don't multiply mouse input by Time.deltaTime;
-    //        float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+    private void CameraRotation()
+    {
+        // if there is an input and camera position is not fixed
+        if(input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
+        {
+            //Don't multiply mouse input by Time.deltaTime;
+            float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-    //        _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-    //        _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
-    //    }
+            _cinemachineTargetYaw += input.look.x * deltaTimeMultiplier;
+            _cinemachineTargetPitch += input.look.y * deltaTimeMultiplier;
+        }
 
-    //    // clamp our rotations so our values are limited 360 degrees
-    //    _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-    //    _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+        // clamp our rotations so our values are limited 360 degrees
+        _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-    //    // Cinemachine will follow this target
-    //    CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-    //        _cinemachineTargetYaw, 0.0f);
-    //}
+        // Cinemachine will follow this target
+        CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+            _cinemachineTargetYaw, 0.0f);
+    }
 
     void Move()
     {
         if (GetComponent<PlayerDamage>().isDie)
+            return;
+        if (IsAction == true)
             return;
 
         // 걷기 유무에 따른 이동속도 할당
