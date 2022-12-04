@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public Image coolImg;
-    //public float inittime = 0f;
-    //public float cooltime = 5f;
     public Text cooltxt;
     public bool isCool;
     public static UIManager uIManager;
@@ -15,8 +13,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        coolImg.fillAmount = 1f;
-        coolImg.enabled = false;
+        coolImg.fillAmount = 0f;
         cooltxt.enabled = false;
         isCool = true;
     }
@@ -28,21 +25,22 @@ public class UIManager : MonoBehaviour
         {
             isCool = false;
             cooltxt.enabled = true;
-            coolImg.enabled = true;
             StartCoroutine(CoolTime(3f));
         }
     }
     IEnumerator CoolTime(float cool)
     {
-        while (cool >= 0f)
+        float cTime = 0f;
+        float cTxt = cool;
+        while (cool > cTime)
         {
-            cool -= Time.deltaTime;
-            coolImg.fillAmount = (cool / 3f);
-            cooltxt.text = cool.ToString("0.0");
+            cTime += Time.deltaTime;
+            cTxt -= Time.deltaTime;
+            coolImg.fillAmount = (cTime / cool);
+            cooltxt.text = cTxt.ToString("0.0");
             yield return new WaitForFixedUpdate();
         }
-        coolImg.fillAmount = 1f;
-        coolImg.enabled = false;
+        coolImg.fillAmount = 0f;
         cooltxt.enabled = false;
         isCool = true;
     }
