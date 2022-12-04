@@ -14,19 +14,16 @@ public class EnemyDamage : MonoBehaviour
     public float hp = 0f;
     public float hpMax = 100f;
 
-    PlayerAction playerAction;
+    PlayerAttack playerAction;
     CapsuleCollider capsuleCollider;
 
-    private PlayerStat thePlayerStat;
     void Start()
     {
         hp = hpMax;
         rb = GetComponent<Rigidbody>();
         renderer = GetComponent<MeshRenderer>();
-        playerAction = GetComponent<PlayerAction>();
+        playerAction = GetComponent<PlayerAttack>();
         capsuleCollider = GetComponent<CapsuleCollider>();
-
-        thePlayerStat = FindObjectOfType<PlayerStat>();
     }
 
     void Update()
@@ -39,8 +36,7 @@ public class EnemyDamage : MonoBehaviour
         if(other.CompareTag(fireBallTag))
         {
             renderer.material.color = Color.red;
-            //hp -= 10f;
-            thePlayerStat.Hit(GetComponent<EnemyStat>().atk);
+            hp -= 10f;
             StartCoroutine(ResetColor());
         }
         if (other.CompareTag(bulletTag))
