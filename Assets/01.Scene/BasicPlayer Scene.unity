@@ -3604,7 +3604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92cd4063a520534799fdfd347a4c188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemID: 10001
+  itemID: 30001
   _count: 1
   pickUpSound: item_pickup
 --- !u!212 &1842999433
