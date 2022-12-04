@@ -2,7 +2,7 @@
     "name": "StandardInput",
     "maps": [
         {
-            "name": "Player",
+            "name": "Move",
             "id": "d8e42f58-1356-4ca2-9d50-1893fe5bfb90",
             "actions": [
                 {
@@ -10,7 +10,7 @@
                     "type": "Value",
                     "id": "994ea5c0-e54f-4b7c-9acf-b9073b4c2b9a",
                     "expectedControlType": "Vector2",
-                    "processors": "NormalizeVector2",
+                    "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
