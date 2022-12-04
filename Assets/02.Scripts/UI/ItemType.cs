@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ItemType : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public enum Type { Goggles, Helmet,Totem, Weapon, Armor, Gloves, Shield, Boots, Backpack }
+    public Type itemType;
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
