@@ -12,7 +12,7 @@ public class Drop : MonoBehaviour, IDropHandler
         GameObject dropped = eventData.pointerDrag;
         Drag dragItem = dropped.GetComponent<Drag>();
 
-        // ★ 추후 장비 장착 데이터 적용을 위해 Type으로 분류하였음
+        // ★ 추후 장비 장착 시 데이터 적용을 위해 Type으로 분류하였음
         switch (SlotType)
         {
             case Type.Inventory:
