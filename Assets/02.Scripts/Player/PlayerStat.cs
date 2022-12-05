@@ -18,6 +18,9 @@ public class PlayerStat : MonoBehaviour
     public int atk;
     public int def;
 
+    public int recover_hp;
+    public int recover_mp;
+
     public string dmgSound;
 
     [SerializeField]
