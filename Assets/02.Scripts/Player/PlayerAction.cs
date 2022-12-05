@@ -6,7 +6,7 @@ public class PlayerAction : MonoBehaviour
 {
     [SerializeField]
     GameObject nearObject;  // 캐릭터와 가장 가까운 오브젝트를 저장
-
+    public static PlayerAction instance;
     void Interaction()
     {
         if (Input.GetKeyDown(KeyCode.E))

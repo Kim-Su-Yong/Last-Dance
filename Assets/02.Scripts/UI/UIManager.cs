@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     {
         coolImg.fillAmount = 0f;
         cooltxt.enabled = false;
+        coolImg.enabled = false;
         isCool = true;
     }
 
@@ -25,23 +26,23 @@ public class UIManager : MonoBehaviour
         {
             isCool = false;
             cooltxt.enabled = true;
+            coolImg.enabled = true;
             StartCoroutine(CoolTime(3f));
         }
     }
     IEnumerator CoolTime(float cool)
     {
-        float cTime = 0f;
         float cTxt = cool;
-        while (cool > cTime)
+        while (cTxt > 0)
         {
-            cTime += Time.deltaTime;
             cTxt -= Time.deltaTime;
-            coolImg.fillAmount = (cTime / cool);
+            coolImg.fillAmount = cTxt / cool;
             cooltxt.text = cTxt.ToString("0.0");
             yield return new WaitForFixedUpdate();
         }
         coolImg.fillAmount = 0f;
         cooltxt.enabled = false;
+        coolImg.enabled = false;
         isCool = true;
     }
 }

@@ -22,9 +22,17 @@ public class ChangeForm : MonoBehaviour
     public float charForm_CoolTime = 7.0f;  // 폼 전환 쿨타임
     public float charForm_Timer;
 
+    public Image coolImg; //쿨타임 이미지
+    public Text coolTxt; //쿨타임 텍스트
+
+
     private void Start()
     {
         animator = GetComponent<Animator>();
+        coolImg.fillAmount = 0f; //초기화
+        coolTxt.enabled = false;
+        coolImg.enabled = false;
+
     }
 
     void Update()
@@ -46,6 +54,7 @@ public class ChangeForm : MonoBehaviour
             if (curForm == FormType.FOX) return;
             if (canFormChange)
             {
+                canFormChange = false;
                 /* 
                 * 폼 변환 애니메이션이나 파티클 넣어주기
                 */
@@ -57,17 +66,17 @@ public class ChangeForm : MonoBehaviour
                 animator.SetInteger("Form", 1);
 
                 ChangeFormSprite();
-                /*
-                 * UI 에서 쿨타임 도는 기능 구현
-                 * 예시 : https://rito15.github.io/posts/unity-memo-cooldown-icon-ui/
-                */
+                //UI 에서 쿨타임 도는 기능 구현
+                coolTxt.enabled = true;
+                coolImg.enabled = true;
+                StartCoroutine(CoolTimeImg(charForm_CoolTime));
+
             }
             else
             {
                 // 폼전환 쿨타임시 UI로 메시지를 띄울 코드
                 Debug.Log("쿨타임 중입니다.");
             }
-            canFormChange = false;
         }
 
         // 상단의 숫자2을 누르면 호랑이 폼으로 전환
@@ -79,6 +88,7 @@ public class ChangeForm : MonoBehaviour
                 /* 
                * 폼 변환 애니메이션이나 파티클 넣어주기
                */
+                canFormChange = false;
                 Staff.enabled = false;   // 호랑이 폼일때는 지팡이를 사용X
                 /*
                  * 다른 폼에서 무기를 사용한다면 코드 추가
@@ -86,12 +96,15 @@ public class ChangeForm : MonoBehaviour
                 curForm = FormType.TIGER;
                 animator.SetInteger("Form", 2);
                 ChangeFormSprite();
+                //UI 에서 쿨타임 도는 기능 구현
+                coolTxt.enabled = true;
+                coolImg.enabled = true;
+                StartCoroutine(CoolTimeImg(charForm_CoolTime));
             }
             else
             {
                 Debug.Log("쿨타임 중입니다.");
             }
-            canFormChange = false;
         }
         // 상단의 숫자3을 누르면 독수리 폼으로 전환
         else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -102,6 +115,7 @@ public class ChangeForm : MonoBehaviour
                 /* 
              * 폼 변환 애니메이션이나 파티클 넣어주기
              */
+                canFormChange = false;
                 Staff.enabled = false;   // 독수리 폼일때는 지팡이를 사용X
                 /*
                  * 다른 폼에서 무기를 사용한다면 코드 추가
@@ -109,15 +123,31 @@ public class ChangeForm : MonoBehaviour
                 curForm = FormType.EAGLE;
                 animator.SetInteger("Form", 3);
                 ChangeFormSprite();
+                coolTxt.enabled = true;
+                coolImg.enabled = true;
+                StartCoroutine(CoolTimeImg(charForm_CoolTime));
             }
             else
             {
                 Debug.Log("쿨타임 중입니다.");
             }
-            canFormChange = false;
-
         }
-        CoolDown();
+        //CoolDown();
+    }
+    IEnumerator CoolTimeImg(float cool)
+    {
+        float cooltime = cool;
+        while (cooltime > 0)
+        {
+            cooltime -= Time.deltaTime;
+            coolImg.fillAmount = cooltime / cool;
+            coolTxt.text = cooltime.ToString("0.0");
+            yield return new WaitForFixedUpdate();
+        }
+        coolTxt.enabled = false;
+        coolImg.enabled = false;
+        coolImg.fillAmount = 0f;
+        canFormChange = true;
     }
 
     private void CoolDown()
