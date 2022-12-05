@@ -72,7 +72,7 @@ public class ThirdPersonCtrl : MonoBehaviour
     private float _cinemachineTargetPitch;
 
     [Header("제어 변수")]
-    public bool IsAction;
+    public bool bIsAction;
 
     // 플레이어
     private float _speed;
@@ -193,9 +193,10 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     void Move()
     {
-        if (GetComponent<PlayerDamage>().isDie)
+        if (GetComponent<PlayerDamage>().isDie ||
+            GetComponent<PlayerAttack>().bIsAttack)
             return;
-        if (IsAction == true)
+        if (bIsAction == true)
             return;
 
         // 걷기 유무에 따른 이동속도 할당
