@@ -40,10 +40,10 @@ public class Boss : MonoBehaviour
             anim.GetCurrentAnimatorStateInfo(1).IsName("None") ||
             !anim.GetBool("CanRotate"))
         {
-            Vector3 rotationOffset = player.transform.position - model.position;
-            rotationOffset.y = 0;
-            float lookDirection = Vector3.SignedAngle(model.forward, rotationOffset, Vector3.up);
-            anim.SetFloat("LookDirection", lookDirection);
+            //Vector3 rotationOffset = player.transform.position - model.position;
+            //rotationOffset.y = 0;
+            //float lookDirection = Vector3.SignedAngle(model.forward, rotationOffset, Vector3.up);
+            //anim.SetFloat("LookDirection", lookDirection);
         }
         else if (!anim.GetBool("Attacking") && anim.GetBool("CanRotate"))
         {

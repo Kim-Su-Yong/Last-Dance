@@ -34,14 +34,9 @@ public class PlayerAction : MonoBehaviour
     void Update()
     {
         Interaction();
-
-        if(Input.GetKeyDown(KeyCode.F5)) //저장
-        {
-
-        }
         if (Input.GetKeyDown(KeyCode.F9)) //불러오기
         {
-
+            theSaveNLoad.CallLoad();
         }
     }
 

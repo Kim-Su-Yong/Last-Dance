@@ -66,7 +66,7 @@ public class BossAttack : MonoBehaviour
     private void Start()
     {
         anim = model.GetComponent<Animator>();
-        playerAnim = player.GetComponent<Animator>();
+       //playerAnim = player.GetComponent<Animator>();
 
         Vector3 size = new Vector3(0.00075f, 0.0004f, 0.014f);
         Vector3 center = new Vector3(0f, 0f, 0.007f);
@@ -81,7 +81,7 @@ public class BossAttack : MonoBehaviour
         //if (Input.GetKeyDown(KeyCode.Keypad1) && gameManager.master) debug = true;
         //brainIcon.gameObject.SetActive(AI);
 
-        distance = Vector3.Distance(model.transform.position, player.transform.position);
+        //distance = Vector3.Distance(model.transform.position, player.transform.position);
 
         this.transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 
