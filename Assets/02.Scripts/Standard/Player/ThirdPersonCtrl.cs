@@ -72,7 +72,8 @@ public class ThirdPersonCtrl : MonoBehaviour
     private float _cinemachineTargetPitch;
 
     [Header("제어 변수")]
-    public bool IsAction;
+    PlayerAttack playerAttack;
+    public bool bIsAction;
 
     // 플레이어
     private float _speed;
@@ -125,6 +126,7 @@ public class ThirdPersonCtrl : MonoBehaviour
         controller = GetComponent<CharacterController>();
         input = GetComponent<StandardInput>(); 
         playerInput = GetComponent<PlayerInput>();
+        playerAttack = GetComponent<PlayerAttack>();
 
         AssignAnimationIDs();
 
@@ -193,9 +195,10 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     void Move()
     {
-        if (GetComponent<PlayerDamage>().isDie)
+        if (GetComponent<PlayerDamage>().isDie ||
+            playerAttack.bIsAttack)
             return;
-        if (IsAction == true)
+        if (bIsAction == true)
             return;
 
         // 걷기 유무에 따른 이동속도 할당
@@ -361,12 +364,17 @@ public class ThirdPersonCtrl : MonoBehaviour
         }
     }
 
-
     private void OnLand(AnimationEvent animationEvent)
     {
         if (animationEvent.animatorClipInfo.weight > 0.5f)
         {
             AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(controller.center), FootstepAudioVolume);
         }
+        playerAttack.enabled = true;
+    }
+
+    void OnJumpStart()
+    {
+        playerAttack.enabled = false;
     }
 }
