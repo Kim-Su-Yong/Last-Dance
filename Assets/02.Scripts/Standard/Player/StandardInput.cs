@@ -31,10 +31,6 @@ public class StandardInput : MonoBehaviour
     }
     public void OnJump(InputValue value)
     {
-        if (GetComponent<PlayerDamage>().isDie)
-        {
-            return;
-        }
         JumpInput(value.isPressed);
     }
     public void OnWalk(InputValue value)
