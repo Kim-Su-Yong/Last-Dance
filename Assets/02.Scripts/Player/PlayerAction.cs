@@ -33,10 +33,6 @@ public class PlayerAction : MonoBehaviour
     void Update()
     {
         Interaction();
-        //if (nearObject.CompareTag("ENEMY"))
-        //{
-        //    GetComponent<ThirdPersonCtrl>().
-        //}
     }
 
     private void OnTriggerStay(Collider other)
