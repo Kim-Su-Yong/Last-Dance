@@ -31,10 +31,8 @@ public class StandardInput : MonoBehaviour
     }
     public void OnJump(InputValue value)
     {
-        if (GetComponent<PlayerDamage>().isDie ||
-        GetComponent<PlayerAttack>().bIsAttack)
+        if (GetComponent<PlayerDamage>().isDie)
         {
-            Debug.Log("이동 및 점프 불가");
             return;
         }
         JumpInput(value.isPressed);

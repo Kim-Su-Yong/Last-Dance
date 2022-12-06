@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    ChangeForm Form;
+    ChangeForm changeForm;
+    ThirdPersonCtrl playerCtrl;
+    Shooter shooter;
+
     Animator animator;
     CharacterController controller;
 
@@ -31,13 +34,20 @@ public class PlayerAttack : MonoBehaviour
     bool isPunching;
     public bool bIsAttack;       
 
-    void Start()
+    void Awake()
     {
-        Form = GetComponent<ChangeForm>();
+        playerCtrl = GetComponent<ThirdPersonCtrl>();
+        shooter = GetComponent<Shooter>();
+        changeForm = GetComponent<ChangeForm>();
         controller = GetComponent<CharacterController>();
         FireBall = Resources.Load("Magic fire") as GameObject;
         animator = GetComponent<Animator>();
 
+       
+    }
+
+    private void Start()
+    {
         AttackCollider(false);                  // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
     }
 
@@ -58,7 +68,7 @@ public class PlayerAttack : MonoBehaviour
             return;
         }
 
-        if (Form.curForm == ChangeForm.FormType.FOX)
+        if (changeForm.curForm == ChangeForm.FormType.FOX)
         {
             // 왼쪽 마우스 버튼 누르면 기본 공격(fireRate는 발사 대기 시간)
             if (Input.GetButtonDown("Fire1") && Time.time > nextFire)   
@@ -73,7 +83,7 @@ public class PlayerAttack : MonoBehaviour
             }
             CoolDown(); // 스킬 쿨타임 관련 코드 추가 필요
         }
-        else if(Form.curForm == ChangeForm.FormType.TIGER)
+        else if(changeForm.curForm == ChangeForm.FormType.TIGER)
         {
             if(Input.GetButtonDown("Fire1"))
             {
@@ -90,7 +100,7 @@ public class PlayerAttack : MonoBehaviour
                 punchCount = 0;
             }
         }
-        else if(Form.curForm == ChangeForm.FormType.EAGLE)
+        else if(changeForm.curForm == ChangeForm.FormType.EAGLE)
         {
 
         }
@@ -121,8 +131,27 @@ public class PlayerAttack : MonoBehaviour
         animator.SetTrigger("Attack");
         yield return new WaitForSeconds(0.4f);
         GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
-        yield return new WaitForSeconds(0.65f);
+        //yield return new WaitForSeconds(0.65f);
+        //bIsAttack = false;
+    }
+    void OnAttackStart()
+    {
+        Debug.Log("공격 시작");
+        bIsAttack = true;
+        animator.SetFloat("Speed", 0f);
+        //playerCtrl.enabled = false;
+        shooter.enabled = false;
+        changeForm.enabled = false;
+        
+    }
+    void OnAttackEnd()
+    {
+        Debug.Log("공격 종료");
+        Debug.Log(controller.velocity);
         bIsAttack = false;
+        //playerCtrl.enabled = true;
+        shooter.enabled = true;
+        changeForm.enabled = true;
     }
 
     void CoolDown()

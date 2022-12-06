@@ -50347,6 +50347,10 @@ PrefabInstance:
       propertyPath: FormImage
       value: 
       objectReference: {fileID: 1389480191}
+    - target: {fileID: 4126552369070853438, guid: 1fecd5606fb2c8e468e7dfe02adf8db0, type: 3}
+      propertyPath: SpeedChangeRate
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4126552369536777917, guid: 1fecd5606fb2c8e468e7dfe02adf8db0, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -50394,6 +50398,18 @@ PrefabInstance:
     - target: {fileID: 4126552369537016603, guid: 1fecd5606fb2c8e468e7dfe02adf8db0, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126552369546650995, guid: 1fecd5606fb2c8e468e7dfe02adf8db0, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126552369546650995, guid: 1fecd5606fb2c8e468e7dfe02adf8db0, type: 3}
+      propertyPath: m_CullingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126552369546650995, guid: 1fecd5606fb2c8e468e7dfe02adf8db0, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fecd5606fb2c8e468e7dfe02adf8db0, type: 3}
