@@ -13,10 +13,10 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        //coolImg.fillAmount = 0f;
-        //cooltxt.enabled = false;
-        //coolImg.enabled = false;
-        //isCool = true;
+        coolImg.fillAmount = 0f;
+        cooltxt.enabled = false;
+        coolImg.enabled = false;
+        isCool = true;
     }
 
 
