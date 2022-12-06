@@ -11,6 +11,7 @@ public class Equipment : MonoBehaviour
     private PlayerStat thePlayerStat;
     private OkOrCancel theOOC;
     private Inventory theInven;
+    private Equipment theEquip;
 
     public string key_sound;
     public string enter_sound;
@@ -34,23 +35,19 @@ public class Equipment : MonoBehaviour
     public GameObject go_selected_Slot_UI; // 선택된 장비 슬롯 UI.
 
     public Item[] equipItemList; // 장착된 장비 리스트.
-
     private int selectedSlot; // 선택된 장비 슬롯.
-
     public bool activated = false;
     private bool inputKey = true;
 
-    // Use this for initialization
     void Start()
-    {
-
+    { 
         theOrder = FindObjectOfType<OrderManager>();
         theSound = FindObjectOfType<SoundManager>();
         thePlayerStat = FindObjectOfType<PlayerStat>();
         theOOC = FindObjectOfType<OkOrCancel>();
         theInven = FindObjectOfType<Inventory>();
+        theEquip = FindObjectOfType<Equipment>();
     }
-
     public void EquipItem(Item _item)
     {
         string temp = _item.itemID.ToString();
@@ -71,7 +68,6 @@ public class Equipment : MonoBehaviour
                 break;
         }
     }
-
     public void EquipItemCheck(int _count, Item _item)
     {
         if (equipItemList[_count].itemID == 0)
@@ -84,12 +80,10 @@ public class Equipment : MonoBehaviour
             equipItemList[_count] = _item;
         }
     }
-
     public void SelectedSlot()
     {
         go_selected_Slot_UI.transform.position = img_slots[selectedSlot].transform.position;
     }
-
     public void ClearEquip()
     {
         Color color = img_slots[0].color;
@@ -101,7 +95,6 @@ public class Equipment : MonoBehaviour
             img_slots[i].color = color;
         }
     }
-
     public void ShowEquip()
     {
         Color color = img_slots[0].color;
@@ -116,12 +109,8 @@ public class Equipment : MonoBehaviour
             }
         }
     }
-
-    // Update is called once per frame
     void Update()
     {
-
-
         if (inputKey)
         {
             if (Input.GetKeyDown(KeyCode.E))
@@ -197,7 +186,6 @@ public class Equipment : MonoBehaviour
             }
         }
     }
-
     IEnumerator OOCCoroutine(string _up, string _down)
     {
         go_OOC.SetActive(true);
