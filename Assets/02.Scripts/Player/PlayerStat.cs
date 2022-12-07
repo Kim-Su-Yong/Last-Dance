@@ -18,6 +18,9 @@ public class PlayerStat : MonoBehaviour
     public int atk;
     public int def;
 
+    public int recover_hp;
+    public int recover_mp;
+
     public string dmgSound;
 
     [SerializeField]
@@ -79,7 +82,7 @@ public class PlayerStat : MonoBehaviour
     }
     void Update()
     {
-        if(currentEXP >= needExp[character_Lv])
+        if (currentEXP >= needExp[character_Lv])
         {
             character_Lv++;
             hp += character_Lv * 2;

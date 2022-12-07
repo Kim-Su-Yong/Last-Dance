@@ -62,7 +62,14 @@ public class Inventory : MonoBehaviour
         inventoryTabList = new List<Item>();
         slots = tf.GetComponentsInChildren<InventorySlot>();
     }
-
+    public List<Item> SaveItem()
+    {
+        return inventoryItemList;
+    }
+    public void LoadItem(List<Item> _itemList)
+    {
+        inventoryItemList = _itemList;
+    }
     public void EquipToInventory(Item _item)
     {
         inventoryItemList.Add(_item);

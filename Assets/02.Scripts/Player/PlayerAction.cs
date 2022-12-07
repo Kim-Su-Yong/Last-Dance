@@ -7,6 +7,9 @@ public class PlayerAction : MonoBehaviour
     [SerializeField]
     GameObject nearObject;  // 캐릭터와 가장 가까운 오브젝트를 저장
     public static PlayerAction instance;
+    public string currentMapName;
+    public string currentSceneName;
+    private SaveNLoad theSaveNLoad;
     void Interaction()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -15,7 +18,7 @@ public class PlayerAction : MonoBehaviour
             /*
              * 충분히 가까워진 상태에서 e키를 누르면 해당 상호작용 팝업창 출력
              */
-            if(nearObject.CompareTag("NPC"))
+            if (nearObject.CompareTag("NPC"))
             {
                 NPCInterAction npc = nearObject.GetComponent<NPCInterAction>();
                 npc.IsTalk = true;
@@ -26,18 +29,25 @@ public class PlayerAction : MonoBehaviour
 
     void Start()
     {
-        
+        theSaveNLoad = FindObjectOfType<SaveNLoad>();
     }
-
-    // Update is called once per frame
     void Update()
     {
         Interaction();
+
+        if (Input.GetKeyDown(KeyCode.F5)) //저장
+        {
+
+        }
+        if (Input.GetKeyDown(KeyCode.F9)) //불러오기
+        {
+
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.CompareTag("NPC"))
+        if (other.gameObject.CompareTag("NPC"))
         {
             nearObject = other.gameObject;
         }

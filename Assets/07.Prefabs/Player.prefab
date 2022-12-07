@@ -1751,8 +1751,8 @@ GameObject:
   - component: {fileID: 4126552369070853434}
   - component: {fileID: 4126552369070853432}
   - component: {fileID: 4126552369070853414}
-  - component: {fileID: 4126552369070853413}
   - component: {fileID: 4126552369070853412}
+  - component: {fileID: 4126552369070853413}
   - component: {fileID: 4126552369070853411}
   m_Layer: 7
   m_Name: Player
@@ -1958,7 +1958,7 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
-  IsAction: 0
+  bIsAction: 0
 --- !u!114 &4126552369070853436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2078,6 +2078,26 @@ MonoBehaviour:
   - {fileID: 4126552368889007388}
   - {fileID: 4126552368481420823}
   thirdEffect: {fileID: 0}
+  bIsAttack: 0
+--- !u!114 &4126552369070853412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4126552369537016603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eef7b803a4d6a9429b01ed907aa0131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HpBar: {fileID: 0}
+  HpText: {fileID: 0}
+  curHp: 0
+  initHp: 0
+  charData: {fileID: 11400000, guid: edec36d8fb7c9ff4da35984a747d6ab9, type: 2}
+  isDie: 0
+  hitEffect: {fileID: 7226583673155636401, guid: 036519260c71ad0488f217309599083b, type: 3}
 --- !u!114 &4126552369070853413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2099,28 +2119,11 @@ MonoBehaviour:
   currentMP: 0
   atk: 5
   def: 0
+  recover_hp: 0
+  recover_mp: 0
   dmgSound: atkSound
   prefabs_floating_text: {fileID: 4175866122574188138, guid: 4f5172c569e50a841aade790c98e203b, type: 3}
   parent: {fileID: 0}
---- !u!114 &4126552369070853412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4126552369537016603}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eef7b803a4d6a9429b01ed907aa0131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HpBar: {fileID: 0}
-  HpText: {fileID: 0}
-  curHp: 0
-  initHp: 0
-  charData: {fileID: 11400000, guid: edec36d8fb7c9ff4da35984a747d6ab9, type: 2}
-  isDie: 0
-  hitEffect: {fileID: 7226583673155636401, guid: 036519260c71ad0488f217309599083b, type: 3}
 --- !u!114 &4126552369070853411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2134,6 +2137,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nearObject: {fileID: 0}
+  currentMapName: 
+  currentSceneName: 
 --- !u!1 &4126552369537019075
 GameObject:
   m_ObjectHideFlags: 0
