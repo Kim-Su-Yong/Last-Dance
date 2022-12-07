@@ -62,25 +62,26 @@ public class Inventory : MonoBehaviour
         inventoryTabList = new List<Item>();
         slots = tf.GetComponentsInChildren<InventorySlot>();
     }
+
     public void EquipToInventory(Item _item)
     {
         inventoryItemList.Add(_item);
     }
     public void GetAnItem(int _itemID, int _count = 1)
     {
-        for(int i = 0; i< theDatabase.itemList.Count; i++) //데이터베이스 아이템 검색
+        for (int i = 0; i < theDatabase.itemList.Count; i++) //데이터베이스 아이템 검색
         {
-            if(_itemID == theDatabase.itemList[i].itemID) //데이터베이스에 아이템 발견
+            if (_itemID == theDatabase.itemList[i].itemID) //데이터베이스에 아이템 발견
             {
-                GameObject clone = Instantiate(prefab_floating_text, PlayerAction.instance.transform.position, Quaternion.Euler(Vector3.zero));
+                GameObject clone = Instantiate(prefab_floating_text, this.transform.position, Quaternion.Euler(Vector3.zero));
                 clone.GetComponent<FloatingText>().text.text = theDatabase.itemList[i].itemName + " " + _count + "개 획득 +";
                 clone.transform.SetParent(this.transform);
 
                 for (int j = 0; j < inventoryItemList.Count; j++) //소지품에 같은 아이템이 있는지 검색
                 {
-                    if(inventoryItemList[i].itemID == _itemID) //소지품에 같은 아이템이 있다 -> 갯수만 증감시켜줌
+                    if (inventoryItemList[j].itemID == _itemID) //소지품에 같은 아이템이 있다 -> 갯수만 증감시켜줌
                     {
-                        if (inventoryItemList[i].itemType == Item.ItemType.Use)
+                        if (inventoryItemList[j].itemType == Item.ItemType.Use)
                         {
                             inventoryItemList[j].itemCount += _count;
                         }
@@ -148,7 +149,7 @@ public class Inventory : MonoBehaviour
         inventoryTabList.Clear();
         RemoveSlot();
         selectedItem = 0;
-        page = 0;
+        //page = 0;
 
         switch (selectedTab)
         {
@@ -182,7 +183,12 @@ public class Inventory : MonoBehaviour
                 break;
         } //탭에 따른 아이템 분류, 그것을 인벤토리 탭 리스트에 추가
 
-        ShowPage();
+        //ShowPage();
+        for (int i = 0; i < inventoryTabList.Count; i++)
+        {
+            slots[i].gameObject.SetActive(true);
+            slots[i].Additem(inventoryTabList[i]);
+        } //인벤토리 탭 리스트의 내용을, 인벤토리 슬롯에 추가
         SelectedItem();
     } //아이템 활성화 (inventoryTabList에 조정에 맞는 아이템들만 넣어주고 인벤토리 슬롯에 출력)
     public void ShowPage()
@@ -202,11 +208,13 @@ public class Inventory : MonoBehaviour
     public void SelectedItem()
     {
         StopAllCoroutines();
-        if (slotCount > -1)
+        //if (slotCount > -1)
+        if (inventoryTabList.Count > 0)
         {
             Color color = slots[0].selected_item.GetComponent<Image>().color;
             color.a = 0f;
-            for (int i = 0; i <= slotCount; i++)
+            //for (int i = 0; i <= slotCount; i++)
+            for (int i = 0; i < inventoryTabList.Count; i++)
             {
                 slots[i].selected_item.GetComponent<Image>().color = color;
             }
@@ -236,6 +244,48 @@ public class Inventory : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
     } //선택된 아이템 반짝임 효과
+
+    IEnumerator OOCCoroutine(string _up, string _down)
+    {
+        theSound.Play(enter_sound);
+        stopKeyInput = true;
+
+        go_OOC.SetActive(true);
+        theOOC.ShowTwoChoice(_up, _down);
+        yield return new WaitUntil(() => !theOOC.activated);
+        if (theOOC.GetResult())
+        {
+            for (int i = 0; i < inventoryItemList.Count; i++)
+            {
+                if (selectedTab == 0)
+                {
+                    theDatabase.UseItem(inventoryItemList[i].itemID);
+
+                    if (inventoryItemList[i].itemID == inventoryTabList[selectedItem].itemID)
+                    {
+                        if (inventoryItemList[i].itemCount > 1)
+                            inventoryItemList[i].itemCount--;
+                        else
+                            inventoryItemList.RemoveAt(i);
+
+                        //theSound.Play() //아이템 먹는 소리 출력
+
+                        ShowItem();
+                        break;
+                    }
+                }
+                else if (selectedTab == 1)
+                {
+                    theEquip.EquipItem(inventoryItemList[i]);
+                    inventoryItemList.RemoveAt(i);
+                    ShowItem();
+                    break;
+                }
+            }
+        }
+        stopKeyInput = false;
+        go_OOC.SetActive(false);
+    }
     void Update()
     {
         if (!stopKeyInput)
@@ -298,103 +348,110 @@ public class Inventory : MonoBehaviour
                     }
                 } //탭 활성화시 키입력 처리
 
-                else if(itemActivated)
+                else if (itemActivated)
                 {
-                    if(Input.GetKeyDown(KeyCode.DownArrow))
+                    if (inventoryTabList.Count > 0)
                     {
-                        if(selectedItem + 2 > slotCount)
+                        if (Input.GetKeyDown(KeyCode.DownArrow))
                         {
-                            if(page < (inventoryItemList.Count - 1) / MAX_SLOTS_COUNT)
-                                page++;
-                            else
-                                page = 0;
+                            //if (selectedItem + 2 > slotCount)
+                            //{
+                            //    if (page < (inventoryItemList.Count - 1) / MAX_SLOTS_COUNT)
+                            //        page++;
+                            //    else
+                            //        page = 0;
 
-                            RemoveSlot();
-                            ShowPage();
-                            selectedItem = -2;
-                        }
-                        if (selectedItem < slotCount - 1)
-                            selectedItem += 2;
-                        else
-                            selectedItem %= 2;
-                        theSound.Play(key_sound);
-                        SelectedItem();
-                    }
-                    else if (Input.GetKeyDown(KeyCode.UpArrow))
-                    {
-                        if (selectedItem - 2 < 0)
-                        {
-                            if (page != 0)
-                                page--;
+                            //    RemoveSlot();
+                            //    ShowPage();
+                            //    selectedItem = -2;
+                            //}
+                            //if (selectedItem < slotCount - 1)
+                            if (selectedItem < inventoryTabList.Count - 2)
+                                selectedItem += 2;
                             else
-                                page = ((inventoryItemList.Count - 1) / MAX_SLOTS_COUNT);
-
-                            RemoveSlot();
-                            ShowPage();
+                                selectedItem %= 2;
+                            theSound.Play(key_sound);
+                            SelectedItem();
                         }
-                        if (selectedItem > 1)
-                            selectedItem -= 2;
-                        else
-                            selectedItem = slotCount - selectedItem;
-                        theSound.Play(key_sound);
-                        SelectedItem();
-                    }
-                    else if (Input.GetKeyDown(KeyCode.RightArrow))
-                    {
-                        if (selectedItem + 1 > slotCount)
+                        else if (Input.GetKeyDown(KeyCode.UpArrow))
                         {
-                            if (page < (inventoryItemList.Count - 1) / MAX_SLOTS_COUNT)
-                                page++;
+                            //if (selectedItem - 2 < 0)
+                            //{
+                            //    if (page != 0)
+                            //        page--;
+                            //    else
+                            //        page = ((inventoryItemList.Count - 1) / MAX_SLOTS_COUNT);
+
+                            //    RemoveSlot();
+                            //    ShowPage();
+                            //}
+                            if (selectedItem > 1)
+                                selectedItem -= 2;
                             else
-                                page = 0;
-
-                            RemoveSlot();
-                            ShowPage();
-                            selectedItem = -1;
+                                selectedItem = inventoryTabList.Count - 1 - selectedItem;
+                            //selectedItem = slotCount - selectedItem;
+                            theSound.Play(key_sound);
+                            SelectedItem();
                         }
-                        if (selectedItem < slotCount)
-                            selectedItem++;
-                        else
-                            selectedItem = 0;
-                        theSound.Play(key_sound);
-                        SelectedItem();
-                    }
-                    else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                    {
-                        if (selectedItem - 1 < 0)
+                        else if (Input.GetKeyDown(KeyCode.RightArrow))
                         {
-                            if (page != 0)
-                                page--;
+                            //if (selectedItem + 1 > slotCount)
+                            //{
+                            //    if (page < (inventoryItemList.Count - 1) / MAX_SLOTS_COUNT)
+                            //        page++;
+                            //    else
+                            //        page = 0;
+
+                            //    RemoveSlot();
+                            //    ShowPage();
+                            //    selectedItem = -1;
+                            //}
+                            //if (selectedItem < slotCount)
+                            if (selectedItem < inventoryTabList.Count - 1)
+                                selectedItem++;
                             else
-                                page = ((inventoryItemList.Count - 1) / MAX_SLOTS_COUNT);
+                                selectedItem = 0;
+                            theSound.Play(key_sound);
+                            SelectedItem();
+                        }
+                        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            //if (selectedItem - 1 < 0)
+                            //{
+                            //    if (page != 0)
+                            //        page--;
+                            //    else
+                            //        page = ((inventoryItemList.Count - 1) / MAX_SLOTS_COUNT);
 
-                            RemoveSlot();
-                            ShowPage();
+                            //    RemoveSlot();
+                            //    ShowPage();
+                            //}
+                            if (selectedItem > 0)
+                                selectedItem--;
+                            else
+                                selectedItem = inventoryItemList.Count - 1;
+                            theSound.Play(key_sound);
+                            SelectedItem();
                         }
-                        if (selectedItem > 0)
-                            selectedItem--;
-                        else
-                            selectedItem = slotCount;
-                        theSound.Play(key_sound);
-                        SelectedItem();
+                        else if (Input.GetKeyDown(KeyCode.Z) && !preventExec)
+                        {
+                            if (selectedTab == 0) //소모품
+                            {
+                                //물약을 마실 거냐? 같은 선택지 호출
+                                StartCoroutine(OOCCoroutine("사용", "취소"));
+                            }
+                            else if (selectedTab == 1)
+                            {
+                                StartCoroutine(OOCCoroutine("장착", "취소"));
+                            }
+                            else //비프음 출력
+                            {
+                                theSound.Play(beep_sound);
+                            }
+                        }
                     }
-                    else if (Input.GetKeyDown(KeyCode.Z) && preventExec)
-                    {
-                        if(selectedTab == 0) //소모품
-                        {
-                            //물약을 마실 거냐? 같은 선택지 호출
-                            StartCoroutine(OOCCoroutine("사용", "취소"));
-                        }
-                        else if(selectedTab == 1)
-                        {
-                            StartCoroutine(OOCCoroutine("장착", "취소"));
-                        }
-                        else //비프음 출력
-                        {
-                            theSound.Play(beep_sound);
-                        }
-                    }
-                    else if (Input.GetKeyDown(KeyCode.X))
+
+                    if (Input.GetKeyDown(KeyCode.X))
                     {
                         theSound.Play(cancel_sound);
                         StopAllCoroutines();
@@ -407,46 +464,5 @@ public class Inventory : MonoBehaviour
                     preventExec = false;
             }
         }
-    }
-    IEnumerator OOCCoroutine(string _up, string _down)
-    {
-        theSound.Play(enter_sound);
-        stopKeyInput = true;
-
-        go_OOC.SetActive(true);
-        theOOC.ShowTwoChoice(_up, _down);
-        yield return new WaitUntil(() => !theOOC.activated);
-        if(theOOC.GetResult())
-        {
-            for(int i =0; i< inventoryItemList.Count; i++)
-            {
-                if(selectedTab == 0)
-                {
-                    theDatabase.UseItem(inventoryItemList[i].itemID);
-
-                    if (inventoryItemList[i].itemID == inventoryTabList[selectedItem].itemID)
-                    {
-                        if (inventoryItemList[i].itemCount > 1)
-                            inventoryItemList[i].itemCount--;
-                        else
-                            inventoryItemList.RemoveAt(i);
-
-                        //theSound.Play() //아이템 먹는 소리 출력
-
-                        ShowItem();
-                        break;
-                    }
-                }
-                else if(selectedTab == 1)
-                {
-                    theEquip.EquipItem(inventoryItemList[i]);
-                    inventoryItemList.RemoveAt(i);
-                    ShowItem();
-                    break;
-                }
-            }
-        }
-        stopKeyInput = false;
-        go_OOC.SetActive(false);
     }
 }

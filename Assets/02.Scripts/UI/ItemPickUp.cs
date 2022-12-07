@@ -8,9 +8,9 @@ public class ItemPickUp : MonoBehaviour
     public int _count;
     public string pickUpSound;
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerStay(Collider collision)
     {
-        if(Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             SoundManager.instance.Play(pickUpSound);
             Inventory.instance.GetAnItem(itemID, _count);
