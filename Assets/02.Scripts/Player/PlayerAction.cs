@@ -7,9 +7,6 @@ public class PlayerAction : MonoBehaviour
     [SerializeField]
     GameObject nearObject;  // 캐릭터와 가장 가까운 오브젝트를 저장
     public static PlayerAction instance;
-    public string currentMapName;
-    public string currentSceneName;
-    private SaveNLoad theSaveNLoad;
     void Interaction()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -29,15 +26,13 @@ public class PlayerAction : MonoBehaviour
 
     void Start()
     {
-        theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        
     }
+
+    // Update is called once per frame
     void Update()
     {
         Interaction();
-        if (Input.GetKeyDown(KeyCode.F9)) //불러오기
-        {
-            theSaveNLoad.CallLoad();
-        }
     }
 
     private void OnTriggerStay(Collider other)

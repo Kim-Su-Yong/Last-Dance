@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class Equipment : MonoBehaviour
 {
-
     private OrderManager theOrder;
     private SoundManager theSound;
     private PlayerStat thePlayerStat;
-    private OkOrCancel theOOC;
     private Inventory theInven;
+    private OkOrCancel theOOC;
     private Equipment theEquip;
 
     public string key_sound;
@@ -23,36 +21,30 @@ public class Equipment : MonoBehaviour
                       HELMET = 5, ARMOR = 6, LEFT_GLOVE = 7, RIGHT_GLOVE = 8, BELT = 9,
                       LEFT_BOOTS = 10, RIGHT_BOOTS = 11;
 
-    private const int ATK = 0, DEF = 1, HPR = 6, MPR = 7;
-
-    public int added_atk, added_def, added_hpr, added_mpr;
-
-    public GameObject equipWeapon;
     public GameObject go;
     public GameObject go_OOC;
-    public Text[] text; // 스탯
-    public Image[] img_slots; // 장비 슬롯 아이콘.
-    public GameObject go_selected_Slot_UI; // 선택된 장비 슬롯 UI.
+    public Text[] text; //스탯
+    public Image[] img_slots; //장비 아이콘들
+    public GameObject go_selected_Slot_UI; //선택된 장비 슬롯 UI
 
-    public Item[] equipItemList; // 장착된 장비 리스트.
-    private int selectedSlot; // 선택된 장비 슬롯.
+    public Item[] equipItemList; //장착된 장비 리스트
+    private int selectedSlot; //선택된 장비 슬롯
     public bool activated = false;
     private bool inputKey = true;
-
     void Start()
-    { 
+    {
+        theInven = FindObjectOfType<Inventory>();
         theOrder = FindObjectOfType<OrderManager>();
-        theSound = FindObjectOfType<SoundManager>();
+        theSound = FindObjectOfType <SoundManager>();
         thePlayerStat = FindObjectOfType<PlayerStat>();
         theOOC = FindObjectOfType<OkOrCancel>();
-        theInven = FindObjectOfType<Inventory>();
         theEquip = FindObjectOfType<Equipment>();
     }
     public void EquipItem(Item _item)
     {
         string temp = _item.itemID.ToString();
         temp = temp.Substring(0, 3);
-        switch (temp)
+        switch(temp) //추후 여기에 낄 장비들 추가해줘야함
         {
             case "200": // 무기
                 EquipItemCheck(WEAPON, _item);
@@ -70,7 +62,7 @@ public class Equipment : MonoBehaviour
     }
     public void EquipItemCheck(int _count, Item _item)
     {
-        if (equipItemList[_count].itemID == 0)
+        if(equipItemList[_count].itemID == 0)
         {
             equipItemList[_count] = _item;
         }
@@ -89,7 +81,7 @@ public class Equipment : MonoBehaviour
         Color color = img_slots[0].color;
         color.a = 0f;
 
-        for (int i = 0; i < img_slots.Length; i++)
+        for(int i =0; i < img_slots.Length; i++)
         {
             img_slots[i].sprite = null;
             img_slots[i].color = color;
@@ -100,9 +92,9 @@ public class Equipment : MonoBehaviour
         Color color = img_slots[0].color;
         color.a = 1f;
 
-        for (int i = 0; i < img_slots.Length; i++)
+        for(int i = 0; i< img_slots.Length; i++)
         {
-            if (equipItemList[i].itemID != 0)
+            if(equipItemList[i].itemID != 0)
             {
                 img_slots[i].sprite = equipItemList[i].itemIcon;
                 img_slots[i].color = color;
@@ -111,13 +103,13 @@ public class Equipment : MonoBehaviour
     }
     void Update()
     {
-        if (inputKey)
+        if(inputKey)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if(Input.GetKeyDown(KeyCode.E))
             {
                 activated = !activated;
 
-                if (activated)
+                if(activated)
                 {
                     //theOrder.NotMove();
                     theSound.Play(open_sound);
@@ -129,16 +121,16 @@ public class Equipment : MonoBehaviour
                 }
                 else
                 {
-                    //theOrder.Move();
+                    //theOrder.NotMove();
                     theSound.Play(close_sound);
                     go.SetActive(false);
                     ClearEquip();
                 }
             }
 
-            if (activated)
+            if(activated)
             {
-                if (Input.GetKeyDown(KeyCode.DownArrow))
+                if(Input.GetKeyDown(KeyCode.DownArrow))
                 {
                     if (selectedSlot < img_slots.Length - 1)
                         selectedSlot++;
@@ -172,7 +164,7 @@ public class Equipment : MonoBehaviour
                     else
                         selectedSlot = img_slots.Length - 1;
                     theSound.Play(key_sound);
-                    SelectedSlot();
+                    SelectedSlot();               
                 }
                 else if (Input.GetKeyDown(KeyCode.Z))
                 {

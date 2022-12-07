@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;  
+using UnityEngine.InputSystem;
 
 public class StandardInput : MonoBehaviour
 {
-    public static StandardInput instance;
-
     [Header("캐릭터 입력 값")]
     public Vector2 move;        // 이동 입력값
     public Vector2 look;        // 캐릭터가 바라보는 방향
@@ -26,13 +24,17 @@ public class StandardInput : MonoBehaviour
     }
     public void OnLook(InputValue value)
     {
-        if(cursorInputForLook)
+        if (cursorInputForLook)
         {
             LookInput(value.Get<Vector2>());
         }
     }
     public void OnJump(InputValue value)
     {
+        if (GetComponent<PlayerDamage>().isDie)
+        {
+            return;
+        }
         JumpInput(value.isPressed);
     }
     public void OnWalk(InputValue value)
@@ -60,10 +62,10 @@ public class StandardInput : MonoBehaviour
         isWalk = newSprintState;
     }
 
-    //private void OnApplicationFocus(bool hasFocus)
-    //{
-    //    SetCursorState(cursorLocked);
-    //}
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        SetCursorState(cursorLocked);
+    }
 
     private void SetCursorState(bool newState)
     {
