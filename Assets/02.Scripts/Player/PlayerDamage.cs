@@ -6,20 +6,22 @@ using UnityEngine.UI;
 public class PlayerDamage : MonoBehaviour
 {
     [Header("UI")]
-    public Image HpBar;
-    public Text HpText;
+    public Image HpBar;             // 체력바
+    public Text HpText;             // 체력 텍스트
     [Header("Data")]
-    [SerializeField] float curHp;
-    public float initHp;
-    public CharacterData charData;
-    public bool isDie;
-    public GameObject hitEffect;
+    [SerializeField] float curHp;   // 현재 체력
+    public float initHp;            // 시작시 체력
+    public CharacterData charData;  // 데이터 스크립트 파일
+    public bool isDie;              // 사망 확인
+    public GameObject hitEffect;    // 피격 이펙트
+    //public ParticleSystem hitEffect;
 
     Renderer[] renderers;
 
     Animator animator;
     ThirdPersonCtrl controller;
     PlayerAttack attack;
+    PlayerState playerState;
 
     readonly int hashDie = Animator.StringToHash("Die");
 
@@ -29,6 +31,7 @@ public class PlayerDamage : MonoBehaviour
         animator = GetComponent<Animator>();
         controller = GetComponent<ThirdPersonCtrl>();
         attack = GetComponent<PlayerAttack>();
+        playerState = GetComponent<PlayerState>();
     }
 
     void Start()
@@ -81,21 +84,20 @@ public class PlayerDamage : MonoBehaviour
 
     IEnumerator Die()
     {
-        controller.enabled = false;
-        attack.enabled = false;
+        playerState.state = PlayerState.State.DIE;  // 사망 상태로 변경
         isDie = true;
        
         animator.SetTrigger("Die");     // 사망 애니메이션 실행
         /*
          * 사망 UI창 띄우기
          */
-        Debug.Log("사망하였습니다.");
+        //Debug.Log("사망하였습니다.");
         yield return new WaitForSeconds(3f);
         SetPlayerVisible(false);
         yield return new WaitForSeconds(5f); // 5초뒤 자동부활
         Respawn();
     }
-    public void Respawn()
+    public void Respawn()   // 덜 구현되어 있는 상태
     {
         Transform SpawnPoint = GameObject.Find("SpawnManager").
             transform.GetChild(0).GetComponent<Transform>();

@@ -11,7 +11,8 @@ public class PlayerState : MonoBehaviour
           JUMP,
           DIE
         };
-   
+
+    [Header("플레이어 상태")]
     public State state = State.IDLE; // 캐릭터의 상태 enum 변수
 
     PlayerAttack playerAttack;
@@ -36,6 +37,7 @@ public class PlayerState : MonoBehaviour
     {
         while(!GetComponent<PlayerDamage>().isDie)
         {
+            // 0.3초마다 상태 체크
             yield return new WaitForSeconds(0.3f);
 
             switch(state)
@@ -66,11 +68,5 @@ public class PlayerState : MonoBehaviour
             }
         }
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

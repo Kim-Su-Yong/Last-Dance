@@ -6,6 +6,7 @@ public class PlayerAction : MonoBehaviour
 {
     [SerializeField]
     GameObject nearObject;  // 캐릭터와 가장 가까운 오브젝트를 저장
+    PlayerState playerState;
     public static PlayerAction instance;
     public string currentMapName;
     public string currentSceneName;
@@ -27,9 +28,19 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        playerState = GetComponent<PlayerState>();
+    }
+
+    private void OnEnable()
+    {
+        //StartCoroutine(FindNearObject());
+    }
     void Start()
     {
         theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        
     }
     void Update()
     {
@@ -45,6 +56,22 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    IEnumerator FindNearObject()
+    {
+        //0.3초마다 
+        while(playerState.state != PlayerState.State.DIE)
+        {
+            yield return new WaitForSeconds(0.3f);
+            // 0.3초마다 20범위 안에 있는 콜라이더들을 찾는다
+            Collider[] Cols = Physics.OverlapSphere(transform.position, 20f);
+
+            foreach (Collider col in Cols)
+            {
+                if (col.CompareTag("ENEMY"))
+                    nearObject = col.gameObject;
+            }
+        } 
+    }
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("NPC"))

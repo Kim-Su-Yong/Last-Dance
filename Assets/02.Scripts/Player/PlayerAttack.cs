@@ -27,15 +27,13 @@ public class PlayerAttack : MonoBehaviour
     float skill_CoolTimer;
 
     [Header("호랑이 펀치")]
-    public CapsuleCollider[] punchColliders;
+    public BoxCollider punchCollider;
     float lastAttackTime = 0f;  // 마지막으로 공격한 시간
     int punchCount = 0;
     readonly int hashCombo = Animator.StringToHash("Combo");
     public GameObject thirdEffect;
     bool isPunching;
 
-
-    //public bool bIsAttack;          // 공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
 
     void Awake()
@@ -53,22 +51,15 @@ public class PlayerAttack : MonoBehaviour
 
     private void Start()
     {
-        AttackCollider(false);                  // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
-    }
-
-    private void AttackCollider(bool isActive)
-    {
-        foreach (var col in punchColliders)
-        {
-            col.enabled = isActive;
-        }
+        // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
+        punchCollider.gameObject.SetActive(false);
     }
 
     void Update()
     {
         // 캐릭터가 죽은 상태에서는 공격불가
-        if (GetComponent<PlayerDamage>().isDie ||
-            GetComponent<ThirdPersonCtrl>().isGrounded == false)
+        if (playerState.state == PlayerState.State.DIE||
+            playerState.state == PlayerState.State.JUMP)
         {
             return;
         }
@@ -105,70 +96,22 @@ public class PlayerAttack : MonoBehaviour
 
         }
     }
-    IEnumerator FoxSkill_1()
-    {
-        if (canSkill)
-        {
-            //bIsAttack = true;
-            animator.SetInteger("SkillState", 1);
-            yield return new WaitForSeconds(0.8f);
-            foreach (GameObject fire in FoxFires)
-            {
-                fire.SetActive(true);
-            }
-            canSkill = false;
-            animator.SetInteger("SkillState", 0);
-            yield return new WaitForSeconds(0.7f);
-            //bIsAttack = false;
-        }
 
-    }
-
+    #region 기본 공격
     IEnumerator FoxBaseAttack()
     {
-        //bIsAttack = true;
         nextFire = Time.time + fireRate;
         animator.SetTrigger("Attack");
-        yield return new WaitForSeconds(1.1f);
-        //GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
-        //yield return new WaitForSeconds(0.65f);
-        //bIsAttack = false;
-    }
-
-    void OnFire()
-    {
-        GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
-    }
-    void OnAttackStart()
-    {
-        Debug.Log("공격 시작");
-        //bIsAttack = true;
-        playerState.state = PlayerState.State.ATTACK;
-        animator.SetFloat("Speed", 0f);        
-    }
-    void OnAttackEnd()
-    {
-        Debug.Log("공격 종료");
-        //bIsAttack = false;
-        playerState.state = PlayerState.State.IDLE;
-    }
-
-    void CoolDown()
-    {
-        if (!canSkill)
-        {
-            skill1_CoolTime += Time.deltaTime;
-            canSkill = true;
-            //if(skill_CoolTimer)
-        }
+        float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
+        yield return new WaitForSeconds(animTime);
     }
 
     private void TigerBaseAttack(bool isPunching)
     {
-        AttackCollider(isPunching);
+        //AttackCollider(isPunching);
         animator.SetBool(hashCombo, isPunching);
-        if (isPunching)
-            StartCoroutine(StartPunch());
+        //if (isPunching)
+        //    StartCoroutine(StartPunch());
     }
 
     IEnumerator StartPunch()
@@ -188,5 +131,83 @@ public class PlayerAttack : MonoBehaviour
             }
         }
     }
+
+    void OnFire()
+    {
+        GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
+    }
+    void OnAttackStart(int count)
+    {
+        Debug.Log("공격 시작");
+        playerState.state = PlayerState.State.ATTACK;
+        if(count != 0) // 펀치공격
+        {
+            if (count < 3)
+            {
+                punchCollider.gameObject.SetActive(true);
+            }
+            punchCount++;
+        }
+        
+        animator.SetFloat("Speed", 0f);
+    }
+    void OnHitAttack()
+    {
+        Debug.Log("호랑이 세번째 타격");
+        punchCollider.gameObject.SetActive(true);
+        
+    }
+    void OnAttackEnd(int count)
+    {
+        Debug.Log("공격 종료");
+        if (!animator.GetBool("Combo"))
+            playerState.state = PlayerState.State.IDLE;
+        if (count != 0) // 펀치공격
+        {
+            //punchCollider.gameObject.SetActive(false);
+            punchCount = 0;
+        }
+    }
+    #endregion
+    IEnumerator FoxSkill_1()
+    {
+        if (canSkill)
+        {
+            animator.SetInteger("SkillState", 1);
+
+
+            yield return new WaitForSeconds(0.9f);
+        }
+    }
+    void OnSkillStart()
+    {
+        playerState.state = PlayerState.State.ATTACK;
+        animator.SetFloat("Speed", 0f);
+    }
+
+    void OnFireGuard()
+    {
+        foreach (GameObject fire in FoxFires)
+        {
+            fire.SetActive(true);
+        }
+    }
+    void OnSkillEnd()
+    {
+        playerState.state = PlayerState.State.IDLE;
+        canSkill = false;
+        animator.SetInteger("SkillState", 0);
+    }
+
+    void CoolDown()
+    {
+        if (!canSkill)
+        {
+            skill1_CoolTime += Time.deltaTime;
+            canSkill = true;
+            //if(skill_CoolTimer)
+        }
+    }
+
 
 }

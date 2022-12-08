@@ -70,7 +70,6 @@ public class StandardInput : MonoBehaviour
     {
         if (GetComponent<PlayerState>().state == PlayerState.State.ATTACK)
             return;
-        Debug.Log("점프 입력 감지");
         isJump = newJumpState;
     }
 

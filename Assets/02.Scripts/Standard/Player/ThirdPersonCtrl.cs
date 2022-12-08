@@ -383,11 +383,12 @@ public class ThirdPersonCtrl : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(controller.center), FootstepAudioVolume);
         }
-        //playerAttack.enabled = true;
+        playerState.state = PlayerState.State.IDLE;
     }
 
     void OnJumpStart()
     {
+        playerState.state = PlayerState.State.JUMP;
         playerAttack.enabled = false;
         GetComponent<Shooter>().enabled = false;
         GetComponent<ChangeForm>().enabled = false;
