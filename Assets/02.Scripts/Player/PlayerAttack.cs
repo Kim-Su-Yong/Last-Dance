@@ -7,6 +7,7 @@ public class PlayerAttack : MonoBehaviour
     ChangeForm changeForm;
     ThirdPersonCtrl playerCtrl;
     Shooter shooter;
+    PlayerState playerState;
 
     Animator animator;
     CharacterController controller;
@@ -32,13 +33,17 @@ public class PlayerAttack : MonoBehaviour
     readonly int hashCombo = Animator.StringToHash("Combo");
     public GameObject thirdEffect;
     bool isPunching;
-    public bool bIsAttack;
+
+
+    //public bool bIsAttack;          // 공격 중인지 확인
+    public bool bIsSkill;           // 스킬 사용중인지 확인
 
     void Awake()
     {
         playerCtrl = GetComponent<ThirdPersonCtrl>();
         shooter = GetComponent<Shooter>();
         changeForm = GetComponent<ChangeForm>();
+        playerState = GetComponent<PlayerState>();
         controller = GetComponent<CharacterController>();
         FireBall = Resources.Load("Magic fire") as GameObject;
         animator = GetComponent<Animator>();
@@ -87,16 +92,11 @@ public class PlayerAttack : MonoBehaviour
         {
             if (Input.GetButtonDown("Fire1"))
             {
-                bIsAttack = true;
                 TigerBaseAttack(true);
             }
             else if (Input.GetButtonUp("Fire1"))
             {
                 TigerBaseAttack(false);
-                //isPunching = false;
-                //AttackCollider(false);
-                //animator.SetBool(hashCombo, isPunching)
-                bIsAttack = false;
                 punchCount = 0;
             }
         }
@@ -109,7 +109,7 @@ public class PlayerAttack : MonoBehaviour
     {
         if (canSkill)
         {
-            bIsAttack = true;
+            //bIsAttack = true;
             animator.SetInteger("SkillState", 1);
             yield return new WaitForSeconds(0.8f);
             foreach (GameObject fire in FoxFires)
@@ -119,39 +119,38 @@ public class PlayerAttack : MonoBehaviour
             canSkill = false;
             animator.SetInteger("SkillState", 0);
             yield return new WaitForSeconds(0.7f);
-            bIsAttack = false;
+            //bIsAttack = false;
         }
 
     }
 
     IEnumerator FoxBaseAttack()
     {
-        bIsAttack = true;
+        //bIsAttack = true;
         nextFire = Time.time + fireRate;
         animator.SetTrigger("Attack");
-        yield return new WaitForSeconds(0.4f);
-        GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
+        yield return new WaitForSeconds(1.1f);
+        //GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
         //yield return new WaitForSeconds(0.65f);
         //bIsAttack = false;
+    }
+
+    void OnFire()
+    {
+        GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
     }
     void OnAttackStart()
     {
         Debug.Log("공격 시작");
-        bIsAttack = true;
-        animator.SetFloat("Speed", 0f);
-        //playerCtrl.enabled = false;
-        shooter.enabled = false;
-        changeForm.enabled = false;
-
+        //bIsAttack = true;
+        playerState.state = PlayerState.State.ATTACK;
+        animator.SetFloat("Speed", 0f);        
     }
     void OnAttackEnd()
     {
         Debug.Log("공격 종료");
-        Debug.Log(controller.velocity);
-        bIsAttack = false;
-        //playerCtrl.enabled = true;
-        shooter.enabled = true;
-        changeForm.enabled = true;
+        //bIsAttack = false;
+        playerState.state = PlayerState.State.IDLE;
     }
 
     void CoolDown()

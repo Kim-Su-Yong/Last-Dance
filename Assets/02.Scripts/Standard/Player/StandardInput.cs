@@ -18,6 +18,20 @@ public class StandardInput : MonoBehaviour
     public bool cursorLocked = true;
     public bool cursorInputForLook = true;
 
+    [Header("입력 감지 제한을 위해 추가")]
+    PlayerAttack playerAttack;
+    ThirdPersonCtrl playerCtrl;
+    Shooter shooter;
+    ChangeForm changeForm;
+
+    private void Awake()
+    {
+        playerAttack = GetComponent<PlayerAttack>();
+        playerCtrl = GetComponent<ThirdPersonCtrl>();
+        shooter = GetComponent<Shooter>();
+        changeForm = GetComponent<ChangeForm>();
+    }
+
     public void OnMove(InputValue value)
     {
         MoveInput(value.Get<Vector2>());
@@ -54,6 +68,9 @@ public class StandardInput : MonoBehaviour
 
     public void JumpInput(bool newJumpState)
     {
+        if (GetComponent<PlayerState>().state == PlayerState.State.ATTACK)
+            return;
+        Debug.Log("점프 입력 감지");
         isJump = newJumpState;
     }
 
@@ -70,6 +87,15 @@ public class StandardInput : MonoBehaviour
     private void SetCursorState(bool newState)
     {
         Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+
+    void OnIdleStart()
+    {
+        //    playerAttack.enabled = true;
+        //    playerAttack.bIsAttack = false;
+        //    playerCtrl.enabled = true;
+        //    shooter.enabled = true;
+        //    changeForm.enabled = true;
     }
 
 }
