@@ -31,22 +31,15 @@ public class Shooter : MonoBehaviour
 
     ThirdPersonCtrl playerctrl;
     ChangeForm Form;
-    PlayerState playerState;
-    private void OnEnable()
-    {
-        //StartCoroutine(ChangeTarget());
-    }
-    void Awake()
+    void Start()
     {
         playerctrl = GetComponent<ThirdPersonCtrl>();
         Form = GetComponent<ChangeForm>();
         animator = GetComponent<Animator>();
-        playerState = GetComponent<PlayerState>();
     }
     void Update()
     {
-        if(Form.curForm == ChangeForm.FormType.EAGLE && 
-            m_target != null)
+        if(Form.curForm == ChangeForm.FormType.EAGLE)
             Fire();
     }
     private void Fire() //공격 관련 함수
@@ -132,10 +125,5 @@ public class Shooter : MonoBehaviour
             yield return new WaitForSeconds(m_interval);
         }
         yield return null;
-    }
-
-    void OnShooter()
-    {
-        
     }
 }
