@@ -34,6 +34,7 @@ public class FindNearEnemyTest : MonoBehaviour
         //0.3초마다 
         while (playerState.state != PlayerState.State.DIE)
         {
+            Debug.Log("근처 오브젝트 찾기");
             yield return new WaitForSeconds(0.3f);
             // 0.3초마다 10범위 안에 있는 레이어가 에너미인 콜라이더들을 찾는다
             enemys = Physics.OverlapSphere(transform.position, 10f, layerMask);
@@ -64,6 +65,7 @@ public class FindNearEnemyTest : MonoBehaviour
             }
             else
             {
+                Debug.Log("근처에 적이 없습니다.");
                 shooter.m_target = null;
                 playerAttack.target = null;
             }

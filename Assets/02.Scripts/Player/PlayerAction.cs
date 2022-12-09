@@ -10,7 +10,8 @@ public class PlayerAction : MonoBehaviour
     public static PlayerAction instance;
     public string currentMapName;
     public string currentSceneName;
-    //private SaveNLoad theSaveNLoad;
+    private SaveNLoad theSaveNLoad;
+
 
     void Interaction()
     {
@@ -34,17 +35,28 @@ public class PlayerAction : MonoBehaviour
         playerState = GetComponent<PlayerState>();
         
     }
+
     private void OnEnable()
     {
         //StartCoroutine(FindNearObject());
     }
     void Start()
     {
-        //theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        
     }
     void Update()
     {
         Interaction();
+
+        if (Input.GetKeyDown(KeyCode.F5)) //저장
+        {
+
+        }
+        if (Input.GetKeyDown(KeyCode.F9)) //불러오기
+        {
+
+        }
     }
 
     private void OnTriggerStay(Collider other)

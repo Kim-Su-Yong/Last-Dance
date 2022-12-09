@@ -2058,7 +2058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 6
   WalkSpeed: 2
-  RotationSmoothTime: 0.05
+  RotationSmoothTime: 0.12
   SpeedChangeRate: 100
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips:
@@ -2206,9 +2206,6 @@ MonoBehaviour:
   canSkill: 1
   punchCollider: {fileID: 384542286}
   thirdEffect: {fileID: 0}
-  roarEffect: {fileID: 8460667080445658512, guid: a3e2c3406e02f2c4ba86cfb1604277bd, type: 3}
-  skill2_CoolTime: 20
-  bIsAttack: 0
   bIsSkill: 0
   target: {fileID: 0}
 --- !u!114 &4126552369070853412
