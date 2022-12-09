@@ -5,17 +5,19 @@ using UnityEngine;
 // 할 것 : GotHitTrace 상태 추가하기(Distance 상관없이 바로 추적), 상태에 따라 HP 활성화 여부 구현하기
 public class MonsterAI : MonoBehaviour
 {
-    // ▶ Monster
+    public enum MonsterType
+    {
+        A_Skeleton,
+        B_Fishman,
+        C_Slime
+    }
+    public MonsterType monsterType;
+
+    // Monster
     public float M_HP = 0f;
     public float M_MaxHP = 100f;
 
-    public float damage = 20f;
-    public float timeBetAttack = 0.5f;  // Between
-    private float lastAttackTime;       // 마지막 공격 시점
-
-
-
-    // ▶ Monster AI Move
+    // Monster AI Move
     public enum State
     {
         PATROL,
@@ -24,27 +26,30 @@ public class MonsterAI : MonoBehaviour
         DIE
     }
     public State state = State.PATROL;
-    private Transform playerTr;
-    private Transform monsterTr;
+    public Transform playerTr;
+    public Transform monsterTr;
 
     public float attackDist = 5.0f;
     public float traceDist = 10.0f;
 
-    // ▶ Bool
+    // Bool
     public bool isDie = false;
 
-    // ▶ Components
-    private Animator animator;
+    // Animation
+    public Animator animator;
 
-    // ▶ Scripts
+    // Audio
+    public AudioSource audio;
+
+    // Scripts
     MoveAgent moveAgent;
     MonsterAttack monsterAttack;
 
-    // ▶ Etc.
+    // Etc.
     private WaitForSeconds ws;
     private Renderer monsterRenderer;
 
-    // ▶ ReadOnly
+    // ReadOnly
     // 프리팹 특성 상 BlendTree > Locomotion 이외에는 Any State -> Trigger 
     //private readonly int hashMove = Animator.StringToHash("IsMove");
     private readonly int hashSpeed = Animator.StringToHash("Locomotion");
@@ -59,7 +64,9 @@ public class MonsterAI : MonoBehaviour
         }
         monsterTr = GetComponent<Transform>();
         animator = GetComponent<Animator>();
+        audio = GetComponent<AudioSource>();
         moveAgent = GetComponent<MoveAgent>();
+        monsterAttack = GetComponent<MonsterAttack>();
 
         monsterRenderer = GetComponentInChildren<Renderer>();
 
@@ -69,10 +76,30 @@ public class MonsterAI : MonoBehaviour
     public void SetUp(MonsterData monsterData)
     {
         M_MaxHP = monsterData.HP;
-        damage = monsterData.damage;
+        monsterAttack.damage = monsterData.damage;
+        monsterAttack.attackSpeed = monsterData.attackSpeed;
         moveAgent.patrolSpeed = monsterData.patrolSpeed;
         moveAgent.traceSpeed = monsterData.traceSpeed;
+        attackDist = monsterData.attackDist;
+        traceDist = monsterData.traceDist;
         monsterRenderer.material.color = monsterData.skinColor; // 슬라임한테 쓰거나, 맞았을 때 쓸 예정
+    }
+
+    // 몬스터 생성 시 몬스터 타입 정보를 받아서 저장한다.
+    public void LetMeKnowMonsterType(int type) // From MonsterSpawner.cs
+    {
+        if (type == 0)
+        {
+            monsterType = MonsterType.A_Skeleton;
+        }
+        else if (type == 1)
+        {
+            monsterType = MonsterType.B_Fishman;
+        }
+        else if (type == 2)
+        {
+            monsterType = MonsterType.C_Slime;
+        }
     }
 
     void OnEnable()
@@ -115,15 +142,24 @@ public class MonsterAI : MonoBehaviour
             switch (state)
             {
                 case State.PATROL:
+                    monsterAttack.isAttack = false;
                     moveAgent.patrolling = true;
+                    animator.SetFloat(hashSpeed, moveAgent.speed);
                     break;
                 case State.TRACE:
+                    monsterAttack.isAttack = false;
                     moveAgent.traceTarget = playerTr.position;
+                    animator.SetFloat(hashSpeed, moveAgent.speed);
                     break;
                 case State.ATTACK:
-                    moveAgent.Stop();
+                    if (monsterAttack.isAttack == false)
+                    {
+                        monsterAttack.isAttack = true;
+                    }
+                        moveAgent.Stop();
                     break;
                 case State.DIE:
+                    Die();
                     moveAgent.Stop();
                     break;
             }
@@ -132,7 +168,6 @@ public class MonsterAI : MonoBehaviour
 
     void Update()
     {
-        animator.SetFloat(hashSpeed, moveAgent.speed);
     }
 
     public void Die()
@@ -140,9 +175,6 @@ public class MonsterAI : MonoBehaviour
         monsterAttack.isAttack = false;
         isDie = true;
         moveAgent.Stop();
-
-        //anim.SetInteger(hashDieIdx, Random.Range(0, 3));
-        //anim.SetTrigger(hashDie);
 
         GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;

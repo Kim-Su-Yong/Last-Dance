@@ -14,6 +14,10 @@ TagManager:
   - PUNCH
   - NPC
   - InventorySlot
+  - Walkable
+  - EnemyBullet
+  - Boss
+  - MonsterAttack
   layers:
   - Default
   - TransparentFX
