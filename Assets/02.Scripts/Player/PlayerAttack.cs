@@ -35,7 +35,7 @@ public class PlayerAttack : MonoBehaviour
     bool isPunching;
 
     public bool bIsSkill;           // 스킬 사용중인지 확인
-
+    public GameObject target;       // 캐릭터 근처에 가장 가까이 있는 적을 자동으로 타겟으로 설정하여 공격시 타겟을 바라보며 공격 모션을 실행
     void Awake()
     {
         playerCtrl = GetComponent<ThirdPersonCtrl>();
@@ -45,8 +45,6 @@ public class PlayerAttack : MonoBehaviour
         controller = GetComponent<CharacterController>();
         FireBall = Resources.Load("Magic fire") as GameObject;
         animator = GetComponent<Animator>();
-
-
     }
 
     private void Start()
@@ -139,6 +137,7 @@ public class PlayerAttack : MonoBehaviour
     void OnAttackStart(int count)
     {
         Debug.Log("공격 시작");
+        LookAtTarget();
         playerState.state = PlayerState.State.ATTACK;
         if(count != 0) // 펀치공격
         {
@@ -207,6 +206,16 @@ public class PlayerAttack : MonoBehaviour
             canSkill = true;
             //if(skill_CoolTimer)
         }
+    }
+
+    // 공격키를 눌렀을때 타겟을 바라보게 해주는 함수
+    void LookAtTarget()
+    {
+        if(target != null)
+        {
+            transform.LookAt(target.transform); // 적을 바라보긴 하지만 부자연스러움
+        }
+
     }
 
 
