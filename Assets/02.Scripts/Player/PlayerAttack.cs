@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour
     float fireRate = 1f;          // 발사 대기 시간
     float nextFire = 0f;
 
-    [Header("여우불 가드")]
+    [Header("여우불 가드(스킬1)")]
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
     public bool canSkill = true;    // 스킬 사용 가능 상태 유무
     float skill1_CoolTime = 10f;
@@ -32,9 +32,16 @@ public class PlayerAttack : MonoBehaviour
     int punchCount = 0;
     readonly int hashCombo = Animator.StringToHash("Combo");
     public GameObject thirdEffect;
-    bool isPunching;
 
+    [Header("호랑이 포효(스킬1)")]
+    public GameObject roarEffect;           // 포효 이펙트
+    public float skill2_CoolTime = 20f;     // 포효 스킬 쿨타임
+        
+    [Header("제어 변수")]
+    public bool bIsAttack;          //  공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
+
+    [Space(10)]
     public GameObject target;       // 캐릭터 근처에 가장 가까이 있는 적을 자동으로 타겟으로 설정하여 공격시 타겟을 바라보며 공격 모션을 실행
     void Awake()
     {
@@ -47,7 +54,7 @@ public class PlayerAttack : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Start()
+    private void OnEnable()
     {
         // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
         punchCollider.gameObject.SetActive(false);
@@ -65,12 +72,12 @@ public class PlayerAttack : MonoBehaviour
         if (changeForm.curForm == ChangeForm.FormType.FOX)
         {
             // 왼쪽 마우스 버튼 누르면 기본 공격(fireRate는 발사 대기 시간)
-            if (Input.GetButtonDown("Fire1") && Time.time > nextFire)
+            if (Input.GetButtonDown("Fire1")&& !bIsSkill)
             {
                 StartCoroutine(FoxBaseAttack());
             }
             // 마우스 오른쪽 버튼 누르면 스킬 사용(단, 스킬 사용 가능 상태일때만 발동된다)
-            else if (Input.GetButtonDown("Fire2"))
+            else if (Input.GetButtonDown("Fire2") && !bIsAttack)
             {
                 //FoxSkill_1();
                 StartCoroutine(FoxSkill_1());
@@ -79,7 +86,7 @@ public class PlayerAttack : MonoBehaviour
         }
         else if (changeForm.curForm == ChangeForm.FormType.TIGER)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire1") && !bIsSkill)
             {
                 TigerBaseAttack(true);
             }
@@ -88,6 +95,11 @@ public class PlayerAttack : MonoBehaviour
                 TigerBaseAttack(false);
                 punchCount = 0;
             }
+            if (Input.GetButtonDown("Fire2") && !bIsAttack)
+            {
+                StartCoroutine(TigerSkill_1());
+            }
+            CoolDown(); // 스킬 쿨타임 관련 코드 추가 필요
         }
         else if (changeForm.curForm == ChangeForm.FormType.EAGLE)
         {
@@ -98,7 +110,7 @@ public class PlayerAttack : MonoBehaviour
     #region 기본 공격
     IEnumerator FoxBaseAttack()
     {
-        nextFire = Time.time + fireRate;
+        //nextFire = Time.time + fireRate;
         animator.SetTrigger("Attack");
         float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
         yield return new WaitForSeconds(animTime);
@@ -112,23 +124,23 @@ public class PlayerAttack : MonoBehaviour
         //    StartCoroutine(StartPunch());
     }
 
-    IEnumerator StartPunch()
-    {
-        if (Time.time - lastAttackTime > 1f)
-        {
-            lastAttackTime = Time.time;
-            punchCount++;
-            if (punchCount == 3)
-            {
-                punchCount = 0;
-            }
-            while (isPunching)
-            {
-                animator.SetBool(hashCombo, true);
-                yield return new WaitForSeconds(1f);
-            }
-        }
-    }
+    //IEnumerator StartPunch()
+    //{
+    //    if (Time.time - lastAttackTime > 1f)
+    //    {
+    //        lastAttackTime = Time.time;
+    //        punchCount++;
+    //        if (punchCount == 3)
+    //        {
+    //            punchCount = 0;
+    //        }
+    //        while (isPunching)
+    //        {
+    //            animator.SetBool(hashCombo, true);
+    //            yield return new WaitForSeconds(1f);
+    //        }
+    //    }
+    //}
 
     void OnFire()
     {
@@ -136,7 +148,7 @@ public class PlayerAttack : MonoBehaviour
     }
     void OnAttackStart(int count)
     {
-        Debug.Log("공격 시작");
+        bIsAttack = true;
         LookAtTarget();
         playerState.state = PlayerState.State.ATTACK;
         if(count != 0) // 펀치공격
@@ -154,11 +166,10 @@ public class PlayerAttack : MonoBehaviour
     {
         Debug.Log("호랑이 세번째 타격");
         punchCollider.gameObject.SetActive(true);
-        
     }
     void OnAttackEnd(int count)
     {
-        Debug.Log("공격 종료");
+        bIsAttack = false;
         if (!animator.GetBool("Combo"))
             playerState.state = PlayerState.State.IDLE;
         if (count != 0) // 펀치공격
@@ -173,13 +184,23 @@ public class PlayerAttack : MonoBehaviour
         if (canSkill)
         {
             animator.SetInteger("SkillState", 1);
+            float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
+            yield return new WaitForSeconds(animTime);
+        }
+    }
 
-
-            yield return new WaitForSeconds(0.9f);
+    IEnumerator TigerSkill_1()
+    {
+        if (canSkill)
+        {
+            animator.SetInteger("SkillState", 1);
+            float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
+            yield return new WaitForSeconds(animTime);
         }
     }
     void OnSkillStart()
     {
+        bIsSkill = true;
         playerState.state = PlayerState.State.ATTACK;
         animator.SetFloat("Speed", 0f);
     }
@@ -191,8 +212,18 @@ public class PlayerAttack : MonoBehaviour
             fire.SetActive(true);
         }
     }
+
+    void OnRoar()
+    {
+        GameObject rEffect = Instantiate(roarEffect,
+            transform.position + transform.up * 2
+            , Quaternion.identity);
+        Destroy(rEffect, rEffect.GetComponent<ParticleSystem>().duration);
+    }
+
     void OnSkillEnd()
     {
+        bIsSkill = false;
         playerState.state = PlayerState.State.IDLE;
         canSkill = false;
         animator.SetInteger("SkillState", 0);
@@ -213,10 +244,8 @@ public class PlayerAttack : MonoBehaviour
     {
         if(target != null)
         {
-            transform.LookAt(target.transform); // 적을 바라보긴 하지만 부자연스러움
+            Vector3 dir = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
+            transform.LookAt(dir); // 적을 바라보긴 하지만 부자연스러움
         }
-
     }
-
-
 }
