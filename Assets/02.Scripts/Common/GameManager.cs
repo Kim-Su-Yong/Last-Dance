@@ -5,8 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private PlayerAction thePlayer;
+    //private FadeManager theFade;
     
-   
     void Start()
     {
         
