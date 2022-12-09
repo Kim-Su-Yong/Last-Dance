@@ -133,16 +133,13 @@ public class PlayerDamage : MonoBehaviour
 
     //}
 
-    private void OnTriggerEnter(Collider other)
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        // 적에게 공격받으면 체력이 감소하는 스크립트들
-        //if (other.CompareTag("E_BULLET")) // 에너미 원거리 공격
-        //{
+        // 에너미에게 공격을 당햇을 경우 처리
+        if (hit.gameObject.CompareTag("ENEMY"))
+        {
 
-        //}
-        //if(other.CompareTag("E_MELEE")) // 에너미 근접 공격
-        //{
-
-        //}
+        }
     }
 }
