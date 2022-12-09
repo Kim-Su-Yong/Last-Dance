@@ -11,8 +11,8 @@ public class MoveAgent : MonoBehaviour
     // 다음 순찰지점 배열 Index
     public int nextIdx;
 
-    private readonly float patrolSpeed = 1.5f;
-    private readonly float traceSpeed = 4.0f;
+    public float patrolSpeed = 1.5f;
+    public float traceSpeed = 4.0f;
     private float damping = 1.0f;
 
     private NavMeshAgent agent;
@@ -23,7 +23,8 @@ public class MoveAgent : MonoBehaviour
     public bool patrolling
     {
         get { return _patrolling; }
-        set {
+        set
+        {
             _patrolling = value;
             if (_patrolling)
             {
@@ -37,7 +38,8 @@ public class MoveAgent : MonoBehaviour
     public Vector3 traceTarget
     {
         get { return _traceTarget; }
-        set {
+        set
+        {
             _traceTarget = value;
             agent.speed = traceSpeed;
             damping = 7.0f; // 추적 상태 회전계수

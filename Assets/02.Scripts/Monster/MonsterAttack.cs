@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class MonsterAttack : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // ¢º Bool
+    public bool isAttack = false;
+
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
