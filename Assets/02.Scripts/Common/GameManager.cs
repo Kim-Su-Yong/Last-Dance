@@ -29,8 +29,7 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadWaitCoroutine()
     {
         yield return new WaitForSeconds(0.5f);
-        thePlayer = FindObjectOfType<PlayerAction>();
-        
+        thePlayer = FindObjectOfType<PlayerAction>(); 
     }
     public void FadeIn()
     {
