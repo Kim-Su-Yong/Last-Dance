@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6d2ab217b89ba45ac9323325ba4b37, type: 3}
   m_Name: Skeleton Data
   m_EditorClassIdentifier: 
-  HP: 100
+  HP: 70
   damage: 20
+  attackSpeed: 1
   patrolSpeed: 1.5
   traceSpeed: 4
   attackDist: 2

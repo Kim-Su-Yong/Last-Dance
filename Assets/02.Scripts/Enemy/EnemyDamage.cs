@@ -57,7 +57,6 @@ public class EnemyDamage : MonoBehaviour
             StartCoroutine(ResetColor());
             hp -= 15f;
         }
-
     }
 
     IEnumerator ResetColor()

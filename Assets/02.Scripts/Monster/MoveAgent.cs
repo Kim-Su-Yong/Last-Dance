@@ -49,7 +49,6 @@ public class MoveAgent : MonoBehaviour
                     case MonsterAI.MonsterType.C_Slime:
                         MoveWayPoint_C();
                         break;
-
                 }
             }
         }
@@ -148,12 +147,14 @@ public class MoveAgent : MonoBehaviour
         agent.destination = pos;
         agent.isStopped = false;
     }
+
     public void Stop()
     {
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
         _patrolling = false;
     }
+
     void Update()
     {
         if (agent.isStopped == false)

@@ -39,7 +39,6 @@ public class MonsterSpawner : MonoBehaviour
     public bool isGameOver = false;
 
     // Script
-    //MonsterAI monsterAI;
 
     private void Awake()
     {
@@ -75,7 +74,10 @@ public class MonsterSpawner : MonoBehaviour
         {
             if (_monster.activeSelf == false)
             {
+                yield return new WaitForSeconds(3.0f);
                 _monster.SetActive(true);
+                //_monster.GetComponent<MonsterAI>().isDie = false;
+                _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
                 break;
             }
         }
@@ -146,5 +148,4 @@ public class MonsterSpawner : MonoBehaviour
             MonsterA.Add(C_monster);
         }
     }
-
 }
