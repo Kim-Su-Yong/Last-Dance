@@ -11,6 +11,10 @@ public class MoveAgent : MonoBehaviour
     public List<Transform> wayPoints_B;
     public List<Transform> wayPoints_C;
 
+    // 순찰 타입
+    public enum PatrolType { Order, Random }
+    public PatrolType patrolType;
+
     // 다음 순찰지점 배열 Index
     public int nextIdx;
 
@@ -38,6 +42,7 @@ public class MoveAgent : MonoBehaviour
                 damping = 1.0f; // 순찰 상태 회전계수
 
                 // 몬스터 타입별 MoveWayPoint() 실행
+
                 switch (monsterAI.monsterType)
                 {
                     case MonsterAI.MonsterType.A_Skeleton:
@@ -70,7 +75,7 @@ public class MoveAgent : MonoBehaviour
         get { return agent.velocity.magnitude; }
     }
 
-    void Start()
+    void Awake()
     {
         monsterTr = GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
@@ -80,6 +85,9 @@ public class MoveAgent : MonoBehaviour
 
         monsterAI = GetComponent<MonsterAI>();
         monsterSpawner = GameObject.Find("MonsterA_Spawner").GetComponent<MonsterSpawner>();
+
+        // 순찰 타입
+        patrolType = PatrolType.Random;
 
         #region < 하이어라키에서 WayPointGroup_A, B, C 오브젝트 추출 >
         var group_A = GameObject.Find("WayPointGroup_A");
@@ -103,6 +111,7 @@ public class MoveAgent : MonoBehaviour
         }
         #endregion
 
+        PatrolTypeNextIdx();
         // 몬스터 타입별 MoveWayPoint() 실행
         switch (monsterAI.monsterType)
         {
@@ -141,6 +150,32 @@ public class MoveAgent : MonoBehaviour
         agent.isStopped = false;
     }
 
+    // 패트롤 타입 선택
+    void PatrolTypeNextIdx()
+    {
+        switch (monsterAI.monsterType)
+        {
+            case MonsterAI.MonsterType.A_Skeleton:
+                if (patrolType == PatrolType.Order)
+                    nextIdx = ++nextIdx % wayPoints_A.Count;
+                else if (patrolType == PatrolType.Random)
+                    nextIdx = UnityEngine.Random.Range(0, wayPoints_A.Count);
+                break;
+            case MonsterAI.MonsterType.B_Fishman:
+                if (patrolType == PatrolType.Order)
+                    nextIdx = ++nextIdx % wayPoints_B.Count;
+                else if (patrolType == PatrolType.Random)
+                    nextIdx = UnityEngine.Random.Range(0, wayPoints_B.Count);
+                break;
+            case MonsterAI.MonsterType.C_Slime:
+                if (patrolType == PatrolType.Order)
+                    nextIdx = ++nextIdx % wayPoints_C.Count;
+                else if (patrolType == PatrolType.Random)
+                    nextIdx = UnityEngine.Random.Range(0, wayPoints_C.Count);
+                break;
+        }
+    }
+    
     void TraceTarget(Vector3 pos)
     {
         if (agent.isPathStale) return;
@@ -169,7 +204,7 @@ public class MoveAgent : MonoBehaviour
         if (agent.velocity.sqrMagnitude >= 0.2f * 0.2f
             && agent.remainingDistance <= 0.5f)
         {
-            nextIdx = ++nextIdx % wayPoints_A.Count;
+            PatrolTypeNextIdx();
             // 몬스터 타입별 MoveWayPoint() 실행
             switch (monsterAI.monsterType)
             {

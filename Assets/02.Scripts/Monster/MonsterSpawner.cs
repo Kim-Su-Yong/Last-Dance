@@ -69,18 +69,55 @@ public class MonsterSpawner : MonoBehaviour
     IEnumerator RepeatingMonster()
     {
         if (isGameOver == true) yield break;
-
-        foreach (GameObject _monster in MonsterA)
+        switch (monsterType)
         {
-            if (_monster.activeSelf == false)
-            {
-                yield return new WaitForSeconds(3.0f);
-                _monster.SetActive(true);
-                //_monster.GetComponent<MonsterAI>().isDie = false;
-                _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
+            case MonsterType.A_Skeleton:
+                foreach (GameObject _monster in MonsterA)
+                {
+                    if (_monster.activeSelf == false)
+                    {
+                        yield return new WaitForSeconds(3.0f);
+                        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                        _monster.transform.position = spawnPoint.position;
+                        _monster.SetActive(true);
+                        //_monster.GetComponent<MonsterAI>().isDie = false;
+                        _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
+                        break;
+                    }
+                }
                 break;
-            }
+            case MonsterType.B_Fishman:
+                foreach (GameObject _monster in MonsterB)
+                {
+                    if (_monster.activeSelf == false)
+                    {
+                        yield return new WaitForSeconds(3.0f);
+                        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                        _monster.transform.position = spawnPoint.position;
+                        _monster.SetActive(true);
+                        //_monster.GetComponent<MonsterAI>().isDie = false;
+                        _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
+                        break;
+                    }
+                }
+                break;
+            case MonsterType.C_Slime:
+                foreach (GameObject _monster in MonsterC)
+                {
+                    if (_monster.activeSelf == false)
+                    {
+                        yield return new WaitForSeconds(3.0f);
+                        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                        _monster.transform.position = spawnPoint.position;
+                        _monster.SetActive(true);
+                        //_monster.GetComponent<MonsterAI>().isDie = false;
+                        _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
+                        break;
+                    }
+                }
+                break;
         }
+
     }
     private void CreateMonster()
     {

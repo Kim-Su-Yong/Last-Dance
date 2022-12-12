@@ -45,16 +45,19 @@ public class MonsterAI : MonoBehaviour
     // 해야 할 것 : 공격하지 않을 땐 콜라이더 enabled = false;로 변경
     // Components
     [HideInInspector]
-    public SphereCollider attackCollider;
+    public BoxCollider attackCollider;
 
     // Bool
     public bool isDie = false;
     public bool isAttack = false;
     public bool isDamaged = false;
+    public bool isIdle = false;
 
     // Animation
     [HideInInspector]
     public Animator animator;
+    public float idleBreakTime = 10f;
+    public float idleTimeCount = 0f;
 
     // Audio
     [HideInInspector]
@@ -77,7 +80,6 @@ public class MonsterAI : MonoBehaviour
     public Text Hp_Text;
     private float AwayTime = 5f;    // 최종 20
     private float GoneTime = 10f;   // 최종 40
-    private float countTime = 0f;
     public Color HpColor = new Color(0f, 188f, 195f, 255f);
     
 
@@ -101,17 +103,7 @@ public class MonsterAI : MonoBehaviour
         audio = GetComponent<AudioSource>();
         moveAgent = GetComponent<MoveAgent>();
         monsterAttack = GetComponent<MonsterAttack>();
-        switch (monsterType)
-        {
-            case MonsterAI.MonsterType.A_Skeleton:
-                //monsterRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
-                break;
-            case MonsterAI.MonsterType.B_Fishman:
-                //monsterRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
-                break;
-            case MonsterAI.MonsterType.C_Slime:
-                break;
-        }
+        attackCollider = GetComponent<BoxCollider>();
 
         // UI
         Hp_Canvas = transform.GetChild(2).GetComponent<Canvas>();
@@ -128,6 +120,7 @@ public class MonsterAI : MonoBehaviour
     {
         M_HP = M_MaxHP;
         Hp_Canvas.enabled = false;
+        attackCollider.enabled = false;
     }
 
     void Update()
@@ -140,7 +133,7 @@ public class MonsterAI : MonoBehaviour
         {
             if (Time.time >= nextAttackTime)
             {
-                Attack();
+                StartCoroutine(Attack());
                 nextAttackTime = Time.time + attackSpeed + Random.Range(0.1f, 0.3f);
             }
             Quaternion rot = Quaternion.LookRotation(playerTr.position - monsterTr.position);
@@ -150,23 +143,28 @@ public class MonsterAI : MonoBehaviour
         // Hp UI 비활성화 루틴
         if (isDamaged == true)
         {
-            Hp_Canvas.enabled = true;
-            if (moveAgent.patrolling)
-            {
-                float CountTime = 0;
-                CountTime += Time.deltaTime;
-                if (CountTime >= AwayTime)
-                {
-                    Hp_Canvas.enabled = false;
-                }
-                if (CountTime >= GoneTime)
-                {
-                    M_HP = M_MaxHP;
-                    isDamaged = false;
-                }
-            }
+            HpUIDeactivation();
         }
         HpUpdate();
+    }
+
+    private void HpUIDeactivation()
+    {
+        Hp_Canvas.enabled = true;
+        if (moveAgent.patrolling)
+        {
+            float _countTime = 0;
+            _countTime += Time.deltaTime;
+            if (_countTime >= AwayTime)
+            {
+                Hp_Canvas.enabled = false;
+            }
+            if (_countTime >= GoneTime)
+            {
+                M_HP = M_MaxHP;
+                isDamaged = false;
+            }
+        }
     }
 
     public void SetUp(MonsterData monsterData)
@@ -198,13 +196,19 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
-    private void Attack()
+    IEnumerator Attack()
     {
         // 애니메이션 랜덤 재생
         switch (monsterType)
         {
             case MonsterAI.MonsterType.A_Skeleton:
                 animator.SetTrigger($"Attack {Random.Range(1, 4)}");
+
+                yield return new WaitForSeconds(0.7f);
+                attackCollider.enabled = true;
+                yield return new WaitForSeconds(0.5f);
+                attackCollider.enabled = false;
+
                 break;
             case MonsterAI.MonsterType.B_Fishman:
                 animator.SetTrigger($"Attack {Random.Range(1, 3)}");
@@ -213,12 +217,6 @@ public class MonsterAI : MonoBehaviour
                 break;
         }
         //audio.PlayOneShot(attackSound, 1.0f);
-    }
-
-    void OnEnable()
-    {
-        //StartCoroutine(CheckState());
-        //StartCoroutine(Action());
     }
 
     IEnumerator CheckState()
@@ -269,7 +267,7 @@ public class MonsterAI : MonoBehaviour
                     {
                         isAttack = true;
                     }
-                        moveAgent.Stop();
+                    moveAgent.Stop();
                     break;
                 case State.DIE:
                     isAttack = false;
@@ -283,12 +281,21 @@ public class MonsterAI : MonoBehaviour
                     StopAllCoroutines();
 
                     StartCoroutine(PushPool());
-                    
-                    //Invoke("Die", 5.0f);
+
                     break;
             }
         }
     }
+
+    //IEnumerator IdleBreakAnimation()
+    //{
+    //    Debug.Log("IDLE");
+    //    moveAgent.Stop();
+    //    animator.SetTrigger("IdleBreak");
+    //    yield return new WaitForSeconds(0f);
+    //    idleTimeCount = 0;
+    //    isIdle = false;
+    //}
 
     public void HpUpdate()
     {
@@ -299,7 +306,6 @@ public class MonsterAI : MonoBehaviour
             state = State.DIE;
             Hp_Canvas.enabled = false;
         }
-        
     }
 
     public void DamagedUI()
@@ -323,6 +329,4 @@ public class MonsterAI : MonoBehaviour
         this.gameObject.SetActive(false);
         M_HP = M_MaxHP;
     }
-
-
 }
