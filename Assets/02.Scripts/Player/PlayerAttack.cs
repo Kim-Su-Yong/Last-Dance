@@ -12,6 +12,15 @@ public class PlayerAttack : MonoBehaviour
     Animator animator;
     CharacterController controller;
 
+    // 캐릭터 근처에 가장 가까이 있는 적을 자동으로 타겟으로 설정하여
+    // 공격시 타겟을 바라보며 공격 모션을 실행
+    public GameObject target;
+
+    [Header("오브젝트 풀링")]
+    public List<GameObject> fireBallPool = new List<GameObject>();
+    public int maxCount = 5;    // 오브젝트 풀링할 개수
+
+
     [Header("파이어볼 발사")]
     public Transform FirePos;       // 파이어볼 던져질 발사 위치
     [SerializeField]
@@ -41,8 +50,6 @@ public class PlayerAttack : MonoBehaviour
     public bool bIsAttack;          //  공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
 
-    [Space(10)]
-    public GameObject target;       // 캐릭터 근처에 가장 가까이 있는 적을 자동으로 타겟으로 설정하여 공격시 타겟을 바라보며 공격 모션을 실행
     void Awake()
     {
         playerCtrl = GetComponent<ThirdPersonCtrl>();
@@ -52,6 +59,11 @@ public class PlayerAttack : MonoBehaviour
         controller = GetComponent<CharacterController>();
         FireBall = Resources.Load("Magic fire") as GameObject;
         animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        CreateFireBallPool();
     }
 
     private void OnEnable()
@@ -105,6 +117,30 @@ public class PlayerAttack : MonoBehaviour
         {
 
         }
+    }
+
+    void CreateFireBallPool()   // 오브젝트 풀링용 오브젝트 생성(FireBall)
+    {
+        GameObject fireBallPools = new GameObject("FireBallPool");
+        for(int i=0; i<maxCount; i++)
+        {
+            GameObject _fireBall = Instantiate(FireBall, fireBallPools.transform);
+            _fireBall.name = "FireBall" + i.ToString("00");
+            _fireBall.SetActive(false);
+            fireBallPool.Add(_fireBall);
+        }
+    }
+
+    public GameObject GetFireBall() // 오브젝트 풀링된 FireBall 정보를 가져오는 함수
+    {
+        for(int i=0; i<fireBallPool.Count; i++)
+        {
+            if (fireBallPool[i].activeSelf == false)
+            {
+                return fireBallPool[i];
+            }
+        }
+        return null;
     }
 
     #region 기본 공격
