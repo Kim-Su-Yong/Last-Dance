@@ -82,7 +82,8 @@ public class PlayerAttack : MonoBehaviour
     {
         // 캐릭터가 죽은 상태에서는 공격불가
         if (playerState.state == PlayerState.State.DIE||
-            playerState.state == PlayerState.State.JUMP)
+            playerState.state == PlayerState.State.JUMP||
+            playerState.state == PlayerState.State.HIT)
         {
             return;
         }
@@ -92,7 +93,7 @@ public class PlayerAttack : MonoBehaviour
             // 왼쪽 마우스 버튼 누르면 기본 공격(fireRate는 발사 대기 시간)
             if (Input.GetButtonDown("Fire1")&& !bIsSkill)
             {
-                StartCoroutine(FoxBaseAttack());
+                FoxBaseAttack();
             }
             // 마우스 오른쪽 버튼 누르면 스킬 사용(단, 스킬 사용 가능 상태일때만 발동된다)
             else if (Input.GetButtonDown("Fire2") && !bIsAttack)
@@ -150,12 +151,10 @@ public class PlayerAttack : MonoBehaviour
     }
 
     #region 기본 공격
-    IEnumerator FoxBaseAttack()
+    void FoxBaseAttack()
     {
         //nextFire = Time.time + fireRate;
         animator.SetTrigger("Attack");
-        float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
-        yield return new WaitForSeconds(animTime);
     }
 
     private void TigerBaseAttack(bool isPunching)
