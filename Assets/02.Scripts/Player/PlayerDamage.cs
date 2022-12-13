@@ -8,12 +8,14 @@ public class PlayerDamage : MonoBehaviour
     [Header("UI")]
     public Image HpBar;             // 체력바
     public Text HpText;             // 체력 텍스트
+
     [Header("Data")]
     [SerializeField] float curHp;   // 현재 체력
     public float initHp;            // 시작시 체력
     public bool isDie;              // 사망 확인
     public GameObject hitEffect;    // 피격 이펙트
-    //public ParticleSystem hitEffect;
+
+    readonly string M_AttackTag = "M_ATTACK";   // 몬스터 공격 콜라이더 태그
 
     Renderer[] renderers;
 
@@ -44,34 +46,31 @@ public class PlayerDamage : MonoBehaviour
 
     void InitCharacterData()
     {
-        initHp = 100;
+        initHp = 1000;
         HpBar.fillAmount = 1f;
         HpBar.color = Color.green;
     }
 
     void Update()
     {
-        // 체력 감소 테스트용 스크립트
-        // P키 누르면 맞는 애니메이션 및 체력 감소 구현
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Hit();
-            if (curHp <= 0)
-            {
-                StartCoroutine("Die");
-            }
-        }
+   
     }
 
-    private void Hit()
+    // 피격 코루틴
+    IEnumerator Hit(GameObject Enemy)
     {
-        if (isDie) return;
-
         animator.SetTrigger("Hit");     // 피격 애니메이션 재생
-        curHp -= 10;                    // 몬스터의 공격력과 캐릭터의 방어력에 따라 받는 데미지가 달라짐
+        animator.SetFloat("Speed", 0f);
+
+        curHp -= Enemy.GetComponent<MonsterAI>().damage;
+        //curHp -= enemy.GetComponent<MonsterAI>().damage;
+        //curHp -= 10;                    // 몬스터의 공격력과 캐릭터의 방어력에 따라 받는 데미지가 달라짐
         curHp = Mathf.Clamp(curHp, 0, initHp);
         HpBar.fillAmount = (float)curHp / initHp;
         HpText.text = curHp.ToString() + " / " + initHp.ToString();
+
+        playerState.state = PlayerState.State.HIT;
+        
         GameObject hitEff = Instantiate(hitEffect, transform.position + new Vector3(0, 1.5f, 0), Quaternion.identity);
         Destroy(hitEff, 1.5f);
 
@@ -79,6 +78,10 @@ public class PlayerDamage : MonoBehaviour
             HpBar.color = Color.red;
         else if (HpBar.fillAmount <= 0.5f)
             HpBar.color = Color.yellow;
+
+        yield return new WaitForSeconds(1f);
+        playerState.state = PlayerState.State.IDLE;
+        //hitCollider.enabled = true;
     }
 
     IEnumerator Die()
@@ -106,8 +109,9 @@ public class PlayerDamage : MonoBehaviour
         HpBar.fillAmount = (float)curHp / initHp;
         HpText.text = curHp.ToString() + " / " + initHp.ToString();
         SetPlayerVisible(true);
-        controller.enabled = true;
-        attack.enabled = true;
+        playerState.state = PlayerState.State.IDLE;
+        //controller.enabled = true;
+        //attack.enabled = true;
         isDie = false;
     }
 
@@ -119,26 +123,27 @@ public class PlayerDamage : MonoBehaviour
         }
     }
 
-    //void Die()
-    //{
-    //    if (isDie) return;
 
-    //    // 게임 매니저에 플레이어가 죽었다고 전달
-    //    animator.SetTrigger("Die");     // 사망 애니메이션 실행
-    //    // 사망시 UI 띄우기 또는 게임 오버 씬으로 전환
-        
-    //    isDie = true;
-
-
-    //}
-
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    private void OnTriggerEnter(Collider other)
     {
-        // 에너미에게 공격을 당햇을 경우 처리
-        //if (hit.gameObject.CompareTag("ENEMY_Attack"))
-        //{
+        if(other.CompareTag(M_AttackTag))
+        {
+            // 죽었거나 피격 상태 라면 실행하지 않음
+            if (isDie ||
+            playerState.state == PlayerState.State.DIE ||
+            playerState.state == PlayerState.State.HIT)
+                return;
+            GameObject EnemyInfo = other.GetComponentInParent<MonsterAI>().gameObject;
+            StartCoroutine(Hit(EnemyInfo));
+            if (curHp <= 0)
+            {
+                StartCoroutine("Die");
+            }
+        }
+    }
 
-        //}
+    void OnHit()
+    {
+        animator.SetFloat("Speed", 0f);
     }
 }

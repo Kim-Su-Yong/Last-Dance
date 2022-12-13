@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 70
   damage: 20
-  attackSpeed: 1
+  attackSpeed: 2
   patrolSpeed: 1.5
   traceSpeed: 4
   attackDist: 2
