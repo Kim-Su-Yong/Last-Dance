@@ -26,8 +26,6 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     GameObject FireBall;            // 파이어볼 오브젝트
     readonly string playerTag = "Player";
-    float fireRate = 1f;          // 발사 대기 시간
-    float nextFire = 0f;
 
     [Header("여우불 가드(스킬1)")]
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
@@ -43,12 +41,13 @@ public class PlayerAttack : MonoBehaviour
     public GameObject thirdEffect;
 
     [Header("호랑이 포효(스킬1)")]
-    public GameObject roarEffect;           // 포효 이펙트
-    public float skill2_CoolTime = 20f;     // 포효 스킬 쿨타임
+    public SkillData roarData;
         
     [Header("제어 변수")]
     public bool bIsAttack;          //  공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
+
+    //public List<SkillData> skillDatas = new List<SkillData>();     // 스킬 데이터를 담을 리스트
 
     void Awake()
     {
@@ -59,6 +58,13 @@ public class PlayerAttack : MonoBehaviour
         controller = GetComponent<CharacterController>();
         FireBall = Resources.Load("Magic fire") as GameObject;
         animator = GetComponent<Animator>();
+        roarData = Resources.Load("SkillData/Roar Data") as SkillData;
+
+        //for(int i=0; i<skillDatas.Count; i++)
+        //{
+        //    skillDatas[i] = GetComponent<SkillData>();
+        //}
+
     }
 
     private void Start()
@@ -180,7 +186,15 @@ public class PlayerAttack : MonoBehaviour
 
     void OnFire()
     {
-        GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
+        //GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
+        // 오브젝트 풀링 방식
+        GameObject _fireBall = GetFireBall();
+        if(_fireBall != null)
+        {
+            _fireBall.transform.position = FirePos.position;
+            _fireBall.transform.rotation = FirePos.rotation;
+            _fireBall.SetActive(true);
+        }
     }
     void OnAttackStart(int count)
     {
@@ -251,10 +265,27 @@ public class PlayerAttack : MonoBehaviour
 
     void OnRoar()
     {
-        GameObject rEffect = Instantiate(roarEffect,
+        // 이펙트 위치 조정 필요함
+        GameObject rEffect = Instantiate(roarData.skillEffect,
             transform.position + transform.up * 2
             , Quaternion.identity);
-        Destroy(rEffect, rEffect.GetComponent<ParticleSystem>().duration);
+        Destroy(rEffect, 1f);
+
+        // 20 반경의 충돌체를 모두 저장
+        Collider[] Cols = Physics.OverlapSphere(transform.position, roarData.f_skillRange);
+        
+        foreach(Collider col in Cols)
+        {
+            Rigidbody rb = col.GetComponent<Rigidbody>();
+            if(rb != null)
+            {
+                if(col.CompareTag("ENEMY"))
+                {
+                    col.GetComponent<EnemyDamage>().OnHitSkill((int)roarData.f_skillDamage, roarData.skillName);
+                    StartCoroutine(DownSpeed(col.gameObject));
+                }
+            }
+        }
     }
 
     void OnSkillEnd()
@@ -283,5 +314,14 @@ public class PlayerAttack : MonoBehaviour
             Vector3 dir = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
             transform.LookAt(dir); // 적을 바라보긴 하지만 부자연스러움
         }
+    }
+
+    IEnumerator DownSpeed(GameObject target)
+    {
+        // 실제 에너미 데이터로 속도 감소 시켜야함
+        // *수정 할 예정*
+        target.GetComponent<EnemyDamage>().testSpeed -= 2f;
+        yield return new WaitForSeconds(2f);
+        target.GetComponent<EnemyDamage>().testSpeed += 2f;
     }
 }

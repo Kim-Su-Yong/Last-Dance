@@ -14,25 +14,22 @@ public class FireBall : MonoBehaviour
     GameObject ExpEffect;
     
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         ExpEffect = Resources.Load("Explosion") as GameObject;
         sphereCollider = GetComponent<SphereCollider>();
+    }
+    private void OnEnable()
+    {
         rb.AddForce(transform.forward * speed);
-
         StartCoroutine(Explosion(5f));
     }
 
-    private void OnEnable()
+    private void OnDisable()
     {
-        //StartCoroutine(Delay());
-        //Destroy(gameObject, 5f);
-    }
-
-    void Update()
-    {
-        //TraceEnemy();
+        sphereCollider.enabled = true;
+        rb.isKinematic = false;
     }
 
     //private void TraceEnemy()
@@ -86,9 +83,7 @@ public class FireBall : MonoBehaviour
         if (other.gameObject.CompareTag("ENEMY"))
         {
             StartCoroutine(Explosion(0f));
-        }
-            
-            
+        }        
     }
 
     IEnumerator Explosion(float time)
@@ -98,6 +93,7 @@ public class FireBall : MonoBehaviour
         rb.isKinematic = true;
         GameObject explosion = Instantiate(ExpEffect, transform.position, Quaternion.identity);
         Destroy(explosion, 1f);
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

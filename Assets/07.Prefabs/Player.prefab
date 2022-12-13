@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 384542284}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.318, z: 0.65}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1.318, z: 0.759}
+  m_LocalScale: {x: 1.2, y: 1, z: 1.2}
   m_Children: []
   m_Father: {fileID: 4126552369536777917}
   m_RootOrder: 7
@@ -435,7 +435,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4126552369536777531
 Transform:
   m_ObjectHideFlags: 0
@@ -1882,6 +1882,7 @@ GameObject:
   - component: {fileID: 1580272506}
   - component: {fileID: 1580272507}
   - component: {fileID: 1370168683}
+  - component: {fileID: 869448305911140268}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -2197,6 +2198,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e305e42aaa450194bb9fa4e6b10906b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  fireBallPool: []
+  maxCount: 5
   FirePos: {fileID: 4126552369662073438}
   FireBall: {fileID: 0}
   FoxFires:
@@ -2206,11 +2210,9 @@ MonoBehaviour:
   canSkill: 1
   punchCollider: {fileID: 384542286}
   thirdEffect: {fileID: 0}
-  roarEffect: {fileID: 8460667080445658512, guid: a3e2c3406e02f2c4ba86cfb1604277bd, type: 3}
-  skill2_CoolTime: 20
+  roarData: {fileID: 0}
   bIsAttack: 0
   bIsSkill: 0
-  target: {fileID: 0}
 --- !u!114 &4126552369070853412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2227,7 +2229,6 @@ MonoBehaviour:
   HpText: {fileID: 0}
   curHp: 0
   initHp: 0
-  charData: {fileID: 11400000, guid: edec36d8fb7c9ff4da35984a747d6ab9, type: 2}
   isDie: 0
   hitEffect: {fileID: 7226583673155636401, guid: 036519260c71ad0488f217309599083b, type: 3}
 --- !u!114 &4126552369070853413
@@ -2337,6 +2338,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemys: []
   nearEnemy: {fileID: 0}
+--- !u!136 &869448305911140268
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4126552369537016603}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.3
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &4126552369537019075
 GameObject:
   m_ObjectHideFlags: 0
@@ -3611,14 +3626,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78e8b38d431ddef4fa2994a3f2d6e2ff, type: 3}
---- !u!4 &4128349508375517214 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4131437023405378, guid: 78e8b38d431ddef4fa2994a3f2d6e2ff, type: 3}
-  m_PrefabInstance: {fileID: 4126552370107694428}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4125743098130437376 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1654736843778140, guid: 78e8b38d431ddef4fa2994a3f2d6e2ff, type: 3}
+  m_PrefabInstance: {fileID: 4126552370107694428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4128349508375517214 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4131437023405378, guid: 78e8b38d431ddef4fa2994a3f2d6e2ff, type: 3}
   m_PrefabInstance: {fileID: 4126552370107694428}
   m_PrefabAsset: {fileID: 0}
 --- !u!135 &4126552369777562522

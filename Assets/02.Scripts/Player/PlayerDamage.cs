@@ -11,7 +11,6 @@ public class PlayerDamage : MonoBehaviour
     [Header("Data")]
     [SerializeField] float curHp;   // 현재 체력
     public float initHp;            // 시작시 체력
-    public CharacterData charData;  // 데이터 스크립트 파일
     public bool isDie;              // 사망 확인
     public GameObject hitEffect;    // 피격 이펙트
     //public ParticleSystem hitEffect;
@@ -45,7 +44,7 @@ public class PlayerDamage : MonoBehaviour
 
     void InitCharacterData()
     {
-        initHp = charData.maxHp;
+        initHp = 100;
         HpBar.fillAmount = 1f;
         HpBar.color = Color.green;
     }
@@ -137,9 +136,9 @@ public class PlayerDamage : MonoBehaviour
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         // 에너미에게 공격을 당햇을 경우 처리
-        if (hit.gameObject.CompareTag("ENEMY"))
-        {
+        //if (hit.gameObject.CompareTag("ENEMY_Attack"))
+        //{
 
-        }
+        //}
     }
 }

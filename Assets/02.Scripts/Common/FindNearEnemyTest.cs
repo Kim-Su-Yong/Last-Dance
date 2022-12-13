@@ -38,11 +38,11 @@ public class FindNearEnemyTest : MonoBehaviour
             // 0.3초마다 10범위 안에 있는 레이어가 에너미인 콜라이더들을 찾는다
             enemys = Physics.OverlapSphere(transform.position, 10f, layerMask);
             
-
+            // 범위안에 적이 있다면
             if (enemys.Length != 0)
             {
                 shortDist = Vector3.Distance(transform.position, enemys[0].transform.position);
-                nearEnemy = enemys[0].gameObject;
+                nearEnemy = enemys[0].gameObject;   // 첫번째 오브젝트를 기준
                 shooter.m_target = nearEnemy;
                 playerAttack.target = nearEnemy;
                 //nearEnemy.GetComponent<MeshRenderer>().material.color = Color.red;
