@@ -10,10 +10,13 @@ TagManager:
   - BULLET
   - FOX_FIRE
   - Enemy
-  - FLYATTACKRANGE
   - PUNCH
   - NPC
   - InventorySlot
+  - Walkable
+  - EnemyBullet
+  - Boss
+  - M_ATTACK
   layers:
   - Default
   - TransparentFX
@@ -50,4 +53,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Top
+    uniqueID: 133051335
     locked: 0

@@ -6,10 +6,12 @@ public class PlayerAction : MonoBehaviour
 {
     [SerializeField]
     GameObject nearObject;  // 캐릭터와 가장 가까운 오브젝트를 저장
+    PlayerState playerState;
     public static PlayerAction instance;
     public string currentMapName;
     public string currentSceneName;
-    private SaveNLoad theSaveNLoad;
+    //private SaveNLoad theSaveNLoad;
+
     void Interaction()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -27,22 +29,22 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        playerState = GetComponent<PlayerState>();
+        
+    }
+    private void OnEnable()
+    {
+        //StartCoroutine(FindNearObject());
+    }
     void Start()
     {
-        theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        //theSaveNLoad = FindObjectOfType<SaveNLoad>();
     }
     void Update()
     {
         Interaction();
-
-        if (Input.GetKeyDown(KeyCode.F5)) //저장
-        {
-
-        }
-        if (Input.GetKeyDown(KeyCode.F9)) //불러오기
-        {
-
-        }
     }
 
     private void OnTriggerStay(Collider other)

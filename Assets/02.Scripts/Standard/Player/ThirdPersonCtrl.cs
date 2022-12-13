@@ -73,6 +73,8 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     [Header("제어 변수")]
     PlayerAttack playerAttack;
+    PlayerDamage playerDamage;
+    PlayerState playerState;
     public bool bIsAction;
 
     // 플레이어
@@ -127,6 +129,9 @@ public class ThirdPersonCtrl : MonoBehaviour
         input = GetComponent<StandardInput>();
         playerInput = GetComponent<PlayerInput>();
         playerAttack = GetComponent<PlayerAttack>();
+        playerDamage = GetComponent<PlayerDamage>();
+        playerState = GetComponent<PlayerState>();
+        
 
         AssignAnimationIDs();
 
@@ -195,8 +200,9 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     void Move()
     {
-        if (GetComponent<PlayerDamage>().isDie ||
-            playerAttack.bIsAttack)
+        // 캐릭터의 상태가 공격중이거나 죽은 상태라면 이동하지 않는다.
+        if (playerState.state == PlayerState.State.ATTACK ||
+            playerState.state == PlayerState.State.DIE)
             return;
         if (bIsAction == true)
             return;
@@ -205,7 +211,10 @@ public class ThirdPersonCtrl : MonoBehaviour
         float targetSpeed = input.isWalk ? WalkSpeed : MoveSpeed;
 
         // 이동하지 않으면 속도는 0
-        if (input.move == Vector2.zero) targetSpeed = 0.0f;
+        if (input.move == Vector2.zero)
+        {
+            targetSpeed = 0.0f;
+        }
 
         // 땅에서의 수평 이동 속도
         float currentHorizontalSpeed = new Vector3(controller.velocity.x, 0.0f, controller.velocity.z).magnitude;
@@ -265,6 +274,10 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     private void JumpAndGravity()
     {
+        // 캐릭터의 상태가 공격중이거나 죽은 상태라면 점프하지 않는다.
+        if (playerState.state == PlayerState.State.ATTACK ||
+            playerState.state == PlayerState.State.DIE)
+            return;
         if (isGrounded)
         {
             // FallTimeout 시간 리셋
@@ -370,11 +383,14 @@ public class ThirdPersonCtrl : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(controller.center), FootstepAudioVolume);
         }
-        playerAttack.enabled = true;
+        playerState.state = PlayerState.State.IDLE;
     }
 
     void OnJumpStart()
     {
+        playerState.state = PlayerState.State.JUMP;
         playerAttack.enabled = false;
-    }
+        GetComponent<Shooter>().enabled = false;
+        GetComponent<ChangeForm>().enabled = false;
+    }    
 }

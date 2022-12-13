@@ -14,6 +14,8 @@ public class EnemyDamage : MonoBehaviour
     public float hp = 0f;
     public float hpMax = 100f;
 
+    public float testSpeed = 5f;
+
     PlayerAttack playerAction;
     CapsuleCollider capsuleCollider;
 
@@ -26,11 +28,17 @@ public class EnemyDamage : MonoBehaviour
         capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
-    void Update()
+    public void OnHitSkill(int newDamage, string skillName)
     {
-        
+        hp -= newDamage;
+        if(skillName == "Roar")
+        {
+            // 스피드 감소
+            Debug.Log("스피드 감소");
+            renderer.material.color = Color.red;
+            StartCoroutine(ResetColor());
+        }
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(fireBallTag))
@@ -57,7 +65,6 @@ public class EnemyDamage : MonoBehaviour
             StartCoroutine(ResetColor());
             hp -= 15f;
         }
-
     }
 
     IEnumerator ResetColor()

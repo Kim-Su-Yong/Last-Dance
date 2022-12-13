@@ -7,29 +7,54 @@ using UnityEngine.AI;
 public class MoveAgent : MonoBehaviour
 {
     // 순찰 지점 저장 List 타입 변수
-    public List<Transform> wayPoints;
+    public List<Transform> wayPoints_A;
+    public List<Transform> wayPoints_B;
+    public List<Transform> wayPoints_C;
+
+    // 순찰 타입
+    public enum PatrolType { Order, Random }
+    public PatrolType patrolType;
+
     // 다음 순찰지점 배열 Index
     public int nextIdx;
 
-    private readonly float patrolSpeed = 1.5f;
-    private readonly float traceSpeed = 4.0f;
+    public float patrolSpeed = 1.5f;
+    public float traceSpeed = 4.0f;
     private float damping = 1.0f;
 
     private NavMeshAgent agent;
     private Transform monsterTr;
+
+    MonsterAI monsterAI;
+    MonsterSpawner monsterSpawner;
 
     private bool _patrolling;
     // patrolling 프로퍼티 정의 (getter, setter)
     public bool patrolling
     {
         get { return _patrolling; }
-        set {
+        set
+        {
             _patrolling = value;
             if (_patrolling)
             {
                 agent.speed = patrolSpeed;
                 damping = 1.0f; // 순찰 상태 회전계수
-                MoveWayPoint();
+
+                // 몬스터 타입별 MoveWayPoint() 실행
+
+                switch (monsterAI.monsterType)
+                {
+                    case MonsterAI.MonsterType.A_Skeleton:
+                        MoveWayPoint_A();
+                        break;
+                    case MonsterAI.MonsterType.B_Fishman:
+                        MoveWayPoint_B();
+                        break;
+                    case MonsterAI.MonsterType.C_Slime:
+                        MoveWayPoint_C();
+                        break;
+                }
             }
         }
     }
@@ -37,7 +62,8 @@ public class MoveAgent : MonoBehaviour
     public Vector3 traceTarget
     {
         get { return _traceTarget; }
-        set {
+        set
+        {
             _traceTarget = value;
             agent.speed = traceSpeed;
             damping = 7.0f; // 추적 상태 회전계수
@@ -49,7 +75,7 @@ public class MoveAgent : MonoBehaviour
         get { return agent.velocity.magnitude; }
     }
 
-    void Start()
+    void Awake()
     {
         monsterTr = GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
@@ -57,39 +83,113 @@ public class MoveAgent : MonoBehaviour
         agent.updateRotation = false;
         agent.speed = patrolSpeed;
 
-        // 하이어라키에서 WayPointGroup 오브젝트 추출
-        var group = GameObject.Find("WayPointGroup");
-        if (group != null)
+        monsterAI = GetComponent<MonsterAI>();
+        monsterSpawner = GameObject.Find("MonsterA_Spawner").GetComponent<MonsterSpawner>();
+
+        // 순찰 타입
+        patrolType = PatrolType.Random;
+
+        #region < 하이어라키에서 WayPointGroup_A, B, C 오브젝트 추출 >
+        var group_A = GameObject.Find("WayPointGroup_A");
+        if (group_A != null)
         {
-            // WayPointGroup 하위에 있는 모든 Transform 컴포넌트를 추출한 후, List 타입의 wayPoints 배열에 추가
-            group.GetComponentsInChildren<Transform>(wayPoints);
-            // 배열 첫 번째 항목 삭제(부모)
-            wayPoints.RemoveAt(0);
+            // List 타입의 wayPoints 배열에 추가
+            group_A.GetComponentsInChildren<Transform>(wayPoints_A);
+            wayPoints_A.RemoveAt(0);
         }
+        var group_B = GameObject.Find("WayPointGroup_B");
+        if (group_B != null)
+        {
+            group_B.GetComponentsInChildren<Transform>(wayPoints_B);
+            wayPoints_B.RemoveAt(0);
+        }
+        var group_C = GameObject.Find("WayPointGroup_C");
+        if (group_C != null)
+        {
+            group_C.GetComponentsInChildren<Transform>(wayPoints_C);
+            wayPoints_C.RemoveAt(0);
+        }
+        #endregion
 
-        MoveWayPoint();
+        PatrolTypeNextIdx();
+        // 몬스터 타입별 MoveWayPoint() 실행
+        switch (monsterAI.monsterType)
+        {
+            case MonsterAI.MonsterType.A_Skeleton:
+                MoveWayPoint_A();
+                break;
+            case MonsterAI.MonsterType.B_Fishman:
+                MoveWayPoint_B();
+                break;
+            case MonsterAI.MonsterType.C_Slime:
+                MoveWayPoint_C();
+                break;
+        }
     }
-
-    void MoveWayPoint()
+    void MoveWayPoint_A()
     {
         if (agent.isPathStale) return;
 
-        agent.destination = wayPoints[nextIdx].position;
+        agent.destination = wayPoints_A[nextIdx].position;
         agent.isStopped = false;
     }
 
+    void MoveWayPoint_B()
+    {
+        if (agent.isPathStale) return;
+
+        agent.destination = wayPoints_B[nextIdx].position;
+        agent.isStopped = false;
+    }
+
+    void MoveWayPoint_C()
+    {
+        if (agent.isPathStale) return;
+
+        agent.destination = wayPoints_C[nextIdx].position;
+        agent.isStopped = false;
+    }
+
+    // 패트롤 타입 선택
+    void PatrolTypeNextIdx()
+    {
+        switch (monsterAI.monsterType)
+        {
+            case MonsterAI.MonsterType.A_Skeleton:
+                if (patrolType == PatrolType.Order)
+                    nextIdx = ++nextIdx % wayPoints_A.Count;
+                else if (patrolType == PatrolType.Random)
+                    nextIdx = UnityEngine.Random.Range(0, wayPoints_A.Count);
+                break;
+            case MonsterAI.MonsterType.B_Fishman:
+                if (patrolType == PatrolType.Order)
+                    nextIdx = ++nextIdx % wayPoints_B.Count;
+                else if (patrolType == PatrolType.Random)
+                    nextIdx = UnityEngine.Random.Range(0, wayPoints_B.Count);
+                break;
+            case MonsterAI.MonsterType.C_Slime:
+                if (patrolType == PatrolType.Order)
+                    nextIdx = ++nextIdx % wayPoints_C.Count;
+                else if (patrolType == PatrolType.Random)
+                    nextIdx = UnityEngine.Random.Range(0, wayPoints_C.Count);
+                break;
+        }
+    }
+    
     void TraceTarget(Vector3 pos)
     {
         if (agent.isPathStale) return;
         agent.destination = pos;
         agent.isStopped = false;
     }
+
     public void Stop()
     {
         agent.isStopped = true;
         agent.velocity = Vector3.zero;
         _patrolling = false;
     }
+
     void Update()
     {
         if (agent.isStopped == false)
@@ -104,8 +204,21 @@ public class MoveAgent : MonoBehaviour
         if (agent.velocity.sqrMagnitude >= 0.2f * 0.2f
             && agent.remainingDistance <= 0.5f)
         {
-            nextIdx = ++nextIdx % wayPoints.Count;
-            MoveWayPoint();
+            PatrolTypeNextIdx();
+            // 몬스터 타입별 MoveWayPoint() 실행
+            switch (monsterAI.monsterType)
+            {
+                case MonsterAI.MonsterType.A_Skeleton:
+                    MoveWayPoint_A();
+                    break;
+                case MonsterAI.MonsterType.B_Fishman:
+                    MoveWayPoint_B();
+                    break;
+                case MonsterAI.MonsterType.C_Slime:
+                    MoveWayPoint_C();
+                    break;
+            }
         }
     }
 }
+

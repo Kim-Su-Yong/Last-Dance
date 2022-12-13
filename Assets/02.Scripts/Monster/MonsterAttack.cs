@@ -4,15 +4,38 @@ using UnityEngine;
 
 public class MonsterAttack : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+
+
+    
+    // Script
+    MonsterAI monsterAI;
+
+
+
+
+
+
+
+    void Awake()
     {
-        
+        monsterAI = GetComponent<MonsterAI>();
+        // Resources
+
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+
+    }
+
     void Update()
     {
-        
+
     }
+
+    
+
+
+
 }

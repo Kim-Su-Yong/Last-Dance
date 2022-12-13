@@ -149,17 +149,4 @@ public class ChangeForm : MonoBehaviour
         coolImg.fillAmount = 0f;
         canFormChange = true;
     }
-
-    private void CoolDown()
-    {
-        if (!canFormChange)
-        {
-            charForm_Timer += Time.deltaTime;
-            if (charForm_Timer > charForm_CoolTime)
-            {
-                charForm_Timer = 0;
-                canFormChange = true;
-            }
-        }
-    }
 }

@@ -6,20 +6,23 @@ using UnityEngine.UI;
 public class PlayerDamage : MonoBehaviour
 {
     [Header("UI")]
-    public Image HpBar;
-    public Text HpText;
+    public Image HpBar;             // 체력바
+    public Text HpText;             // 체력 텍스트
+
     [Header("Data")]
-    [SerializeField] float curHp;
-    public float initHp;
-    public CharacterData charData;
-    public bool isDie;
-    public GameObject hitEffect;
+    [SerializeField] float curHp;   // 현재 체력
+    public float initHp;            // 시작시 체력
+    public bool isDie;              // 사망 확인
+    public GameObject hitEffect;    // 피격 이펙트
+
+    readonly string M_AttackTag = "M_ATTACK";   // 몬스터 공격 콜라이더 태그
 
     Renderer[] renderers;
 
     Animator animator;
     ThirdPersonCtrl controller;
     PlayerAttack attack;
+    PlayerState playerState;
 
     readonly int hashDie = Animator.StringToHash("Die");
 
@@ -29,6 +32,7 @@ public class PlayerDamage : MonoBehaviour
         animator = GetComponent<Animator>();
         controller = GetComponent<ThirdPersonCtrl>();
         attack = GetComponent<PlayerAttack>();
+        playerState = GetComponent<PlayerState>();
     }
 
     void Start()
@@ -42,34 +46,31 @@ public class PlayerDamage : MonoBehaviour
 
     void InitCharacterData()
     {
-        initHp = charData.maxHp;
+        initHp = 1000;
         HpBar.fillAmount = 1f;
         HpBar.color = Color.green;
     }
 
     void Update()
     {
-        // 체력 감소 테스트용 스크립트
-        // P키 누르면 맞는 애니메이션 및 체력 감소 구현
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Hit();
-            if (curHp <= 0)
-            {
-                StartCoroutine("Die");
-            }
-        }
+   
     }
 
-    private void Hit()
+    // 피격 코루틴
+    IEnumerator Hit(GameObject Enemy)
     {
-        if (isDie) return;
-
         animator.SetTrigger("Hit");     // 피격 애니메이션 재생
-        curHp -= 10;                    // 몬스터의 공격력과 캐릭터의 방어력에 따라 받는 데미지가 달라짐
+        animator.SetFloat("Speed", 0f);
+
+        curHp -= Enemy.GetComponent<MonsterAI>().damage;
+        //curHp -= enemy.GetComponent<MonsterAI>().damage;
+        //curHp -= 10;                    // 몬스터의 공격력과 캐릭터의 방어력에 따라 받는 데미지가 달라짐
         curHp = Mathf.Clamp(curHp, 0, initHp);
         HpBar.fillAmount = (float)curHp / initHp;
         HpText.text = curHp.ToString() + " / " + initHp.ToString();
+
+        playerState.state = PlayerState.State.HIT;
+        
         GameObject hitEff = Instantiate(hitEffect, transform.position + new Vector3(0, 1.5f, 0), Quaternion.identity);
         Destroy(hitEff, 1.5f);
 
@@ -77,25 +78,28 @@ public class PlayerDamage : MonoBehaviour
             HpBar.color = Color.red;
         else if (HpBar.fillAmount <= 0.5f)
             HpBar.color = Color.yellow;
+
+        yield return new WaitForSeconds(1f);
+        playerState.state = PlayerState.State.IDLE;
+        //hitCollider.enabled = true;
     }
 
     IEnumerator Die()
     {
-        controller.enabled = false;
-        attack.enabled = false;
+        playerState.state = PlayerState.State.DIE;  // 사망 상태로 변경
         isDie = true;
        
         animator.SetTrigger("Die");     // 사망 애니메이션 실행
         /*
          * 사망 UI창 띄우기
          */
-        Debug.Log("사망하였습니다.");
+        //Debug.Log("사망하였습니다.");
         yield return new WaitForSeconds(3f);
         SetPlayerVisible(false);
         yield return new WaitForSeconds(5f); // 5초뒤 자동부활
         Respawn();
     }
-    public void Respawn()
+    public void Respawn()   // 덜 구현되어 있는 상태
     {
         Transform SpawnPoint = GameObject.Find("SpawnManager").
             transform.GetChild(0).GetComponent<Transform>();
@@ -105,8 +109,9 @@ public class PlayerDamage : MonoBehaviour
         HpBar.fillAmount = (float)curHp / initHp;
         HpText.text = curHp.ToString() + " / " + initHp.ToString();
         SetPlayerVisible(true);
-        controller.enabled = true;
-        attack.enabled = true;
+        playerState.state = PlayerState.State.IDLE;
+        //controller.enabled = true;
+        //attack.enabled = true;
         isDie = false;
     }
 
@@ -118,29 +123,27 @@ public class PlayerDamage : MonoBehaviour
         }
     }
 
-    //void Die()
-    //{
-    //    if (isDie) return;
-
-    //    // 게임 매니저에 플레이어가 죽었다고 전달
-    //    animator.SetTrigger("Die");     // 사망 애니메이션 실행
-    //    // 사망시 UI 띄우기 또는 게임 오버 씬으로 전환
-        
-    //    isDie = true;
-
-
-    //}
 
     private void OnTriggerEnter(Collider other)
     {
-        // 적에게 공격받으면 체력이 감소하는 스크립트들
-        //if (other.CompareTag("E_BULLET")) // 에너미 원거리 공격
-        //{
+        if(other.CompareTag(M_AttackTag))
+        {
+            // 죽었거나 피격 상태 라면 실행하지 않음
+            if (isDie ||
+            playerState.state == PlayerState.State.DIE ||
+            playerState.state == PlayerState.State.HIT)
+                return;
+            GameObject EnemyInfo = other.GetComponentInParent<MonsterAI>().gameObject;
+            StartCoroutine(Hit(EnemyInfo));
+            if (curHp <= 0)
+            {
+                StartCoroutine("Die");
+            }
+        }
+    }
 
-        //}
-        //if(other.CompareTag("E_MELEE")) // 에너미 근접 공격
-        //{
-
-        //}
+    void OnHit()
+    {
+        animator.SetFloat("Speed", 0f);
     }
 }
