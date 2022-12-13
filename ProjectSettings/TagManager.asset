@@ -10,7 +10,6 @@ TagManager:
   - BULLET
   - FOX_FIRE
   - Enemy
-  - FLYATTACKRANGE
   - PUNCH
   - NPC
   - InventorySlot

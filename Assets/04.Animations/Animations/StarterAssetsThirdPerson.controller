@@ -8,7 +8,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Punch01
-  m_Speed: 1
+  m_Speed: 1.3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -27350686787386719}
@@ -2397,7 +2397,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Punch 02
-  m_Speed: 1
+  m_Speed: 1.3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -4972069679394607702}
@@ -2557,7 +2557,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Hit
-  m_Speed: 1
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6839620931586967345}
@@ -3557,7 +3557,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FireBall
-  m_Speed: 1
+  m_Speed: 1.1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -217838657807457563}
