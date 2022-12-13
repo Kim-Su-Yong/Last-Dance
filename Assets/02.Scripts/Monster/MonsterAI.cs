@@ -44,7 +44,7 @@ public class MonsterAI : MonoBehaviour
 
     // 해야 할 것 : 공격하지 않을 땐 콜라이더 enabled = false;로 변경
     // Components
-    [HideInInspector]
+    //[HideInInspector]
     public BoxCollider attackCollider;
 
     // Bool
@@ -103,7 +103,7 @@ public class MonsterAI : MonoBehaviour
         audio = GetComponent<AudioSource>();
         moveAgent = GetComponent<MoveAgent>();
         monsterAttack = GetComponent<MonsterAttack>();
-        attackCollider = GetComponent<BoxCollider>();
+        attackCollider = GetComponentInChildren<BoxCollider>();
 
         // UI
         Hp_Canvas = transform.GetChild(2).GetComponent<Canvas>();
