@@ -17,15 +17,22 @@ public class FoxFire : MonoBehaviour
     [SerializeField]
     LayerMask layerMask = 0;
 
+    [SerializeField]
+    SkillData foxFireData;
+    SphereCollider collider;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        foxFireData =  Resources.Load("SkillData/FoxFire Data") as SkillData;
+        collider = GetComponent<SphereCollider>();
     }
 
     private void OnEnable()
     {
-        StartCoroutine(Delay());
+        collider.enabled = true;
+        rb.isKinematic = false;
+        //StartCoroutine(Delay());
     }
 
     void Update()
@@ -75,9 +82,21 @@ public class FoxFire : MonoBehaviour
     {
         if (other.gameObject.CompareTag("ENEMY"))
         {
-            gameObject.SetActive(false);
+            StartCoroutine(Explosion(0f));
+            //gameObject.SetActive(false);
         }
 
         //Destroy(gameObject);
+    }
+
+    IEnumerator Explosion(float time)
+    {
+        yield return new WaitForSeconds(time);
+        collider.enabled = false;
+        rb.isKinematic = true;
+        GameObject explosion = Instantiate(foxFireData.skillEffect, transform.position, Quaternion.identity);
+        Destroy(explosion, 1f);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

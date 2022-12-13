@@ -9,7 +9,8 @@ public class PlayerState : MonoBehaviour
           MOVE,
           ATTACK,
           JUMP,
-          DIE
+          DIE, 
+          HIT
         };
 
     [Header("플레이어 상태")]
@@ -52,18 +53,28 @@ public class PlayerState : MonoBehaviour
                 case State.ATTACK:
                     shooter.enabled = false;
                     playerCtrl.enabled = false;
+                    //playerAttack.enabled = false;
                     changeForm.enabled = false;
                     break;
                 case State.JUMP:
                     shooter.enabled = false;
                     playerAttack.enabled = false;
                     changeForm.enabled = false;
+                    playerCtrl.enabled = true;
                     break;
 
                 case State.DIE:
                     shooter.enabled = false;
                     playerCtrl.enabled = false;
                     changeForm.enabled = false;
+                    playerAttack.enabled = false;
+                    break;
+
+                case State.HIT:
+                    playerCtrl.enabled = false;
+                    shooter.enabled = true;
+                    changeForm.enabled = false;
+                    playerAttack.enabled = true;
                     break;
             }
         }
