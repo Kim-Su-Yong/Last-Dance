@@ -10,11 +10,11 @@ public class LookAtCamera : MonoBehaviour
     {
         CanvasTr = GetComponent<Transform>();
         CamTr = Camera.main.transform;
-        this.transform.Rotate(0, 180, 0);
     }
 
     void Update()
     {
         CanvasTr.LookAt(CamTr.transform);
+        CanvasTr.rotation = Quaternion.LookRotation(CanvasTr.position - CamTr.position);
     }
 }

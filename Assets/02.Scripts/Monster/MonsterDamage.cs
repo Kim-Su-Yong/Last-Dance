@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MonsterDamage : MonoBehaviour
 {
     // Component
-    //private MeshRenderer renderer;
 
     // Readonly
     private readonly string fireBallTag = "FIREBALL";
@@ -13,21 +13,32 @@ public class MonsterDamage : MonoBehaviour
     private readonly string foxFireTag = "FOX_FIRE";
     private readonly string punchTag = "PUNCH";
 
-    private float D_FireBall = 10f;
-
+    private float fireBall_Damage = 20f;
+    private float bullet_Damage = 20f;
+    private float foxFire_Damage = 20f;
+    private float punch_Damage = 20f;
 
     // Scripts
     MonsterAI monsterAI;
 
+    // Prefabs
+    [SerializeField]
+    private GameObject damageUIPrefab;
+    private GameObject damageParticlePrefab;
+
+    // Pre
+    private Color M_DamageColor = new Color(255f, 110f, 0f);
+
     void Awake()
     {
         monsterAI = GetComponent<MonsterAI>();
-        //renderer = GetComponent<MeshRenderer>();
+        damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
 
     }
 
     void Update()
     {
+
 
     }
 
@@ -35,60 +46,73 @@ public class MonsterDamage : MonoBehaviour
     {
         if (other.CompareTag(fireBallTag))
         {
-            monsterAI.M_HP -= 10f;
+            int _damage = (int) (fireBall_Damage + Random.Range(0f, 10f));
+            monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
             monsterAI.HpUpdate();
             monsterAI.DamagedUI();
 
-            //monsterAI.monsterRenderer[0].material.SetColor();
-            //StartCoroutine(ResetColor());
+            if (!monsterAI.isDie)
+                ShowDamageEffect(other, _damage);
         }
         if (other.CompareTag(bulletTag))
         {
-            BulletAttack();
+            int _damage = (int) (bullet_Damage + Random.Range(0f, 10f));
+            monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
             monsterAI.HpUpdate();
             monsterAI.DamagedUI();
-            //monsterAI.monsterRenderer.material.color = Color.red;
-            //StartCoroutine(ResetColor());
+
+            if (!monsterAI.isDie)
+                ShowDamageEffect(other, _damage);
         }
         if (other.CompareTag(foxFireTag))
         {
-            monsterAI.M_HP -= 20f;
+            int _damage = (int) (foxFire_Damage + Random.Range(0f, 10f));
+            monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
             monsterAI.HpUpdate();
             monsterAI.DamagedUI();
-            //monsterAI.monsterRenderer.material.color = Color.red;
-            //StartCoroutine(ResetColor());
+
+            if (!monsterAI.isDie)
+                ShowDamageEffect(other, _damage);
         }
         if (other.CompareTag(punchTag))
         {
-            monsterAI.M_HP -= 15f;
+            int _damage = (int) (punch_Damage + Random.Range(0f, 10f));
+            monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
             monsterAI.HpUpdate();
             monsterAI.DamagedUI();
-            //monsterAI.monsterRenderer.material.color = Color.red;
-            //StartCoroutine(ResetColor());
+
+            if (!monsterAI.isDie)
+                ShowDamageEffect(other, _damage);
         }
     }
 
-    void OnDamage()
-    {
-        //capsuleCollider.enabled = true;
-    }
-
-    void BulletAttack()
-    {
-        monsterAI.M_HP -= 2f;
-    }
     void FlyAttack()
     {
         monsterAI.M_HP -= 10f;
         //capsuleCollider.enabled = false;
-        //Invoke("OnDamage", 5.0f);
+    }
+
+    void ShowDamageEffect(Collider col, int _damage)
+    {
+        // Monster GotHit Particle Effect
+        Vector3 pos = col.ClosestPoint(transform.position);
+        Vector3 _normal = transform.position - pos;
+        //GameObject Effect_M_GotHit = Instantiate(damageParticlePrefab, pos, Quaternion.identity);
+
+        // Monster GotHit Damage Amount Effect
+        Vector3 MonsterHeader = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), 
+                                            transform.position.y + 2.2f, 
+                                            transform.position.z + Random.Range(-0.5f, 0.5f));
+        GameObject Effect_M_DamageAmount = Instantiate(damageUIPrefab, MonsterHeader, Quaternion.identity, transform);
+        Effect_M_DamageAmount.GetComponent<TextMeshPro>().text = _damage.ToString();
+        Effect_M_DamageAmount.GetComponent<TextMeshPro>().color = M_DamageColor;
     }
 }
