@@ -17,7 +17,7 @@ TagManager:
   - Walkable
   - EnemyBullet
   - Boss
-  - MonsterAttack
+  - M_ATTACK
   layers:
   - Default
   - TransparentFX
