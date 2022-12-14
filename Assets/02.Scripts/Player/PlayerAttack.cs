@@ -74,8 +74,8 @@ public class PlayerAttack : MonoBehaviour
     private void OnEnable()
     {
         // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
-        foreach(var col in punchCollider)
-            col.gameObject.SetActive(false);
+        //foreach(var col in punchCollider)
+            //col.gameObject.SetActive(false);
     }
 
     void Update()
