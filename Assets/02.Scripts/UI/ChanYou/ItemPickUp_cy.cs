@@ -4,15 +4,37 @@ using UnityEngine;
 
 public class ItemPickUp_cy : MonoBehaviour
 {
-    
-    void Start()
+    public int itemID;
+    public int _count;
+    //public string pickUpSound;
+
+    public bool isPickUp = false;
+    private readonly string playerTag = "Player";
+
+    private void Update()
     {
-        
+        PickUp();
     }
 
-    
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag(playerTag))
+            isPickUp = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(playerTag))
+            isPickUp = false;
+    }
+
+    public void PickUp()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && isPickUp)
+        {
+            //Inventory.instance.GetAnItem(itemID, _count);
+            Destroy(this.gameObject);
+        }
         
     }
 }
