@@ -7,7 +7,7 @@ public class PlayerAction : MonoBehaviour
     [SerializeField]
     GameObject nearObject;  // 캐릭터와 가장 가까운 오브젝트를 저장
     PlayerState playerState;
-    public GameManager manager;
+    public GameManager g_manager;
     public static PlayerAction instance;
     public string currentMapName;
     public string currentSceneName;
@@ -22,7 +22,7 @@ public class PlayerAction : MonoBehaviour
         {
             if (nearObject == null) return;
             theSound.Play(call_sound);
-            manager.Action();
+            g_manager.Action();
             /*
              * 충분히 가까워진 상태에서 e키를 누르면 해당 상호작용 팝업창 출력
              */
