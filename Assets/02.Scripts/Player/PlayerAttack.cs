@@ -25,29 +25,29 @@ public class PlayerAttack : MonoBehaviour
     public Transform FirePos;       // 파이어볼 던져질 발사 위치
     [SerializeField]
     GameObject FireBall;            // 파이어볼 오브젝트
-    readonly string playerTag = "Player";
 
     [Header("여우불 가드(스킬1)")]
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
     public bool canSkill = true;    // 스킬 사용 가능 상태 유무
+    public SkillData fireData;      // 여우불 스킬 데이터
     float skill1_CoolTime = 10f;
     float skill_CoolTimer;
 
     [Header("호랑이 펀치")]
-    public BoxCollider punchCollider;
-    float lastAttackTime = 0f;  // 마지막으로 공격한 시간
+    public BoxCollider[] punchCollider; // 펀치 충돌 콜라이더 배열
     int punchCount = 0;
     readonly int hashCombo = Animator.StringToHash("Combo");
-    public GameObject thirdEffect;
+    public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
 
     [Header("호랑이 포효(스킬1)")]
-    public SkillData roarData;
+    public SkillData roarData;      // 포효 스킬 데이터
+    public Transform roarTr;        // 포효 이펙트 위치
         
     [Header("제어 변수")]
     public bool bIsAttack;          //  공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
-
-    //public List<SkillData> skillDatas = new List<SkillData>();     // 스킬 데이터를 담을 리스트
+    [SerializeField]
+    LayerMask enemyLayer;           // 에너미 검출을 위한 레이어
 
     void Awake()
     {
@@ -58,24 +58,24 @@ public class PlayerAttack : MonoBehaviour
         controller = GetComponent<CharacterController>();
         FireBall = Resources.Load("Magic fire") as GameObject;
         animator = GetComponent<Animator>();
+
+        fireData = Resources.Load("SkillData/FoxFire Data") as SkillData;
         roarData = Resources.Load("SkillData/Roar Data") as SkillData;
 
-        //for(int i=0; i<skillDatas.Count; i++)
-        //{
-        //    skillDatas[i] = GetComponent<SkillData>();
-        //}
-
+        thirdEffect.Stop();
     }
 
     private void Start()
     {
+        //enemyLayer = LayerMask.NameToLayer("ENEMY");
         CreateFireBallPool();
     }
 
     private void OnEnable()
     {
         // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
-        punchCollider.gameObject.SetActive(false);
+        //foreach(var col in punchCollider)
+            //col.gameObject.SetActive(false);
     }
 
     void Update()
@@ -159,33 +159,11 @@ public class PlayerAttack : MonoBehaviour
 
     private void TigerBaseAttack(bool isPunching)
     {
-        //AttackCollider(isPunching);
         animator.SetBool(hashCombo, isPunching);
-        //if (isPunching)
-        //    StartCoroutine(StartPunch());
     }
-
-    //IEnumerator StartPunch()
-    //{
-    //    if (Time.time - lastAttackTime > 1f)
-    //    {
-    //        lastAttackTime = Time.time;
-    //        punchCount++;
-    //        if (punchCount == 3)
-    //        {
-    //            punchCount = 0;
-    //        }
-    //        while (isPunching)
-    //        {
-    //            animator.SetBool(hashCombo, true);
-    //            yield return new WaitForSeconds(1f);
-    //        }
-    //    }
-    //}
 
     void OnFire()
     {
-        //GameObject Fire = Instantiate(FireBall, FirePos.position, FirePos.rotation);
         // 오브젝트 풀링 방식
         GameObject _fireBall = GetFireBall();
         if(_fireBall != null)
@@ -204,7 +182,7 @@ public class PlayerAttack : MonoBehaviour
         {
             if (count < 3)
             {
-                punchCollider.gameObject.SetActive(true);
+                punchCollider[0].gameObject.SetActive(true);
             }
             punchCount++;
         }
@@ -214,7 +192,8 @@ public class PlayerAttack : MonoBehaviour
     void OnHitAttack()
     {
         Debug.Log("호랑이 세번째 타격");
-        punchCollider.gameObject.SetActive(true);
+        thirdEffect.Play();
+        punchCollider[1].gameObject.SetActive(true);
     }
     void OnAttackEnd(int count)
     {
@@ -223,7 +202,6 @@ public class PlayerAttack : MonoBehaviour
             playerState.state = PlayerState.State.IDLE;
         if (count != 0) // 펀치공격
         {
-            //punchCollider.gameObject.SetActive(false);
             punchCount = 0;
         }
     }
@@ -233,6 +211,8 @@ public class PlayerAttack : MonoBehaviour
         if (canSkill)
         {
             animator.SetInteger("SkillState", 1);
+            GameObject Effect = Instantiate(fireData.skillEffect, transform.position , Quaternion.identity);
+            Destroy(Effect, 1f);
             float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
             yield return new WaitForSeconds(animTime);
         }
@@ -264,25 +244,21 @@ public class PlayerAttack : MonoBehaviour
 
     void OnRoar()
     {
-        // 이펙트 위치 조정 필요함
-        GameObject rEffect = Instantiate(roarData.skillEffect,
-            transform.position + transform.up * 2
-            , Quaternion.identity);
-        Destroy(rEffect, 1f);
+        // 이펙트 소환
+        GameObject Effect = Instantiate(roarData.skillEffect, roarTr.position, roarTr.rotation);
+        Destroy(Effect, 1f);
 
-        // 20 반경의 충돌체를 모두 저장
-        Collider[] Cols = Physics.OverlapSphere(transform.position, roarData.f_skillRange);
+        // 포효 스킬 반경의 에너미 레이어 충돌체를 모두 저장
+        Collider[] Cols = Physics.OverlapSphere(transform.position, roarData.f_skillRange, enemyLayer);
         
+        // 콜라이더가 에너미들이라면 
         foreach(Collider col in Cols)
         {
             Rigidbody rb = col.GetComponent<Rigidbody>();
             if(rb != null)
             {
-                if(col.CompareTag("ENEMY"))
-                {
-                    col.GetComponent<EnemyDamage>().OnHitSkill((int)roarData.f_skillDamage, roarData.skillName);
-                    StartCoroutine(DownSpeed(col.gameObject));
-                }
+                col.GetComponent<EnemyDamage>().OnHitSkill((int)roarData.f_skillDamage, roarData.skillName);
+                StartCoroutine(DownSpeed(col.gameObject));
             }
         }
     }

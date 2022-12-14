@@ -5,18 +5,13 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private PlayerAction thePlayer;
-    //private FadeManager theFade;
-    [SerializeField]
-    private Image image; //검은색 화면
-    [SerializeField]
-    private GameObject button; //삭제 예정
-    [SerializeField]
-    private GameObject button1; //삭제 예정
-    public GameObject FadePannel;
-
+    public GameObject talkImage;
+    public Text talkText;
+    public GameObject canvasUI;
     void Start()
     {
-        
+        talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(0).gameObject;
+        canvasUI = GameObject.Find("Canvas_UI");
     }
     void Update()
     {
@@ -31,36 +26,20 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         thePlayer = FindObjectOfType<PlayerAction>(); 
     }
-    public void FadeIn()
+    public void Action()
     {
-        Debug.Log("페이드인");
-        button1.SetActive(false);
-        StartCoroutine(FadeInCoroutine());
-    }
-    IEnumerator FadeInCoroutine()
-    {
-        float fadeCount = 1; //처음 알파값
-        while (fadeCount > 0) //알파 최대값 1.0까지 반복
-        {
-            fadeCount -= 0.02f;
-            yield return new WaitForSeconds(0.005f); //n초마다 실행(작을수록 빨리 인함)
-            image.color = new Color(0, 0, 0, fadeCount); //해당 변수값으로 알파값 지정
+            if(talkImage.gameObject.activeInHierarchy == false)
+            {
+                talkImage.gameObject.SetActive(true);
+                Time.timeScale = 0f;
+                canvasUI.gameObject.SetActive(false);
+                talkText.text = "루나NPC입니다. 무엇을 도와드릴까요?";
+            }
+            else
+            {
+                talkImage.gameObject.SetActive(false);
+                canvasUI.gameObject.SetActive(true);
+                Time.timeScale = 1f;
+            }
         }
     }
-    public void FadeOut()
-    {
-        Debug.Log("페이드아웃");
-        button.SetActive(false);
-        StartCoroutine(FadeOutCoroutine());
-    }
-    IEnumerator FadeOutCoroutine()
-    {
-        float fadeCount = 0; //처음 알파값
-        while(fadeCount < 1) //알파 최대값 1.0까지 반복
-        {
-            fadeCount += 0.02f;
-            yield return new WaitForSeconds(0.005f); //n초마다 실행(작을수록 빨리 아웃함)
-            image.color = new Color(0, 0, 0, fadeCount); //해당 변수값으로 알파값 지정
-        }
-    }
-}

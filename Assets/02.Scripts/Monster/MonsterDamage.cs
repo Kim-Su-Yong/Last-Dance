@@ -28,11 +28,13 @@ public class MonsterDamage : MonoBehaviour
 
     // Pre
     private Color M_DamageColor = new Color(255f, 110f, 0f);
+    private float Offset = 0f;
 
     void Awake()
     {
         monsterAI = GetComponent<MonsterAI>();
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
+        damageParticlePrefab = Resources.Load<GameObject>("Effects/HitEffect_A");
 
     }
 
@@ -44,9 +46,10 @@ public class MonsterDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (monsterAI.isDie == true) return;
         if (other.CompareTag(fireBallTag))
         {
-            int _damage = (int) (fireBall_Damage + Random.Range(0f, 10f));
+            int _damage = (int) (fireBall_Damage + Random.Range(0f, 9f));
             monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
@@ -58,7 +61,7 @@ public class MonsterDamage : MonoBehaviour
         }
         if (other.CompareTag(bulletTag))
         {
-            int _damage = (int) (bullet_Damage + Random.Range(0f, 10f));
+            int _damage = (int) (bullet_Damage + Random.Range(0f, 9f));
             monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
@@ -70,7 +73,7 @@ public class MonsterDamage : MonoBehaviour
         }
         if (other.CompareTag(foxFireTag))
         {
-            int _damage = (int) (foxFire_Damage + Random.Range(0f, 10f));
+            int _damage = (int) (foxFire_Damage + Random.Range(0f, 9f));
             monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
@@ -82,7 +85,7 @@ public class MonsterDamage : MonoBehaviour
         }
         if (other.CompareTag(punchTag))
         {
-            int _damage = (int) (punch_Damage + Random.Range(0f, 10f));
+            int _damage = (int) (punch_Damage + Random.Range(0f, 9f));
             monsterAI.M_HP -= _damage;
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
@@ -106,10 +109,24 @@ public class MonsterDamage : MonoBehaviour
         Vector3 pos = col.ClosestPoint(transform.position);
         Vector3 _normal = transform.position - pos;
         //GameObject Effect_M_GotHit = Instantiate(damageParticlePrefab, pos, Quaternion.identity);
+        //Destroy(Effect_M_GotHit, 1f);
 
         // Monster GotHit Damage Amount Effect
+        // MonsterHeader Offset Setting
+        switch (monsterAI.monsterType)
+        {
+            case MonsterAI.MonsterType.A_Skeleton:
+                Offset = 2.2f;
+                break;
+            case MonsterAI.MonsterType.B_Fishman:
+                Offset = 1.9f;
+                break;
+            case MonsterAI.MonsterType.C_Slime:
+                Offset = 1.5f;
+                break;
+        }
         Vector3 MonsterHeader = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), 
-                                            transform.position.y + 2.2f, 
+                                            transform.position.y + Offset, 
                                             transform.position.z + Random.Range(-0.5f, 0.5f));
         GameObject Effect_M_DamageAmount = Instantiate(damageUIPrefab, MonsterHeader, Quaternion.identity, transform);
         Effect_M_DamageAmount.GetComponent<TextMeshPro>().text = _damage.ToString();

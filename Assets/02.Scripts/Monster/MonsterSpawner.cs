@@ -77,10 +77,13 @@ public class MonsterSpawner : MonoBehaviour
                     if (_monster.activeSelf == false)
                     {
                         yield return new WaitForSeconds(3.0f);
-                        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                        Transform randomPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                        Transform spawnPoint = randomPoint;
+                        _monster.transform.position = randomPoint.position;
+                        
                         _monster.transform.position = spawnPoint.position;
                         _monster.SetActive(true);
-                        //_monster.GetComponent<MonsterAI>().isDie = false;
+                        _monster.GetComponent<MonsterAI>().isDie = false;
                         _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
                         break;
                     }
@@ -92,10 +95,18 @@ public class MonsterSpawner : MonoBehaviour
                     if (_monster.activeSelf == false)
                     {
                         yield return new WaitForSeconds(3.0f);
-                        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                        Transform pastPosition = _monster.transform;
+                        Transform spawnPoint = pastPosition;
+
+                        if (spawnPoint == pastPosition)
+                        {
+                            spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                            _monster.transform.position = spawnPoint.position;
+                        }
+
                         _monster.transform.position = spawnPoint.position;
                         _monster.SetActive(true);
-                        //_monster.GetComponent<MonsterAI>().isDie = false;
+                        _monster.GetComponent<MonsterAI>().isDie = false;
                         _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
                         break;
                     }
@@ -107,10 +118,16 @@ public class MonsterSpawner : MonoBehaviour
                     if (_monster.activeSelf == false)
                     {
                         yield return new WaitForSeconds(3.0f);
-                        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
-                        _monster.transform.position = spawnPoint.position;
+                        Transform pastPosition = _monster.transform;
+                        Transform spawnPoint = pastPosition;
+
+                        if (spawnPoint == pastPosition)
+                        {
+                            spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
+                            _monster.transform.position = spawnPoint.position;
+                        }
                         _monster.SetActive(true);
-                        //_monster.GetComponent<MonsterAI>().isDie = false;
+                        _monster.GetComponent<MonsterAI>().isDie = false;
                         _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
                         break;
                     }

@@ -18,7 +18,7 @@ public class ChangeForm : MonoBehaviour
     public MeshRenderer Staff;  // 스태프 모델 메쉬 렌더러
     Animator animator;
 
-    public bool canFormChange = true;      // 폼 전환 가능 상태
+    public bool canFormChange = true;       // 폼 전환 가능 상태
     public float charForm_CoolTime = 7.0f;  // 폼 전환 쿨타임
     public float charForm_Timer;
 

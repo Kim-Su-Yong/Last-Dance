@@ -18,7 +18,4 @@ public class MonsterData : ScriptableObject
     [Header("AI Distance")]
     public float attackDist = 2.0f;
     public float traceDist = 10.0f;
-
-    [Header("Material Color")]
-    public Color skinColor = Color.white;
 }

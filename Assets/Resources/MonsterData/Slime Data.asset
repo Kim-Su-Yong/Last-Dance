@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 100
   damage: 20
+  attackSpeed: 0.5
   patrolSpeed: 1.5
   traceSpeed: 4
   attackDist: 2
-  traceDist: 10
-  skinColor: {r: 1, g: 1, b: 1, a: 1}
+  traceDist: 8
