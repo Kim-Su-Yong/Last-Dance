@@ -34,8 +34,10 @@ public class MonsterAI : MonoBehaviour
     public Transform playerTr;
     public Transform monsterTr;
 
-    public float attackDist = 5.0f;
-    public float traceDist = 10.0f;
+    [SerializeField]
+    private float attackDist = 2.0f;
+    [SerializeField]
+    private float traceDist = 10.0f;
 
     // Attack Value
     public float damage = 20f;
@@ -80,6 +82,7 @@ public class MonsterAI : MonoBehaviour
     public Text Hp_Text;
     private float AwayTime = 5f;    // 최종 20
     private float GoneTime = 10f;   // 최종 40
+    private float _countTime = 0f;
     public Color HpColor = new Color(0f, 188f, 195f, 255f);
     
 
@@ -128,6 +131,12 @@ public class MonsterAI : MonoBehaviour
         StartCoroutine(CheckState());
         StartCoroutine(Action());
 
+        // Hp Bar
+        if (isDamaged == true)
+            _countTime += Time.deltaTime;
+        HpUIActivation();
+        HpUpdate();
+
         // Attack
         if (isAttack)
         {
@@ -139,22 +148,14 @@ public class MonsterAI : MonoBehaviour
             Quaternion rot = Quaternion.LookRotation(playerTr.position - monsterTr.position);
             monsterTr.rotation = Quaternion.Slerp(monsterTr.rotation, rot, Time.deltaTime * damping);
         }
-
-        // Hp UI 비활성화 루틴
-        if (isDamaged == true)
-        {
-            HpUIDeactivation();
-        }
-        HpUpdate();
     }
 
-    private void HpUIDeactivation()
+    private void HpUIActivation()
     {
-        Hp_Canvas.enabled = true;
-        if (moveAgent.patrolling)
+        // 플레이어에 지름 10m Sphere Collider Trigger 만들어서 OnTriggerEnter, OnTriggerExit 함수 적고
+        // monsterAI.Hp_Canvas.enabled = true & false; 넣기
+        if (moveAgent.patrolling == true && isDamaged == true)
         {
-            float _countTime = 0;
-            _countTime += Time.deltaTime;
             if (_countTime >= AwayTime)
             {
                 Hp_Canvas.enabled = false;
@@ -163,6 +164,7 @@ public class MonsterAI : MonoBehaviour
             {
                 M_HP = M_MaxHP;
                 isDamaged = false;
+                _countTime = 0f;
             }
         }
     }
@@ -273,12 +275,11 @@ public class MonsterAI : MonoBehaviour
                     isAttack = false;
                     moveAgent.Stop();
                     animator.SetTrigger("Death");
-                    isAttack = false;
                     isDie = true;
 
                     GetComponent<Rigidbody>().isKinematic = true;
                     GetComponent<CapsuleCollider>().enabled = false;
-                    StopAllCoroutines();
+                    //StopAllCoroutines();
 
                     StartCoroutine(PushPool());
 
@@ -322,11 +323,11 @@ public class MonsterAI : MonoBehaviour
 
     IEnumerator PushPool()
     {
-        yield return new WaitForSeconds(3.0f);
-        isDie = false;
+        yield return new WaitForSeconds(5.0f);
+        StartCoroutine(ReturnUIColor());
+        this.gameObject.SetActive(false);
         GetComponent<Rigidbody>().isKinematic = false;
         GetComponent<CapsuleCollider>().enabled = true;
-        this.gameObject.SetActive(false);
         M_HP = M_MaxHP;
     }
 }
