@@ -42,8 +42,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 1.26, z: 1.22}
+  m_Size: {x: 0.7, y: 0.7, z: 0.7}
+  m_Center: {x: 0, y: 1.18, z: 1.07}
 --- !u!1 &506979788
 GameObject:
   m_ObjectHideFlags: 0
@@ -14300,6 +14300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ee36fa03c7b85418ff5964c7bb8f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageUIPrefab: {fileID: 0}
 --- !u!114 &803678079172877196
 MonoBehaviour:
   m_ObjectHideFlags: 0
