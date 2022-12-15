@@ -43,7 +43,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.7, y: 0.7, z: 0.7}
-  m_Center: {x: 0, y: 1.3, z: 0.71}
+  m_Center: {x: 0, y: 1.3, z: 1.3}
 --- !u!1 &168176582182411265
 GameObject:
   m_ObjectHideFlags: 0
@@ -2333,10 +2333,10 @@ MonoBehaviour:
   state: 0
   playerTr: {fileID: 0}
   monsterTr: {fileID: 0}
-  attackDist: 5
-  traceDist: 10
+  attackDist: 2
+  traceDist: 8
   damage: 20
-  attackSpeed: 0.5
+  attackSpeed: 2
   attackCollider: {fileID: 0}
   isDie: 0
   isAttack: 0

@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 15
-  destroyTime: 1.5
+  destroyTime: 2
   text: {fileID: 2148997261125783581}
 --- !u!114 &7746469215203277216
 MonoBehaviour:
