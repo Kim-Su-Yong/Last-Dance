@@ -17,24 +17,19 @@ public class MonsterDetection : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
+        if (other.gameObject == null) return; 
         if (other.CompareTag(monsterTag))
         {
-            if (other.GetComponent<MonsterAI>().isDie == false)
-            {
-                other.GetComponent<MonsterAI>().Hp_Canvas.enabled = true;
-            }
-        }
+            other.GetComponent<MonsterAI>().Hp_Canvas.enabled = true;
+        }  
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.gameObject == null) return;
         if (other.CompareTag(monsterTag))
         {
-            if (other.GetComponent<MonsterAI>().isDie == false)
-            {
-                other.GetComponent<MonsterAI>().Hp_Canvas.enabled = false;
-            }
+            other.GetComponent<MonsterAI>().Hp_Canvas.enabled = false;
         }
     }
 }
