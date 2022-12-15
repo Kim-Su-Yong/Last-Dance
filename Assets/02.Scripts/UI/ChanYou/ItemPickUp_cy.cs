@@ -8,33 +8,18 @@ public class ItemPickUp_cy : MonoBehaviour
     public int _count;
     //public string pickUpSound;
 
-    public bool isPickUp = false;
+    public GameObject prefab_floating_text;
+    
+
     private readonly string playerTag = "Player";
 
-    private void Update()
+    private void OnTriggerStay(Collider other)
     {
-        PickUp();
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(playerTag))
-            isPickUp = true;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag(playerTag))
-            isPickUp = false;
-    }
-
-    public void PickUp()
-    {
-        if (Input.GetKeyDown(KeyCode.F) && isPickUp)
+        if (other.CompareTag(playerTag) && Input.GetKeyDown(KeyCode.K))
         {
-            Inventory_cy.instance.GetAnItem(itemID);
+            Inventory_cy.instance.GetAnItem(itemID, _count);
             Destroy(this.gameObject);
         }
-        
+
     }
 }
