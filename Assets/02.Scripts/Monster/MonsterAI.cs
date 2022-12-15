@@ -37,11 +37,11 @@ public class MonsterAI : MonoBehaviour
     [SerializeField]
     private float attackDist = 2.0f;
     [SerializeField]
-    private float traceDist = 10.0f;
+    private float traceDist = 8.0f;
 
     // Attack Value
     public float damage = 20f;
-    public float attackSpeed = 0.5f;  // Between
+    public float attackSpeed = 2f;  // Between
     private float nextAttackTime = 0;
 
     // 해야 할 것 : 공격하지 않을 땐 콜라이더 enabled = false;로 변경
@@ -214,6 +214,11 @@ public class MonsterAI : MonoBehaviour
                 break;
             case MonsterAI.MonsterType.B_Fishman:
                 animator.SetTrigger($"Attack {Random.Range(1, 3)}");
+
+                yield return new WaitForSeconds(0.9f);
+                attackCollider.enabled = true;
+                yield return new WaitForSeconds(0.3f);
+                attackCollider.enabled = false;
                 break;
             case MonsterAI.MonsterType.C_Slime:
                 break;

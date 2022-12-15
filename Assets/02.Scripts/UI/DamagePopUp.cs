@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// Instantiate 는 MonsterDamage.cs 스크립트 ShowDamageEffect() 메서드에 있습니다.
 public class DamagePopUp : MonoBehaviour
 {
-    private TextMeshPro textMesh;
     private float destroyTime = 1.0f;
 
     private Animation anim;
@@ -16,7 +16,6 @@ public class DamagePopUp : MonoBehaviour
     }
     private void Start()
     {
-        //anim.Play();
         Destroy(this.gameObject, destroyTime);
     }
 }
