@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 public class PlayerDamage : MonoBehaviour
 {
     [Header("UI")]
@@ -14,6 +14,7 @@ public class PlayerDamage : MonoBehaviour
     public float initHp;            // 시작시 체력
     public bool isDie;              // 사망 확인
     public GameObject hitEffect;    // 피격 이펙트
+    public GameObject damageUIPrefab;
 
     readonly string M_AttackTag = "M_ATTACK";   // 몬스터 공격 콜라이더 태그
 
@@ -33,6 +34,7 @@ public class PlayerDamage : MonoBehaviour
         controller = GetComponent<ThirdPersonCtrl>();
         attack = GetComponent<PlayerAttack>();
         playerState = GetComponent<PlayerState>();
+        damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
 
     void Start()
@@ -62,7 +64,11 @@ public class PlayerDamage : MonoBehaviour
         animator.SetTrigger("Hit");     // 피격 애니메이션 재생
         animator.SetFloat("Speed", 0f);
 
-        curHp -= Enemy.GetComponent<MonsterAI>().damage;
+        int _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
+        curHp -= _damage;
+        ShowDamageEffect(_damage);
+        // + 지은 : 다이나믹한 연출을 위해 데미지 0~9의 값이 랜덤 추가되는 것으로 변경했습니다!
+
         //curHp -= enemy.GetComponent<MonsterAI>().damage;
         //curHp -= 10;                    // 몬스터의 공격력과 캐릭터의 방어력에 따라 받는 데미지가 달라짐
         curHp = Mathf.Clamp(curHp, 0, initHp);
@@ -140,6 +146,19 @@ public class PlayerDamage : MonoBehaviour
                 StartCoroutine("Die");
             }
         }
+    }
+
+    void ShowDamageEffect(int _damage) // 플레이어 위치는 transform이 되므로 위치 정보를 받을 필요 없음
+    {
+        Vector3 MonsterHeader = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f),
+                                            transform.position.y + 1.8f,
+                                            transform.position.z + Random.Range(-0.5f, 0.5f));
+        GameObject Effect_M_DamageAmount = Instantiate(damageUIPrefab,
+                                           MonsterHeader,
+                                           Quaternion.identity,
+                                           transform);
+        Effect_M_DamageAmount.GetComponent<TextMeshPro>().text = _damage.ToString();
+        Effect_M_DamageAmount.GetComponent<TextMeshPro>().color = new Color(150f, 0f, 255f);
     }
 
     void OnHit()

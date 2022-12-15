@@ -27,7 +27,7 @@ public class MonsterDamage : MonoBehaviour
     private GameObject damageParticlePrefab;
 
     // Pre
-    private Color M_DamageColor = new Color(255f, 110f, 0f);
+    //public Color M_DamageColor = new Color(255f, 110f, 0f);
     private float Offset = 0f;
 
     void Awake()
@@ -35,13 +35,6 @@ public class MonsterDamage : MonoBehaviour
         monsterAI = GetComponent<MonsterAI>();
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
         damageParticlePrefab = Resources.Load<GameObject>("Effects/HitEffect_A");
-
-    }
-
-    void Update()
-    {
-
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -116,10 +109,10 @@ public class MonsterDamage : MonoBehaviour
         switch (monsterAI.monsterType)
         {
             case MonsterAI.MonsterType.A_Skeleton:
-                Offset = 2.2f;
+                Offset = 2.3f;
                 break;
             case MonsterAI.MonsterType.B_Fishman:
-                Offset = 1.9f;
+                Offset = 2.0f;
                 break;
             case MonsterAI.MonsterType.C_Slime:
                 Offset = 1.5f;
@@ -128,8 +121,12 @@ public class MonsterDamage : MonoBehaviour
         Vector3 MonsterHeader = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), 
                                             transform.position.y + Offset, 
                                             transform.position.z + Random.Range(-0.5f, 0.5f));
-        GameObject Effect_M_DamageAmount = Instantiate(damageUIPrefab, MonsterHeader, Quaternion.identity, transform);
+        GameObject Effect_M_DamageAmount = Instantiate(damageUIPrefab, 
+                                           MonsterHeader, 
+                                           Quaternion.identity,
+                                           transform);
+        //Effect_M_DamageAmount.GetComponent<Transform>().Rotate(0f, 0f, 30f);  // 적용 불가 (Instantiate에도 X)
         Effect_M_DamageAmount.GetComponent<TextMeshPro>().text = _damage.ToString();
-        Effect_M_DamageAmount.GetComponent<TextMeshPro>().color = M_DamageColor;
+        //Effect_M_DamageAmount.GetComponent<TextMeshPro>().color = M_DamageColor; // 폰트 특성 상 생상 반영 안 되는 것으로 보임.
     }
 }
