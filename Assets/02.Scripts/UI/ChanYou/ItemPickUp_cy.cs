@@ -32,7 +32,7 @@ public class ItemPickUp_cy : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F) && isPickUp)
         {
-            //Inventory.instance.GetAnItem(itemID, _count);
+            Inventory_cy.instance.GetAnItem(itemID);
             Destroy(this.gameObject);
         }
         
