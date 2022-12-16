@@ -37,6 +37,7 @@ public class PlayerAttack : MonoBehaviour
     int punchCount = 0;
     readonly int hashCombo = Animator.StringToHash("Combo");
     public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
+    public TrailRenderer rHandTrail;
 
     [Header("호랑이 스킬")]
     public SkillData roarData;      // 포효 스킬 데이터
@@ -63,8 +64,10 @@ public class PlayerAttack : MonoBehaviour
 
         fireData = Resources.Load("SkillData/FoxFire Data") as SkillData;
         roarData = Resources.Load("SkillData/Roar Data") as SkillData;
+        healData = Resources.Load("SkillData/Heal Data") as SkillData;
 
         thirdEffect.Stop();
+        rHandTrail.enabled = false;
     }
 
     private void Start()
@@ -209,16 +212,26 @@ public class PlayerAttack : MonoBehaviour
             {
                 punchCollider[0].gameObject.SetActive(true);
             }
+            else if (count == 3)
+                rHandTrail.enabled = true;
+            Invoke("TrailOff", 2f);
             punchCount++;
         }
         
         animator.SetFloat("Speed", 0f);
     }
+
+    void TrailOff()
+    {
+        rHandTrail.enabled = false;
+    }
+
     void OnHitAttack()
     {
         Debug.Log("호랑이 세번째 타격");
         thirdEffect.Play();
         punchCollider[1].gameObject.SetActive(true);
+
     }
     void OnAttackEnd(int count)
     {
@@ -250,8 +263,6 @@ public class PlayerAttack : MonoBehaviour
         if(canSkill)
         {
             animator.SetInteger("SkillState", 2);
-            GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity);
-            Destroy(Effect, 1f);
             float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
             yield return new WaitForSeconds(animTime);
         }
@@ -285,6 +296,11 @@ public class PlayerAttack : MonoBehaviour
     {
         // PlayerDagage 스크립트에 RestoreHealth 함수 추가 예쩡
         //GetComponent<PlayerDamage>().
+        GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity);
+        Destroy(Effect, 1.5f);
+        PlayerDamage playerDamage = GetComponent<PlayerDamage>();
+        playerDamage.RestoreHp(healData.f_skillDamage);
+        Debug.Log("Heal");
     }
 
     void OnRoar()
