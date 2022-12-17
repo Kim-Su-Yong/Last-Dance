@@ -8,6 +8,8 @@ public class Inventory_cy : MonoBehaviour
 
     private DatabaseManager_cy theData;
 
+    private HoverTip hoverTip;
+
     public List<RectTransform> Nodes;
     private List<Item_cy> InventoryItem;
     private List<Item_cy> Item_Consume;
@@ -17,6 +19,7 @@ public class Inventory_cy : MonoBehaviour
     //test
     public GameObject[] test2;
     public GameObject test;
+    public int ItemNumber;
 
     [SerializeField]
     private InventorySlot_cy slots; //인벤토리 슬롯들
@@ -53,6 +56,7 @@ public class Inventory_cy : MonoBehaviour
         {
             if (itemID == theData.itemList[i].itemID)
             {
+                ItemNumber = itemID;
                 AddItem();
                 GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
                 clone.GetComponent<FloatingText>().text.text = theData.itemList[i].itemName + " " + _count + "개 획득 +";
@@ -84,6 +88,16 @@ public class Inventory_cy : MonoBehaviour
     {
         GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN().transform);
+        hoverTip = clone.GetComponent<HoverTip>();
+
+        for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
+        {
+            if (ItemNumber == theData.itemList[i].itemID)
+            {
+                hoverTip.tipToShow = theData.itemList[i].itemDescription;
+                break;
+            }
+        }
     }
 
     public void ShowItem()
@@ -104,9 +118,12 @@ public class Inventory_cy : MonoBehaviour
         GameObject emptyInven = null;
         for (int i = 0; i < test2.Length; i++)
         {
-            if (test2[i].transform.GetChild(0).GetComponent<GameObject>() == null)
+            if (test2[i].transform.childCount == 0)
+            {
                 emptyInven = test2[i];
-            break;
+                Debug.Log("부모 찾음");
+                break;
+            }
         }
         return emptyInven;
     }
