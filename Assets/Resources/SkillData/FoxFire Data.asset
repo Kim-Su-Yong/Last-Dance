@@ -21,4 +21,4 @@ MonoBehaviour:
     \uC2DC \uD3ED\uBC1C\uD558\uBA70 \uB370\uBBF8\uC9C0\uB97C \uC900\uB2E4."
   f_skillRange: 5
   f_skillDamage: 15
-  f_skillCoolTime: 5
+  f_skillCoolTime: 10
