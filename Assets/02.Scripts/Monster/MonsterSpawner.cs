@@ -17,7 +17,7 @@ public class MonsterSpawner : MonoBehaviour
     {
         A_Skeleton,
         B_Fishman,
-        C_Slime
+        C_Mushroom
     }
     [Header("Which monster do you want to Spawn?")]
     public MonsterType monsterType;
@@ -49,11 +49,11 @@ public class MonsterSpawner : MonoBehaviour
         // Resource Load
         monsterInfos[0].monsterPrefab = Resources.Load<GameObject>("MonsterData/Skeleton Prefab");
         monsterInfos[1].monsterPrefab = Resources.Load<GameObject>("MonsterData/Fishman Prefab");
-        monsterInfos[2].monsterPrefab = Resources.Load<GameObject>("MonsterData/Slime Prefab");
+        monsterInfos[2].monsterPrefab = Resources.Load<GameObject>("MonsterData/Mushroom Prefab");
 
         monsterInfos[0].monsterData = Resources.Load<MonsterData>("MonsterData/Skeleton Data");
         monsterInfos[1].monsterData = Resources.Load<MonsterData>("MonsterData/Fishman Data");
-        monsterInfos[2].monsterData = Resources.Load<MonsterData>("MonsterData/Slime Data");
+        monsterInfos[2].monsterData = Resources.Load<MonsterData>("MonsterData/Mushroom Data");
     }
 
     private void Start()
@@ -113,7 +113,7 @@ public class MonsterSpawner : MonoBehaviour
                     }
                 }
                 break;
-            case MonsterType.C_Slime:
+            case MonsterType.C_Mushroom:
                 foreach (GameObject _monster in MonsterC)
                 {
                     if (_monster.activeSelf == false)
@@ -146,7 +146,7 @@ public class MonsterSpawner : MonoBehaviour
             case MonsterType.B_Fishman:
                 StartCoroutine(CreateMonster_B());
                 break;
-            case MonsterType.C_Slime:
+            case MonsterType.C_Mushroom:
                 StartCoroutine(CreateMonster_C());
                 break;
         }
@@ -188,14 +188,14 @@ public class MonsterSpawner : MonoBehaviour
 
     IEnumerator CreateMonster_C()
     {
-        GameObject C_obj = new GameObject("C_Slime-Pool");
+        GameObject C_obj = new GameObject("C_Mushroom-Pool");
         for (int i = 0; i < monsterCount; i++)
         {
             yield return new WaitForSeconds(CreateTime);
 
             Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
             var C_monster = Instantiate(monsterInfos[2].monsterPrefab, spawnPoint.position, spawnPoint.rotation, C_obj.transform);
-            C_monster.name = "C_Slime" + i.ToString();
+            C_monster.name = "C_Mushroom" + i.ToString();
             C_monster.GetComponent<MonsterAI>().SetUp(monsterInfos[2].monsterData);
             C_monster.GetComponent<MonsterAI>().LetMeKnowMonsterType(2);
             C_monster.SetActive(true);
