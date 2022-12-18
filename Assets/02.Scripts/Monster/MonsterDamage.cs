@@ -42,7 +42,7 @@ public class MonsterDamage : MonoBehaviour
         if (monsterAI.isDie == true) return;
         if (other.CompareTag(fireBallTag))
         {
-            int _damage = (int) (fireBall_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(fireBall_Damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
@@ -59,7 +59,7 @@ public class MonsterDamage : MonoBehaviour
         }
         if (other.CompareTag(bulletTag))
         {
-            int _damage = (int) (bullet_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(bullet_Damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
@@ -74,7 +74,7 @@ public class MonsterDamage : MonoBehaviour
         }
         if (other.CompareTag(foxFireTag))
         {
-            int _damage = (int) (foxFire_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(foxFire_Damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
@@ -89,7 +89,7 @@ public class MonsterDamage : MonoBehaviour
         }
         if (other.CompareTag(punchTag))
         {
-            int _damage = (int) (punch_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(punch_Damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
@@ -128,11 +128,11 @@ public class MonsterDamage : MonoBehaviour
             case MonsterAI.MonsterType.B_Fishman:
                 Offset = 2.1f;
                 break;
-            case MonsterAI.MonsterType.C_Slime:
+            case MonsterAI.MonsterType.C_Mushroom:
                 Offset = 1.5f;
                 break;
         }
-        Vector3 MonsterHeader = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), 
+        Vector3 MonsterHeader = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f),
                                             transform.position.y + Offset,
                                             transform.position.z + Random.Range(-0.5f, 0.5f));
         GameObject Effect_M_DamageAmount = Instantiate(damageUIPrefab,
