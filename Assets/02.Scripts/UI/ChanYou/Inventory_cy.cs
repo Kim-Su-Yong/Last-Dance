@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Inventory_cy : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class Inventory_cy : MonoBehaviour
 
     private HoverTip hoverTip;
 
-    public List<RectTransform> Nodes;
     private List<Item_cy> InventoryItem;
     private List<Item_cy> Item_Consume;
     private List<Item_cy> Item_Equip;
@@ -28,6 +28,10 @@ public class Inventory_cy : MonoBehaviour
     public GameObject prefab_floating_text;
     public Transform messageTr;
 
+    private void Awake()
+    {
+        
+    }
 
     void Start()
     {
@@ -89,12 +93,16 @@ public class Inventory_cy : MonoBehaviour
         GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN().transform);
         hoverTip = clone.GetComponent<HoverTip>();
+        slots = clone.GetComponent<InventorySlot_cy>();
 
         for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
         {
             if (ItemNumber == theData.itemList[i].itemID)
             {
+                hoverTip.titleToShow = theData.itemList[i].itemName;
                 hoverTip.tipToShow = theData.itemList[i].itemDescription;
+                hoverTip.itemToShow = theData.itemList[i].itemIcon;
+                slots.icon.sprite = theData.itemList[i].itemIcon;
                 break;
             }
         }
@@ -128,15 +136,4 @@ public class Inventory_cy : MonoBehaviour
         return emptyInven;
     }
 
-    //private void OnEnable() 하위 모든 트랜스폼에 대해서 적용이 되어버림...
-    //{
-    //    RectTransform[] transforms = GetComponentsInChildren<RectTransform>();
-    //    Nodes = new List<RectTransform>();
-
-    //    foreach (RectTransform tr in transforms)
-    //    {
-    //        if (tr != this.transform)
-    //            Nodes.Add(tr);
-    //    }
-    //}
 }
