@@ -26,20 +26,20 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     GameObject FireBall;            // 파이어볼 오브젝트
 
-    [Header("여우불 가드(스킬1)")]
+    [Header("여우 스킬")]
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
     public bool canSkill = true;    // 스킬 사용 가능 상태 유무
     public SkillData fireData;      // 여우불 스킬 데이터
-    float skill1_CoolTime = 10f;
-    float skill_CoolTimer;
+    public SkillData healData;      // 힐 스킬 데이터
 
     [Header("호랑이 펀치")]
     public BoxCollider[] punchCollider; // 펀치 충돌 콜라이더 배열
     int punchCount = 0;
     readonly int hashCombo = Animator.StringToHash("Combo");
     public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
+    public TrailRenderer rHandTrail;
 
-    [Header("호랑이 포효(스킬1)")]
+    [Header("호랑이 스킬")]
     public SkillData roarData;      // 포효 스킬 데이터
     public Transform roarTr;        // 포효 이펙트 위치
         
@@ -49,6 +49,9 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     LayerMask enemyLayer;           // 에너미 검출을 위한 레이어
 
+
+    float skill1_CoolTime = 10f;
+    float skill_CoolTimer;
     void Awake()
     {
         playerCtrl = GetComponent<ThirdPersonCtrl>();
@@ -61,13 +64,14 @@ public class PlayerAttack : MonoBehaviour
 
         fireData = Resources.Load("SkillData/FoxFire Data") as SkillData;
         roarData = Resources.Load("SkillData/Roar Data") as SkillData;
+        healData = Resources.Load("SkillData/Heal Data") as SkillData;
 
         thirdEffect.Stop();
+        rHandTrail.enabled = false;
     }
 
     private void Start()
     {
-        //enemyLayer = LayerMask.NameToLayer("ENEMY");
         CreateFireBallPool();
     }
 
@@ -77,7 +81,6 @@ public class PlayerAttack : MonoBehaviour
         //foreach(var col in punchCollider)
             //col.gameObject.SetActive(false);
     }
-
     void Update()
     {
         // 캐릭터가 죽은 상태에서는 공격불가
@@ -98,10 +101,14 @@ public class PlayerAttack : MonoBehaviour
             // 마우스 오른쪽 버튼 누르면 스킬 사용(단, 스킬 사용 가능 상태일때만 발동된다)
             else if (Input.GetButtonDown("Fire2") && !bIsAttack)
             {
-                //FoxSkill_1();
                 StartCoroutine(FoxSkill_1());
             }
+            else if(Input.GetKeyDown(KeyCode.Q) && !bIsAttack)
+            {
+                StartCoroutine(FoxSkill_2());
+            }
             CoolDown(); // 스킬 쿨타임 관련 코드 추가 필요
+
         }
         else if (changeForm.curForm == ChangeForm.FormType.TIGER)
         {
@@ -126,6 +133,27 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    // 공격키를 눌렀을때 타겟을 바라보게 해주는 함수
+    void LookAtTarget() 
+    {
+        if (target != null)
+        {
+            Vector3 dir = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
+            transform.LookAt(dir); // 적을 바라보긴 하지만 부자연스러움
+        }
+
+        //if(target != null)
+        //{
+        //    Vector3 lookDir = (target.transform.position - transform.position).normalized;
+
+        //    Quaternion from = transform.rotation;
+        //    Quaternion to = Quaternion.LookRotation(lookDir);
+
+        //    transform.rotation = Quaternion.Lerp(from, to, Time.deltaTime*5f);
+        //}
+    }
+
+    #region FireBall 오브젝트 풀링
     void CreateFireBallPool()   // 오브젝트 풀링용 오브젝트 생성(FireBall)
     {
         GameObject fireBallPools = new GameObject("FireBallPool");
@@ -149,11 +177,11 @@ public class PlayerAttack : MonoBehaviour
         }
         return null;
     }
+    #endregion
 
     #region 기본 공격
     void FoxBaseAttack()
     {
-        //nextFire = Time.time + fireRate;
         animator.SetTrigger("Attack");
     }
 
@@ -184,16 +212,26 @@ public class PlayerAttack : MonoBehaviour
             {
                 punchCollider[0].gameObject.SetActive(true);
             }
+            else if (count == 3)
+                rHandTrail.enabled = true;
+            Invoke("TrailOff", 2f);
             punchCount++;
         }
         
         animator.SetFloat("Speed", 0f);
     }
+
+    void TrailOff()
+    {
+        rHandTrail.enabled = false;
+    }
+
     void OnHitAttack()
     {
         Debug.Log("호랑이 세번째 타격");
         thirdEffect.Play();
         punchCollider[1].gameObject.SetActive(true);
+
     }
     void OnAttackEnd(int count)
     {
@@ -206,13 +244,25 @@ public class PlayerAttack : MonoBehaviour
         }
     }
     #endregion
+
+    #region 스킬
     IEnumerator FoxSkill_1()
     {
         if (canSkill)
         {
             animator.SetInteger("SkillState", 1);
-            GameObject Effect = Instantiate(fireData.skillEffect, transform.position , Quaternion.identity);
+            GameObject Effect = Instantiate(fireData.skillEffect, transform.position ,Quaternion.identity);
             Destroy(Effect, 1f);
+            float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
+            yield return new WaitForSeconds(animTime);
+        }
+    }
+
+    IEnumerator FoxSkill_2()
+    {
+        if(canSkill)
+        {
+            animator.SetInteger("SkillState", 2);
             float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
             yield return new WaitForSeconds(animTime);
         }
@@ -242,6 +292,17 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    void OnHeal()
+    {
+        // PlayerDagage 스크립트에 RestoreHealth 함수 추가 예쩡
+        //GetComponent<PlayerDamage>().
+        GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity);
+        Destroy(Effect, 1.5f);
+        PlayerDamage playerDamage = GetComponent<PlayerDamage>();
+        playerDamage.RestoreHp(healData.f_skillDamage);
+        Debug.Log("Heal");
+    }
+
     void OnRoar()
     {
         // 이펙트 소환
@@ -262,6 +323,14 @@ public class PlayerAttack : MonoBehaviour
             }
         }
     }
+    IEnumerator DownSpeed(GameObject target)
+    {
+        // 실제 에너미 데이터로 속도 감소 시켜야함
+        // *수정 할 예정*
+        target.GetComponent<EnemyDamage>().testSpeed -= 2f;
+        yield return new WaitForSeconds(2f);
+        target.GetComponent<EnemyDamage>().testSpeed += 2f;
+    }
 
     void OnSkillEnd()
     {
@@ -280,23 +349,6 @@ public class PlayerAttack : MonoBehaviour
             //if(skill_CoolTimer)
         }
     }
+    #endregion
 
-    // 공격키를 눌렀을때 타겟을 바라보게 해주는 함수
-    void LookAtTarget()
-    {
-        if(target != null)
-        {
-            Vector3 dir = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
-            transform.LookAt(dir); // 적을 바라보긴 하지만 부자연스러움
-        }
-    }
-
-    IEnumerator DownSpeed(GameObject target)
-    {
-        // 실제 에너미 데이터로 속도 감소 시켜야함
-        // *수정 할 예정*
-        target.GetComponent<EnemyDamage>().testSpeed -= 2f;
-        yield return new WaitForSeconds(2f);
-        target.GetComponent<EnemyDamage>().testSpeed += 2f;
-    }
 }

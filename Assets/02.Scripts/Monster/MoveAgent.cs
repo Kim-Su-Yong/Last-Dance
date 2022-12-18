@@ -51,7 +51,7 @@ public class MoveAgent : MonoBehaviour
                     case MonsterAI.MonsterType.B_Fishman:
                         MoveWayPoint_B();
                         break;
-                    case MonsterAI.MonsterType.C_Slime:
+                    case MonsterAI.MonsterType.C_Mushroom:
                         MoveWayPoint_C();
                         break;
                 }
@@ -121,7 +121,7 @@ public class MoveAgent : MonoBehaviour
             case MonsterAI.MonsterType.B_Fishman:
                 MoveWayPoint_B();
                 break;
-            case MonsterAI.MonsterType.C_Slime:
+            case MonsterAI.MonsterType.C_Mushroom:
                 MoveWayPoint_C();
                 break;
         }
@@ -146,7 +146,7 @@ public class MoveAgent : MonoBehaviour
     {
         if (agent.isPathStale) return;
 
-        agent.destination = wayPoints_C[nextIdx].position;
+        agent.destination = wayPoints_B[nextIdx].position;
         agent.isStopped = false;
     }
 
@@ -167,7 +167,7 @@ public class MoveAgent : MonoBehaviour
                 else if (patrolType == PatrolType.Random)
                     nextIdx = UnityEngine.Random.Range(0, wayPoints_B.Count);
                 break;
-            case MonsterAI.MonsterType.C_Slime:
+            case MonsterAI.MonsterType.C_Mushroom:
                 if (patrolType == PatrolType.Order)
                     nextIdx = ++nextIdx % wayPoints_C.Count;
                 else if (patrolType == PatrolType.Random)
@@ -175,7 +175,7 @@ public class MoveAgent : MonoBehaviour
                 break;
         }
     }
-    
+
     void TraceTarget(Vector3 pos)
     {
         if (agent.isPathStale) return;
@@ -214,11 +214,10 @@ public class MoveAgent : MonoBehaviour
                 case MonsterAI.MonsterType.B_Fishman:
                     MoveWayPoint_B();
                     break;
-                case MonsterAI.MonsterType.C_Slime:
+                case MonsterAI.MonsterType.C_Mushroom:
                     MoveWayPoint_C();
                     break;
             }
         }
     }
 }
-

@@ -14,7 +14,7 @@ public class MonsterAI : MonoBehaviour
     {
         A_Skeleton,
         B_Fishman,
-        C_Slime
+        C_Mushroom
     }
     public MonsterType monsterType;
 
@@ -37,11 +37,13 @@ public class MonsterAI : MonoBehaviour
     [SerializeField]
     private float attackDist = 2.0f;
     [SerializeField]
-    private float traceDist = 10.0f;
+    private float traceDist = 8.0f;
+    private float traceDistMemory = 0f;
+    private float MadTraceDist = 15.0f;
 
     // Attack Value
     public float damage = 20f;
-    public float attackSpeed = 0.5f;  // Between
+    public float attackSpeed = 2f;  // Between
     private float nextAttackTime = 0;
 
     // 해야 할 것 : 공격하지 않을 땐 콜라이더 enabled = false;로 변경
@@ -54,6 +56,7 @@ public class MonsterAI : MonoBehaviour
     public bool isAttack = false;
     public bool isDamaged = false;
     public bool isIdle = false;
+    public bool isInDetection = false;
 
     // Animation
     [HideInInspector]
@@ -79,12 +82,15 @@ public class MonsterAI : MonoBehaviour
     // UI
     public Canvas Hp_Canvas;
     public Image Hp_Bar;
+    public Image Hp_Bar_Before;
     public Text Hp_Text;
-    private float AwayTime = 5f;    // 최종 20
-    private float GoneTime = 10f;   // 최종 40
+    private float AwayTime = 20f;    // 최종 20
+    private float GoneTime = 40f;   // 최종 40
     private float _countTime = 0f;
     public Color HpColor = new Color(0f, 188f, 195f, 255f);
-    
+
+    // Damage
+    public float _beforeHP = 0f;    // MonsterDamage.cs에서 값 저장됨
 
     // ReadOnly
     // 프리팹 특성 상 BlendTree > Locomotion 이외에는 Any State -> Trigger 
@@ -110,8 +116,9 @@ public class MonsterAI : MonoBehaviour
 
         // UI
         Hp_Canvas = transform.GetChild(2).GetComponent<Canvas>();
-        Hp_Bar = transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Image>();
-        Hp_Text = transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Text>();
+        Hp_Bar_Before = transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Image>();
+        Hp_Bar = transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Image>();
+        Hp_Text = transform.GetChild(2).GetChild(0).GetChild(2).GetComponent<Text>();
 
         // Resources Load
         attackSound = Resources.Load<AudioClip>("Sound/");
@@ -122,8 +129,13 @@ public class MonsterAI : MonoBehaviour
     private void Start()
     {
         M_HP = M_MaxHP;
+        Hp_Bar.fillAmount = 1f;
+        Hp_Bar_Before.enabled = false;
         Hp_Canvas.enabled = false;
         attackCollider.enabled = false;
+
+        Hp_Text.text = ((int)M_HP).ToString() + " / " + ((int)M_MaxHP).ToString();
+
     }
 
     void Update()
@@ -134,8 +146,8 @@ public class MonsterAI : MonoBehaviour
         // Hp Bar
         if (isDamaged == true)
             _countTime += Time.deltaTime;
-        HpUIActivation();
-        HpUpdate();
+        PlayerFarAway();
+        //HpUpdate();
 
         // Attack
         if (isAttack)
@@ -150,10 +162,10 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
-    private void HpUIActivation()
+    private void PlayerFarAway()
     {
-        // 플레이어에 지름 10m Sphere Collider Trigger 만들어서 OnTriggerEnter, OnTriggerExit 함수 적고
-        // monsterAI.Hp_Canvas.enabled = true & false; 넣기
+        // [Hp 비활성화]
+        if (isInDetection == true) return;
         if (moveAgent.patrolling == true && isDamaged == true)
         {
             if (_countTime >= AwayTime)
@@ -165,7 +177,15 @@ public class MonsterAI : MonoBehaviour
                 M_HP = M_MaxHP;
                 isDamaged = false;
                 _countTime = 0f;
+                traceDist = traceDistMemory;
             }
+        }
+        // [몬스터의 분노] → isDamaged == ture일 때 TraceDistance += 5f 되고,
+        //                    GoneTime 이후 isDamaged == false 되면 초기값으로 변경
+        if (isDamaged == true)
+        {
+            //Debug.Log("Did it work?");
+            traceDist = MadTraceDist;
         }
     }
 
@@ -177,7 +197,10 @@ public class MonsterAI : MonoBehaviour
         moveAgent.patrolSpeed = monsterData.patrolSpeed;
         moveAgent.traceSpeed = monsterData.traceSpeed;
         attackDist = monsterData.attackDist;
+        // TraceDistance
         traceDist = monsterData.traceDist;
+        traceDistMemory = traceDist;
+        MadTraceDist = monsterData.MadTraceDist;
         //monsterRenderer.material.color = monsterData.skinColor; // 슬라임한테 쓰거나, 맞았을 때 쓸 예정
     }
 
@@ -194,7 +217,7 @@ public class MonsterAI : MonoBehaviour
         }
         else if (type == 2)
         {
-            monsterType = MonsterType.C_Slime;
+            monsterType = MonsterType.C_Mushroom;
         }
     }
 
@@ -203,19 +226,33 @@ public class MonsterAI : MonoBehaviour
         // 애니메이션 랜덤 재생
         switch (monsterType)
         {
-            case MonsterAI.MonsterType.A_Skeleton:
+            case MonsterType.A_Skeleton:
                 animator.SetTrigger($"Attack {Random.Range(1, 4)}");
 
                 yield return new WaitForSeconds(0.7f);
                 attackCollider.enabled = true;
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.2f);
                 attackCollider.enabled = false;
 
                 break;
-            case MonsterAI.MonsterType.B_Fishman:
+            case MonsterType.B_Fishman:
                 animator.SetTrigger($"Attack {Random.Range(1, 3)}");
+
+                yield return new WaitForSeconds(0.9f);
+                attackCollider.enabled = true;
+                yield return new WaitForSeconds(0.2f);
+                attackCollider.enabled = false;
                 break;
-            case MonsterAI.MonsterType.C_Slime:
+            case MonsterType.C_Mushroom:
+                animator.SetBool("Attact 4Start", false);
+                animator.SetTrigger("Attack 4End");
+                yield return new WaitForSeconds(0.4f);
+                animator.SetTrigger($"Attack {Random.Range(2, 2)}");
+                yield return new WaitForSeconds(0.6f);
+                attackCollider.enabled = true;
+                yield return new WaitForSeconds(0.2f);
+                attackCollider.enabled = false;
+
                 break;
         }
         //audio.PlayOneShot(attackSound, 1.0f);
@@ -233,10 +270,12 @@ public class MonsterAI : MonoBehaviour
             if (dist <= attackDist)
             {
                 state = State.ATTACK;
+
             }
             else if (dist <= traceDist)
             {
                 state = State.TRACE;
+
             }
             else
             {
@@ -262,7 +301,15 @@ public class MonsterAI : MonoBehaviour
                 case State.TRACE:
                     isAttack = false;
                     moveAgent.traceTarget = playerTr.position;
-                    animator.SetFloat(hashSpeed, moveAgent.speed);
+                    if (monsterType == MonsterType.C_Mushroom)
+                    {
+                        animator.SetBool("Attack 4Start", true);
+                    }
+                    else
+                    {
+                        animator.SetFloat(hashSpeed, moveAgent.speed);
+                    }
+
                     break;
                 case State.ATTACK:
                     if (isAttack == false)
@@ -288,20 +335,18 @@ public class MonsterAI : MonoBehaviour
         }
     }
 
-    //IEnumerator IdleBreakAnimation()
-    //{
-    //    Debug.Log("IDLE");
-    //    moveAgent.Stop();
-    //    animator.SetTrigger("IdleBreak");
-    //    yield return new WaitForSeconds(0f);
-    //    idleTimeCount = 0;
-    //    isIdle = false;
-    //}
-
     public void HpUpdate()
     {
+        // 선형 보간 함수로 데미지 부드럽게 줄어들도록 만듦
+        //Hp_Bar.fillAmount = Mathf.Lerp(Hp_Bar.fillAmount, M_HP / M_MaxHP, Time.deltaTime * 100f);
         Hp_Bar.fillAmount = M_HP / M_MaxHP;
-        Hp_Text.text = ((int)M_HP).ToString() + " / 100";
+        Hp_Bar_Before.fillAmount = _beforeHP / M_MaxHP;
+
+        Debug.Log("Hp_Bar.fillAmount 값 : " + Hp_Bar.fillAmount * M_MaxHP);
+        Hp_Text.text = ((int)M_HP).ToString() + " / " + ((int)M_MaxHP).ToString();
+
+        // HP 값의 범위 지정
+
         if (M_HP <= 0)
         {
             state = State.DIE;
@@ -312,19 +357,20 @@ public class MonsterAI : MonoBehaviour
     public void DamagedUI()
     {
         Hp_Bar.color = Color.red;
-        StartCoroutine(ReturnUIColor());
+        Hp_Bar_Before.enabled = true;
+        Invoke("ReturnUIColor", 0.3f);
     }
 
-    IEnumerator ReturnUIColor()
+    private void ReturnUIColor()
     {
-        yield return new WaitForSeconds(0.3f);
         Hp_Bar.color = HpColor;
+        Hp_Bar_Before.enabled = false;
     }
 
     IEnumerator PushPool()
     {
         yield return new WaitForSeconds(5.0f);
-        StartCoroutine(ReturnUIColor());
+        ReturnUIColor();
         this.gameObject.SetActive(false);
         GetComponent<Rigidbody>().isKinematic = false;
         GetComponent<CapsuleCollider>().enabled = true;

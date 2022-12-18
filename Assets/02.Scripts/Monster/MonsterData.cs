@@ -18,4 +18,5 @@ public class MonsterData : ScriptableObject
     [Header("AI Distance")]
     public float attackDist = 2.0f;
     public float traceDist = 10.0f;
+    public float MadTraceDist = 15.0f;
 }
