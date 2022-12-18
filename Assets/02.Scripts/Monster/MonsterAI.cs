@@ -14,7 +14,7 @@ public class MonsterAI : MonoBehaviour
     {
         A_Skeleton,
         B_Fishman,
-        C_Slime
+        C_Mushroom
     }
     public MonsterType monsterType;
 
@@ -116,8 +116,8 @@ public class MonsterAI : MonoBehaviour
 
         // UI
         Hp_Canvas = transform.GetChild(2).GetComponent<Canvas>();
-        Hp_Bar = transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Image>();
         Hp_Bar_Before = transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<Image>();
+        Hp_Bar = transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<Image>();
         Hp_Text = transform.GetChild(2).GetChild(0).GetChild(2).GetComponent<Text>();
 
         // Resources Load
@@ -184,7 +184,7 @@ public class MonsterAI : MonoBehaviour
         //                    GoneTime 이후 isDamaged == false 되면 초기값으로 변경
         if (isDamaged == true)
         {
-            Debug.Log("Did it work?");
+            //Debug.Log("Did it work?");
             traceDist = MadTraceDist;
         }
     }
@@ -217,7 +217,7 @@ public class MonsterAI : MonoBehaviour
         }
         else if (type == 2)
         {
-            monsterType = MonsterType.C_Slime;
+            monsterType = MonsterType.C_Mushroom;
         }
     }
 
@@ -226,24 +226,33 @@ public class MonsterAI : MonoBehaviour
         // 애니메이션 랜덤 재생
         switch (monsterType)
         {
-            case MonsterAI.MonsterType.A_Skeleton:
+            case MonsterType.A_Skeleton:
                 animator.SetTrigger($"Attack {Random.Range(1, 4)}");
 
                 yield return new WaitForSeconds(0.7f);
                 attackCollider.enabled = true;
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.2f);
                 attackCollider.enabled = false;
 
                 break;
-            case MonsterAI.MonsterType.B_Fishman:
+            case MonsterType.B_Fishman:
                 animator.SetTrigger($"Attack {Random.Range(1, 3)}");
 
                 yield return new WaitForSeconds(0.9f);
                 attackCollider.enabled = true;
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.2f);
                 attackCollider.enabled = false;
                 break;
-            case MonsterAI.MonsterType.C_Slime:
+            case MonsterType.C_Mushroom:
+                animator.SetBool("Attact 4Start", false);
+                animator.SetTrigger("Attack 4End");
+                yield return new WaitForSeconds(0.4f);
+                animator.SetTrigger($"Attack {Random.Range(2, 2)}");
+                yield return new WaitForSeconds(0.6f);
+                attackCollider.enabled = true;
+                yield return new WaitForSeconds(0.2f);
+                attackCollider.enabled = false;
+
                 break;
         }
         //audio.PlayOneShot(attackSound, 1.0f);
@@ -260,11 +269,13 @@ public class MonsterAI : MonoBehaviour
 
             if (dist <= attackDist)
             {
-                state = State.ATTACK;
+                 state = State.ATTACK;
+
             }
             else if (dist <= traceDist)
             {
                 state = State.TRACE;
+
             }
             else
             {
@@ -290,8 +301,16 @@ public class MonsterAI : MonoBehaviour
                 case State.TRACE:
                     isAttack = false;
                     moveAgent.traceTarget = playerTr.position;
-                    animator.SetFloat(hashSpeed, moveAgent.speed);
-                    break;
+                    if (monsterType == MonsterType.C_Mushroom)
+                    {
+                        animator.SetBool("Attack 4Start", true);
+                    }
+                    else
+                    {
+                        animator.SetFloat(hashSpeed, moveAgent.speed);
+                    }
+
+                        break;
                 case State.ATTACK:
                     if (isAttack == false)
                     {
