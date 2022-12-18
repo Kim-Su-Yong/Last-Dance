@@ -128,7 +128,7 @@ public class MonsterDamage : MonoBehaviour
             case MonsterAI.MonsterType.B_Fishman:
                 Offset = 2.1f;
                 break;
-            case MonsterAI.MonsterType.C_Slime:
+            case MonsterAI.MonsterType.C_Mushroom:
                 Offset = 1.5f;
                 break;
         }
