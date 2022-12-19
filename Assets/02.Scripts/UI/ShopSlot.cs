@@ -34,7 +34,7 @@ public class ShopSlot : MonoBehaviour
             //if (DatabaseManager.instance.money >= item.itemCost && !soldOut && Inventory.instance.items.Count < Inventory.instance.SlotCnt)
             //{
                 //DatabaseManager.instance.money -= item.itemCost;
-                Inventory_cy.instance.AddItem();
+                //Inventory_cy.instance.AddItem();
                 soldOut = true;
                 inventoryUI.Buy(slotnum);
                 UpdateSlotUI();

@@ -8,11 +8,11 @@ public class ShopData : MonoBehaviour
     public bool[] soldOuts;
     void Start()
     {
-        stocks.Add(DatabaseManager_cy.instance.itemList[0]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[1]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[2]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[3]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[4]);
+        //stocks.Add(DatabaseManager_cy.instance.itemList[0]);
+        //stocks.Add(DatabaseManager_cy.instance.itemList[1]);
+        //stocks.Add(DatabaseManager_cy.instance.itemList[2]);
+        //stocks.Add(DatabaseManager_cy.instance.itemList[3]);
+        //stocks.Add(DatabaseManager_cy.instance.itemList[4]);
         soldOuts = new bool[stocks.Count];
         for(int i = 0; i < soldOuts.Length; i++)
         {
