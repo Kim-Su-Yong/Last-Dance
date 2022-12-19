@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6d2ab217b89ba45ac9323325ba4b37, type: 3}
   m_Name: Fishman Data
   m_EditorClassIdentifier: 
-  HP: 120
+  HP: 110
   damage: 10
   attackSpeed: 3
-  patrolSpeed: 1.5
-  traceSpeed: 4
+  patrolSpeed: 1
+  traceSpeed: 3
   attackDist: 2
-  traceDist: 8
+  traceDist: 5
+  MadTraceDist: 15
