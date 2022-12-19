@@ -5,9 +5,7 @@ using UnityEngine;
 public class DatabaseManager_cy : MonoBehaviour
 {
     static public DatabaseManager_cy instance;
-    //private PlayerStat thePlayerStat;
-    //public GameObject prefabs_Floating_Text;
-    //public GameObject parent;
+    
     private void Awake()
     {
         if (instance != null)
@@ -20,59 +18,25 @@ public class DatabaseManager_cy : MonoBehaviour
             instance = this;
         }
     }
-    //public string[] var_name;
-    //public float[] var;
-
-    //public string[] switch_name;
-    //public bool[] switches;
-
-    public List<Item_cy> itemList = new List<Item_cy>();
-    //private void FloatingText(int number, string color)
-    //{
-    //    Vector3 vector = thePlayerStat.transform.position;
-    //    vector.y += 60;
-
-    //    GameObject clone = Instantiate(prefabs_Floating_Text, vector, Quaternion.Euler(Vector3.zero));
-    //    clone.GetComponent<FloatingText>().text.text = number.ToString();
-    //    if (color == "GREEN")
-    //        clone.GetComponent<FloatingText>().text.color = Color.green;
-    //    else if (color == "BLUE")
-    //        clone.GetComponent<FloatingText>().text.color = Color.blue;
-    //    clone.GetComponent<FloatingText>().text.fontSize = 25;
-    //    clone.transform.SetParent(parent.transform);
-    //}
-    //public void UseItem(int _itemID)
-    //{
-    //    switch (_itemID)
-    //    {
-    //        case 10001:
-    //            if (thePlayerStat.hp >= thePlayerStat.currentHP + 50)
-    //                thePlayerStat.currentHP += 50;
-    //            else
-    //                thePlayerStat.currentHP = thePlayerStat.hp;
-    //            FloatingText(50, "GREEN");
-    //            break;
-    //        case 10002:
-    //            if (thePlayerStat.mp >= thePlayerStat.currentMP + 50)
-    //                thePlayerStat.currentMP += 15;
-    //            else
-    //                thePlayerStat.currentMP = thePlayerStat.mp;
-    //            FloatingText(50, "BLUE");
-    //            break;
-    //    }
-    //}
+    
+    public List<ItemInfo> itemList = new List<ItemInfo>();
+    
     void Start()
     {
-        //thePlayerStat = FindObjectOfType<PlayerStat>();
-        itemList.Add(new Item_cy(111, "빨간 포션", "체력을 50 회복시켜주는 기적의 물약", Item_cy.ItemType.Consume));
-        itemList.Add(new Item_cy(121, "파란 포션", "마나를 15 회복시켜주는 기적의 물약", Item_cy.ItemType.Consume));
-        itemList.Add(new Item_cy(112, "농축 빨간 포션", "체력을 350 회복시켜주는 기적의 농축 물약", Item_cy.ItemType.Consume));
-        itemList.Add(new Item_cy(122, "농축 파란 포션", "마나를 80 회복시켜주는 기적의 농축 물약", Item_cy.ItemType.Consume));
-        //itemList.Add(new Item_cy(11001, "랜덤 상자", "랜덤으로 포션이 나온다. 낮은 확률로 꽝", Item_cy.ItemType.Consume));
-        //itemList.Add(new Item_cy(20001, "짧은 검", "기본적인 용사의 검", Item_cy.ItemType.Equip));
-        //itemList.Add(new Item_cy(20301, "사파이어 반지", "1분에 미니 1을 회복시켜주는 마법 반지", Item_cy.ItemType.Equip));
-        //itemList.Add(new Item_cy(30001, "고대 유물의 조각1", "반으로 쪼개진 고대 유물의 파편", Item_cy.ItemType.ETC));
-        //itemList.Add(new Item_cy(30002, "고대 유물의 조각2", "반으로 쪼개진 고대 유물의 파편", Item_cy.ItemType.ETC));
-        //itemList.Add(new Item_cy(30003, "고대 유물", "고대 유적에 잠들어있던 고대의 유물", Item_cy.ItemType.ETC));
+        itemList.Add(new ItemInfo(111, "빨간 포션", "체력을 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(121, "파란 포션", "마나를 15 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(112, "농축 빨간 포션", "체력을 350 회복시켜주는 기적의 농축 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(122, "농축 파란 포션", "마나를 80 회복시켜주는 기적의 농축 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(211, "검", "기본검입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon));
+        itemList.Add(new ItemInfo(212, "좋은검", "좋은검입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon));
+        itemList.Add(new ItemInfo(221, "투구", "기본투구입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Helmet));
+        itemList.Add(new ItemInfo(222, "좋은투구", "좋은투구입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Helmet));
+        itemList.Add(new ItemInfo(231, "갑옷", "기본갑옷입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor));
+        itemList.Add(new ItemInfo(232, "좋은갑옷", "좋은갑옷입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor));
+        itemList.Add(new ItemInfo(241, "신발", "기본신발입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots));
+        itemList.Add(new ItemInfo(251, "악세사리", "기본악세사리입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem));
+        itemList.Add(new ItemInfo(252, "좋은악세사리", "좋은악세사리입니다", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem));
+        itemList.Add(new ItemInfo(311, "퀘스트아이템", "퀘스트아이템입니다", ItemInfo.ItemType.ETC));
+        itemList.Add(new ItemInfo(312, "퀘스트아이템2", "퀘스트아이템입니다2", ItemInfo.ItemType.ETC));
     }
 }

@@ -2421,6 +2421,11 @@ MonoBehaviour:
   charForm_Timer: 0
   coolImg: {fileID: 0}
   coolTxt: {fileID: 0}
+  Fox_Skill_Panel:
+  - {fileID: 0}
+  - {fileID: 0}
+  Tiger_Skill_Panel:
+  - {fileID: 0}
 --- !u!114 &4126552369070853432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2458,14 +2463,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   fireBallPool: []
-  maxCount: 5
   FirePos: {fileID: 4126552369662073438}
-  FireBall: {fileID: 0}
   FoxFires:
   - {fileID: 4125743098277407369}
   - {fileID: 4125743098084752048}
   - {fileID: 4125743098130437376}
-  canSkill: 1
+  canSkills: 010101
   fireData: {fileID: 0}
   healData: {fileID: 0}
   punchCollider:
@@ -2480,6 +2483,14 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
+  coolImg:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  coolTxt:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &4126552369070853412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4383,6 +4394,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19800000, guid: 75369bb81385f4904842bf20a51c14a2, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800000, guid: 75369bb81385f4904842bf20a51c14a2, type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.01
       objectReference: {fileID: 0}
@@ -4399,6 +4414,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 19800002, guid: 75369bb81385f4904842bf20a51c14a2, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 75369bb81385f4904842bf20a51c14a2, type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.01
       objectReference: {fileID: 0}
@@ -4413,6 +4432,10 @@ PrefabInstance:
     - target: {fileID: 19800002, guid: 75369bb81385f4904842bf20a51c14a2, type: 3}
       propertyPath: InitialModule.startRotationY.minMaxState
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800004, guid: 75369bb81385f4904842bf20a51c14a2, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19800004, guid: 75369bb81385f4904842bf20a51c14a2, type: 3}
       propertyPath: InitialModule.startSizeY.minMaxState

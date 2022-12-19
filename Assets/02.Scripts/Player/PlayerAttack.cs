@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -18,24 +19,22 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("오브젝트 풀링")]
     public List<GameObject> fireBallPool = new List<GameObject>();
-    public int maxCount = 5;    // 오브젝트 풀링할 개수
-
+    int maxCount = 5;    // 오브젝트 풀링할 개수
 
     [Header("파이어볼 발사")]
     public Transform FirePos;       // 파이어볼 던져질 발사 위치
-    [SerializeField]
     GameObject FireBall;            // 파이어볼 오브젝트
 
     [Header("여우 스킬")]
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
-    public bool canSkill = true;    // 스킬 사용 가능 상태 유무
+    public bool[] canSkills;
+    //public bool canSkill = true;    // 스킬 사용 가능 상태 유무
     public SkillData fireData;      // 여우불 스킬 데이터
     public SkillData healData;      // 힐 스킬 데이터
 
     [Header("호랑이 펀치")]
     public BoxCollider[] punchCollider; // 펀치 충돌 콜라이더 배열
     int punchCount = 0;
-    readonly int hashCombo = Animator.StringToHash("Combo");
     public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
     public TrailRenderer rHandTrail;
 
@@ -49,9 +48,13 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     LayerMask enemyLayer;           // 에너미 검출을 위한 레이어
 
+    public Image[] coolImg;         // 스킬 쿨타임 이미지들
+    public Text[] coolTxt;          // 스킬 쿨타임 텍스트들
 
-    float skill1_CoolTime = 10f;
-    float skill_CoolTimer;
+    // 최적화를 위한 변수
+    readonly int hashCombo = Animator.StringToHash("Combo");
+    readonly int hashSpeed = Animator.StringToHash("Speed");
+
     void Awake()
     {
         playerCtrl = GetComponent<ThirdPersonCtrl>();
@@ -64,37 +67,48 @@ public class PlayerAttack : MonoBehaviour
 
         fireData = Resources.Load("SkillData/FoxFire Data") as SkillData;
         roarData = Resources.Load("SkillData/Roar Data") as SkillData;
-        healData = Resources.Load("SkillData/Heal Data") as SkillData;
-
-        thirdEffect.Stop();
-        rHandTrail.enabled = false;
+        healData = Resources.Load("SkillData/Heal Data") as SkillData; 
     }
 
     private void Start()
     {
         CreateFireBallPool();
+
+        foreach(var img in coolImg)
+        {
+            img.fillAmount = 0f;
+            img.enabled = false;
+        }
+        foreach(var txt in coolTxt)
+        {
+            txt.enabled = false;
+        }
     }
 
     private void OnEnable()
     {
-        // 호랑이 공격하는 시간 외에는 콜라이더가 꺼져있어야 함
-        //foreach(var col in punchCollider)
-            //col.gameObject.SetActive(false);
+        thirdEffect.Stop();
+        rHandTrail.enabled = false;
     }
     void Update()
     {
         // 캐릭터가 죽은 상태에서는 공격불가
-        if (playerState.state == PlayerState.State.DIE||
-            playerState.state == PlayerState.State.JUMP||
+        if (playerState.state == PlayerState.State.DIE ||
+            playerState.state == PlayerState.State.JUMP ||
             playerState.state == PlayerState.State.HIT)
         {
             return;
         }
 
+        Attack();
+    }
+
+    private void Attack()
+    {
         if (changeForm.curForm == ChangeForm.FormType.FOX)
         {
             // 왼쪽 마우스 버튼 누르면 기본 공격(fireRate는 발사 대기 시간)
-            if (Input.GetButtonDown("Fire1")&& !bIsSkill)
+            if (Input.GetButtonDown("Fire1") && !bIsSkill)
             {
                 FoxBaseAttack();
             }
@@ -103,12 +117,10 @@ public class PlayerAttack : MonoBehaviour
             {
                 StartCoroutine(FoxSkill_1());
             }
-            else if(Input.GetKeyDown(KeyCode.Q) && !bIsAttack)
+            else if (Input.GetKeyDown(KeyCode.Q) && !bIsAttack)
             {
                 StartCoroutine(FoxSkill_2());
             }
-            CoolDown(); // 스킬 쿨타임 관련 코드 추가 필요
-
         }
         else if (changeForm.curForm == ChangeForm.FormType.TIGER)
         {
@@ -125,11 +137,10 @@ public class PlayerAttack : MonoBehaviour
             {
                 StartCoroutine(TigerSkill_1());
             }
-            CoolDown(); // 스킬 쿨타임 관련 코드 추가 필요
         }
         else if (changeForm.curForm == ChangeForm.FormType.EAGLE)
         {
-
+            //Shooter 내용
         }
     }
 
@@ -217,8 +228,8 @@ public class PlayerAttack : MonoBehaviour
             Invoke("TrailOff", 2f);
             punchCount++;
         }
-        
-        animator.SetFloat("Speed", 0f);
+
+        moveStop();
     }
 
     void TrailOff()
@@ -226,9 +237,9 @@ public class PlayerAttack : MonoBehaviour
         rHandTrail.enabled = false;
     }
 
-    void OnHitAttack()
+    void OnHitAttack()  // OnThirdAttack으로 바꿀 예정(애니메이션 이벤트도 변경)
     {
-        Debug.Log("호랑이 세번째 타격");
+        //Debug.Log("호랑이 세번째 타격");
         thirdEffect.Play();
         punchCollider[1].gameObject.SetActive(true);
 
@@ -248,40 +259,63 @@ public class PlayerAttack : MonoBehaviour
     #region 스킬
     IEnumerator FoxSkill_1()
     {
-        if (canSkill)
+        if (canSkills[0])
         {
+            canSkills[0] = false;
+            coolImg[0].enabled = true;
+            coolTxt[0].enabled = true;
             animator.SetInteger("SkillState", 1);
-            GameObject Effect = Instantiate(fireData.skillEffect, transform.position ,Quaternion.identity);
+            GameObject Effect = Instantiate(fireData.skillEffect, transform.position, Quaternion.identity);
             Destroy(Effect, 1f);
-            float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
-            yield return new WaitForSeconds(animTime);
+
+            StartCoroutine(CoolTimeImg(fireData.f_skillCoolTime, coolImg[0], coolTxt[0]));
+            yield return new WaitForSeconds(fireData.f_skillCoolTime);
+            canSkills[0] = true;
+            //float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
+            //yield return new WaitForSeconds(animTime); 
         }
     }
 
     IEnumerator FoxSkill_2()
     {
-        if(canSkill)
+        if(canSkills[1])
         {
+            canSkills[1] = false;
+            coolImg[1].enabled = true;
+            coolTxt[1].enabled = true;
             animator.SetInteger("SkillState", 2);
-            float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
-            yield return new WaitForSeconds(animTime);
+            StartCoroutine(CoolTimeImg(healData.f_skillCoolTime, coolImg[1], coolTxt[1]));
+
+            yield return new WaitForSeconds(healData.f_skillCoolTime);
+            canSkills[1] = true;
+
+            //float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
+            //yield return new WaitForSeconds(animTime);
         }
     }
 
     IEnumerator TigerSkill_1()
     {
-        if (canSkill)
+        if (canSkills[2])
         {
+            canSkills[2] = false;
+            coolImg[2].enabled = true;
+            coolTxt[2].enabled = true;
             animator.SetInteger("SkillState", 1);
-            float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
-            yield return new WaitForSeconds(animTime);
+
+            StartCoroutine(CoolTimeImg(roarData.f_skillCoolTime, coolImg[2], coolTxt[2]));
+
+            yield return new WaitForSeconds(roarData.f_skillCoolTime);
+            canSkills[2] = true;
+            //float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
+            //yield return new WaitForSeconds(animTime);
         }
     }
     void OnSkillStart()
     {
         bIsSkill = true;
         playerState.state = PlayerState.State.ATTACK;
-        animator.SetFloat("Speed", 0f);
+        moveStop();
     }
 
     void OnFireGuard()
@@ -294,13 +328,11 @@ public class PlayerAttack : MonoBehaviour
 
     void OnHeal()
     {
-        // PlayerDagage 스크립트에 RestoreHealth 함수 추가 예쩡
-        //GetComponent<PlayerDamage>().
         GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity);
         Destroy(Effect, 1.5f);
         PlayerDamage playerDamage = GetComponent<PlayerDamage>();
         playerDamage.RestoreHp(healData.f_skillDamage);
-        Debug.Log("Heal");
+        //Debug.Log("Heal");
     }
 
     void OnRoar()
@@ -336,19 +368,29 @@ public class PlayerAttack : MonoBehaviour
     {
         bIsSkill = false;
         playerState.state = PlayerState.State.IDLE;
-        canSkill = false;
         animator.SetInteger("SkillState", 0);
-    }
-
-    void CoolDown()
-    {
-        if (!canSkill)
-        {
-            skill1_CoolTime += Time.deltaTime;
-            canSkill = true;
-            //if(skill_CoolTimer)
-        }
     }
     #endregion
 
+    IEnumerator CoolTimeImg(float cool, Image coolImg, Text coolTxt)
+    {
+        float cooltime = cool;
+        while (cooltime > 0)
+        {
+            cooltime -= Time.deltaTime;
+            coolImg.fillAmount = cooltime / cool;
+            coolTxt.text = cooltime.ToString("0.0");
+            yield return new WaitForFixedUpdate();
+        }
+        coolTxt.enabled = false;
+        coolImg.enabled = false;
+        coolImg.fillAmount = 0f;
+    }
+
+    // 공격, 대화, 스킬 사용시 애니메이터에서 Speed 값이 0이 되지 않기때문에 애니메이션이 계속해서 작동되는 버그가 발생
+    // 이를 막기 위한 이동속도 변수 값을 0으로 만들어주는 함수
+    void moveStop()
+    {
+        animator.SetFloat(hashSpeed, 0f);
+    }
 }

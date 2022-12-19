@@ -17,6 +17,9 @@ TagManager:
   - EnemyBullet
   - Boss
   - M_ATTACK
+  - Equip
+  - Consume
+  - ETC
   layers:
   - Default
   - TransparentFX

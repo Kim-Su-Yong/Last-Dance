@@ -25,14 +25,31 @@ public class ChangeForm : MonoBehaviour
     public Image coolImg; //쿨타임 이미지
     public Text coolTxt; //쿨타임 텍스트
 
+    [Header("폼에 따른 스킬 UI")]
+    public GameObject[] Fox_Skill_Panel;
+    public GameObject[] Tiger_Skill_Panel;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+
+        foreach(var panel in Fox_Skill_Panel)
+        {
+            //panel.GetComponent<Image>().enabled = true;
+            //panel.transform.GetChild(0).GetComponent<Image>().enabled = true;
+            panel.SetActive(true);
+        }
+
+        foreach(var panel in Tiger_Skill_Panel)
+        {
+            //panel.GetComponent<Image>().enabled = false;
+            //panel.transform.GetChild(0).GetComponent<Image>().enabled = false;
+            panel.SetActive(false);
+        }
+
         coolImg.fillAmount = 0f; //초기화
         coolTxt.enabled = false;
         coolImg.enabled = false;
-
     }
 
     void Update()
@@ -59,9 +76,21 @@ public class ChangeForm : MonoBehaviour
                 * 폼 변환 애니메이션이나 파티클 넣어주기
                 */
                 Staff.enabled = true;   // 여우 폼일때는 지팡이를 사용
-                /*
-                 * 다른 폼에서 무기를 사용한다면 코드 추가
-                */
+
+                foreach (var panel in Fox_Skill_Panel)
+                {
+                    //panel.GetComponent<Image>().enabled = true;
+                    //panel.transform.GetChild(0).GetComponent<Image>().enabled = true;
+                    panel.SetActive(true);
+                }
+
+                foreach (var panel in Tiger_Skill_Panel)
+                {
+                    //panel.GetComponent<Image>().enabled = false;
+                    //panel.transform.GetChild(0).GetComponent<Image>().enabled = false;
+                    panel.SetActive(false);
+                }
+
                 curForm = FormType.FOX;
                 animator.SetInteger("Form", 1);
 
@@ -90,9 +119,21 @@ public class ChangeForm : MonoBehaviour
                */
                 canFormChange = false;
                 Staff.enabled = false;   // 호랑이 폼일때는 지팡이를 사용X
-                /*
-                 * 다른 폼에서 무기를 사용한다면 코드 추가
-                */
+
+                foreach (var panel in Fox_Skill_Panel)
+                {
+                    //panel.GetComponent<Image>().enabled = false;
+                    //panel.transform.GetChild(0).GetComponent<Image>().enabled = false;
+                    panel.SetActive(false);
+                }
+
+                foreach (var panel in Tiger_Skill_Panel)
+                {
+                    //panel.GetComponent<Image>().enabled = true;
+                    //panel.transform.GetChild(0).GetComponent<Image>().enabled = true;
+                    panel.SetActive(true);
+                }
+
                 curForm = FormType.TIGER;
                 animator.SetInteger("Form", 2);
                 ChangeFormSprite();
