@@ -40,6 +40,7 @@ public class MonsterAI : MonoBehaviour
     private float traceDist = 8.0f;
     private float traceDistMemory = 0f;
     private float MadTraceDist = 15.0f;
+    private float tooCloseDist = 1.2f;
 
     // Attack Value
     public float damage = 20f;
@@ -66,7 +67,7 @@ public class MonsterAI : MonoBehaviour
 
     // Audio
     [HideInInspector]
-    public AudioSource audio;
+    public AudioSource _audio;
 
     // Audio Clip
     private AudioClip attackSound;
@@ -77,17 +78,18 @@ public class MonsterAI : MonoBehaviour
 
     // Etc.
     private WaitForSeconds ws;
-    //public SkinnedMeshRenderer[] monsterRenderer;
+    private Rigidbody rbody;
 
     // UI
-    public Canvas Hp_Canvas;
-    public Image Hp_Bar;
-    public Image Hp_Bar_Before;
-    public Text Hp_Text;
+
+    [HideInInspector] public Canvas Hp_Canvas;
+    [HideInInspector] public Image Hp_Bar;
+    [HideInInspector] public Image Hp_Bar_Before;
+    [HideInInspector] public Text Hp_Text;
     private float AwayTime = 20f;    // 최종 20
     private float GoneTime = 40f;   // 최종 40
     private float _countTime = 0f;
-    public Color HpColor = new Color(0f, 188f, 195f, 255f);
+    [HideInInspector] public Color HpColor = new Color(0f, 188f, 195f, 255f);
 
     // Damage
     public float _beforeHP = 0f;    // MonsterDamage.cs에서 값 저장됨
@@ -109,10 +111,11 @@ public class MonsterAI : MonoBehaviour
         }
         monsterTr = GetComponent<Transform>();
         animator = GetComponent<Animator>();
-        audio = GetComponent<AudioSource>();
+        _audio = GetComponent<AudioSource>();
         moveAgent = GetComponent<MoveAgent>();
         monsterAttack = GetComponent<MonsterAttack>();
         attackCollider = GetComponentInChildren<BoxCollider>();
+        rbody = GetComponent<Rigidbody>();
 
         // UI
         Hp_Canvas = transform.GetChild(2).GetComponent<Canvas>();
@@ -244,11 +247,8 @@ public class MonsterAI : MonoBehaviour
                 attackCollider.enabled = false;
                 break;
             case MonsterType.C_Mushroom:
-                animator.SetBool("Attact 4Start", false);
-                animator.SetTrigger("Attack 4End");
+                animator.SetTrigger($"Attack {Random.Range(1, 2)}");
                 yield return new WaitForSeconds(0.4f);
-                animator.SetTrigger($"Attack {Random.Range(2, 2)}");
-                yield return new WaitForSeconds(0.6f);
                 attackCollider.enabled = true;
                 yield return new WaitForSeconds(0.2f);
                 attackCollider.enabled = false;
@@ -266,11 +266,13 @@ public class MonsterAI : MonoBehaviour
             if (state == State.DIE) yield break;
 
             float dist = Vector3.Distance(playerTr.position, monsterTr.position);
-
-            if (dist <= attackDist)
+            if (dist <= tooCloseDist)
+            {
+                rbody.AddForce(new Vector3(0f, 0f, -1f), ForceMode.Impulse);
+            }
+            else if (dist <= attackDist)
             {
                 state = State.ATTACK;
-
             }
             else if (dist <= traceDist)
             {
@@ -301,15 +303,7 @@ public class MonsterAI : MonoBehaviour
                 case State.TRACE:
                     isAttack = false;
                     moveAgent.traceTarget = playerTr.position;
-                    if (monsterType == MonsterType.C_Mushroom)
-                    {
-                        animator.SetBool("Attack 4Start", true);
-                    }
-                    else
-                    {
-                        animator.SetFloat(hashSpeed, moveAgent.speed);
-                    }
-
+                    animator.SetFloat(hashSpeed, moveAgent.speed);
                     break;
                 case State.ATTACK:
                     if (isAttack == false)
