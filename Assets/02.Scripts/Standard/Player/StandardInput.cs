@@ -78,10 +78,10 @@ public class StandardInput : MonoBehaviour
         isWalk = newSprintState;
     }
 
-    private void OnApplicationFocus(bool hasFocus)
-    {
-        SetCursorState(cursorLocked);
-    }
+    //private void OnApplicationFocus(bool hasFocus)
+    //{
+    //    SetCursorState(cursorLocked);
+    //}
 
     private void SetCursorState(bool newState)
     {

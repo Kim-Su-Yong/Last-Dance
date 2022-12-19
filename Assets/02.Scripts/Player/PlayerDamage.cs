@@ -28,6 +28,8 @@ public class PlayerDamage : MonoBehaviour
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
 
+    //public GameObject deathPanel;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -76,6 +78,8 @@ public class PlayerDamage : MonoBehaviour
         {
             curHp -= 100f;
             hpUpdate();
+            if (curHp <= 0)
+                StartCoroutine(Die());
         }
             
     }
@@ -114,14 +118,13 @@ public class PlayerDamage : MonoBehaviour
         isDie = true;
        
         animator.SetTrigger("Die");     // 사망 애니메이션 실행
-        /*
-         * 사망 UI창 띄우기
-         */
-        //Debug.Log("사망하였습니다.");
+        GetComponent<CharacterController>().enabled = false;    // 충돌판정 제거를 위한 캐릭터 컨트롤러 비활성화
+
+        // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
+        yield return new WaitForSeconds(2f);    
+        //deathPanel.SetActive(true);
         yield return new WaitForSeconds(3f);
-        // 
-        //SetPlayerVisible(false);
-        yield return new WaitForSeconds(5f); // 5초뒤 자동부활-> UI버튼으로 부활 클릭하면 그때 부활
+        //deathPanel.SetActive(false);
         Respawn();
     }
     public void Respawn()   // 덜 구현되어 있는 상태
@@ -133,7 +136,13 @@ public class PlayerDamage : MonoBehaviour
         HpBar.color = Color.green;
         hpUpdate();
         playerState.state = PlayerState.State.IDLE;
+        GetComponent<CharacterController>().enabled = true;
+        GetComponent<ChangeForm>().curForm = ChangeForm.FormType.FOX;
+        GetComponent<ChangeForm>().Staff.enabled = true;
         isDie = false;
+
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)
