@@ -24,6 +24,10 @@ public class PlayerState : MonoBehaviour
     ChangeForm changeForm;
     PlayerAction playerAction;
 
+    Animator animator;
+
+    readonly int hashSpeed = Animator.StringToHash("Speed");
+
     void Awake()
     {
         playerAttack = GetComponent<PlayerAttack>();
@@ -31,6 +35,8 @@ public class PlayerState : MonoBehaviour
         shooter = GetComponent<Shooter>();
         changeForm = GetComponent<ChangeForm>();
         playerAction = GetComponent<PlayerAction>();
+
+        animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -86,10 +92,12 @@ public class PlayerState : MonoBehaviour
                     playerAction.enabled = false;
                     break;
                 case State.TALK:    // 토크 중에는 모든 동작 불가
+                    animator.SetFloat(hashSpeed, 0f);
                     playerCtrl.enabled = false;
                     shooter.enabled = false;
                     changeForm.enabled = false;
                     playerAttack.enabled = false;
+                    
                     break;
             }
         }
