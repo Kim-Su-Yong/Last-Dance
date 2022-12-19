@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ItemInfo : MonoBehaviour
 {
-
     // 아이템 1차 분류
     public enum ItemCategory { Equip, Consume, Etc };
     public ItemCategory itemCategory;
@@ -27,15 +26,4 @@ public class ItemInfo : MonoBehaviour
         etc         = 11
     };
     public ItemType itemType;
-
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 }

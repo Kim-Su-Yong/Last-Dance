@@ -27,12 +27,6 @@ public class Inventory_cy : MonoBehaviour
 
     public GameObject prefab_floating_text;
     public Transform messageTr;
-
-    private void Awake()
-    {
-        
-    }
-
     void Start()
     {
         instance = this;
@@ -44,16 +38,7 @@ public class Inventory_cy : MonoBehaviour
 
         slots = Resources.Load<GameObject>("Item/item").GetComponent<InventorySlot_cy>();
         ItemSlot = Resources.Load<GameObject>("Item/item");
-
-
     }
-
-
-    void Update()
-    {
-        
-    }
-
     public void GetAnItem(int itemID, int _count)
     {
         for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
@@ -107,7 +92,6 @@ public class Inventory_cy : MonoBehaviour
             }
         }
     }
-
     public void ShowItem()
     {
         for (int i = 0; i < InventoryItem.Count; i++)
@@ -120,7 +104,6 @@ public class Inventory_cy : MonoBehaviour
                 Item_ETC.Add(InventoryItem[i]);
         }
     }
-
     public GameObject ItemGetIN()
     {
         GameObject emptyInven = null;
