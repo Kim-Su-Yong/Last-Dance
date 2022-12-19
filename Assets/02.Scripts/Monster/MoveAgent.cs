@@ -26,7 +26,6 @@ public class MoveAgent : MonoBehaviour
     private Transform monsterTr;
 
     MonsterAI monsterAI;
-    MonsterSpawner monsterSpawner;
 
     private bool _patrolling;
     // patrolling 프로퍼티 정의 (getter, setter)
@@ -84,7 +83,7 @@ public class MoveAgent : MonoBehaviour
         agent.speed = patrolSpeed;
 
         monsterAI = GetComponent<MonsterAI>();
-        monsterSpawner = GameObject.Find("MonsterA_Spawner").GetComponent<MonsterSpawner>();
+
 
         // 순찰 타입
         patrolType = PatrolType.Random;
@@ -146,7 +145,7 @@ public class MoveAgent : MonoBehaviour
     {
         if (agent.isPathStale) return;
 
-        agent.destination = wayPoints_B[nextIdx].position;
+        agent.destination = wayPoints_C[nextIdx].position;
         agent.isStopped = false;
     }
 

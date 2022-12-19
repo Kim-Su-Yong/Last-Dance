@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b6d2ab217b89ba45ac9323325ba4b37, type: 3}
-  m_Name: Slime Data
+  m_Name: Mushroom Data
   m_EditorClassIdentifier: 
-  HP: 100
+  HP: 90
   damage: 20
-  attackSpeed: 0.5
-  patrolSpeed: 1.5
-  traceSpeed: 4
+  attackSpeed: 2
+  patrolSpeed: 0.7
+  traceSpeed: 3
   attackDist: 2
-  traceDist: 8
+  traceDist: 5
+  MadTraceDist: 15
