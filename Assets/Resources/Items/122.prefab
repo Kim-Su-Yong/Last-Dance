@@ -111,7 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 122
   _count: 1
-  prefab_floating_text: {fileID: 0}
+  prefab_floating_text: {fileID: 4175866122574188138, guid: 4f5172c569e50a841aade790c98e203b, type: 3}
 --- !u!65 &-3512607522860303264
 BoxCollider:
   m_ObjectHideFlags: 0

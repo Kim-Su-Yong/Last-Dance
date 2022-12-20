@@ -9,11 +9,12 @@ public class HoverTipManager : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI tipText;
+    public TextMeshProUGUI countText;
     public Image itemImage;
 
     public RectTransform tipWindow;
 
-    public static Action<string, string, Sprite, Vector2> OnMouseHover;
+    public static Action<string, string, string, Sprite, Vector2> OnMouseHover;
     public static Action OnMouseLoseFocus;
 
     private void OnEnable()
@@ -30,10 +31,11 @@ public class HoverTipManager : MonoBehaviour
     {
         HideTip();
     }
-    private void ShowTip(string title, string tip, Sprite item, Vector2 mousePos)
+    private void ShowTip(string title, string tip, string count, Sprite item, Vector2 mousePos)
     {
         titleText.text = title;
         tipText.text = tip;
+        countText.text = count;
         itemImage.sprite = item;
         tipWindow.sizeDelta = new Vector2(650, 250);
 
@@ -43,7 +45,10 @@ public class HoverTipManager : MonoBehaviour
     }
     private void HideTip()
     {
+        titleText.text = default;
         tipText.text = default;
+        countText.text = default;
+        itemImage.sprite = default;
         tipWindow.gameObject.SetActive(false);
 
     }

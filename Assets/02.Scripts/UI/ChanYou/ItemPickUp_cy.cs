@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ItemPickUp_cy : MonoBehaviour
 {
+
     public int itemID;
     public int _count;
     //public string pickUpSound;
