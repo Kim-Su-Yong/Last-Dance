@@ -9,6 +9,7 @@ public class PlayerAttack : MonoBehaviour
     ThirdPersonCtrl playerCtrl;
     Shooter shooter;
     PlayerState playerState;
+    PlayerStat playerStat;
 
     Animator animator;
     CharacterController controller;
@@ -41,7 +42,10 @@ public class PlayerAttack : MonoBehaviour
     [Header("호랑이 스킬")]
     public SkillData roarData;      // 포효 스킬 데이터
     public Transform roarTr;        // 포효 이펙트 위치
-        
+
+    [Header("독수리 스킬")]
+    public SkillData buffData;
+
     [Header("제어 변수")]
     public bool bIsAttack;          //  공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
@@ -61,13 +65,18 @@ public class PlayerAttack : MonoBehaviour
         shooter = GetComponent<Shooter>();
         changeForm = GetComponent<ChangeForm>();
         playerState = GetComponent<PlayerState>();
+        playerStat = GetComponent<PlayerStat>();
         controller = GetComponent<CharacterController>();
-        FireBall = Resources.Load("Magic fire") as GameObject;
+
         animator = GetComponent<Animator>();
 
+        //FireBall = Resources.Load("Magic fire") as GameObject;
+        FireBall = Resources.Load("Player/Magic Fire Ball") as GameObject;
+
         fireData = Resources.Load("SkillData/FoxFire Data") as SkillData;
+        healData = Resources.Load("SkillData/Heal Data") as SkillData;
         roarData = Resources.Load("SkillData/Roar Data") as SkillData;
-        healData = Resources.Load("SkillData/Heal Data") as SkillData; 
+        buffData = Resources.Load("SkillData/Buff Data") as SkillData;
     }
 
     private void Start()
@@ -113,11 +122,11 @@ public class PlayerAttack : MonoBehaviour
                 FoxBaseAttack();
             }
             // 마우스 오른쪽 버튼 누르면 스킬 사용(단, 스킬 사용 가능 상태일때만 발동된다)
-            else if (Input.GetButtonDown("Fire2") && !bIsAttack)
+            else if (Input.GetButtonDown("Fire2") && !bIsAttack && !bIsSkill)
             {
                 StartCoroutine(FoxSkill_1());
             }
-            else if (Input.GetKeyDown(KeyCode.Q) && !bIsAttack)
+            else if (Input.GetKeyDown(KeyCode.Q) && !bIsAttack && !bIsSkill)           
             {
                 StartCoroutine(FoxSkill_2());
             }
@@ -133,7 +142,7 @@ public class PlayerAttack : MonoBehaviour
                 TigerBaseAttack(false);
                 punchCount = 0;
             }
-            if (Input.GetButtonDown("Fire2") && !bIsAttack)
+            if (Input.GetButtonDown("Fire2") && !bIsAttack && !bIsSkill)
             {
                 StartCoroutine(TigerSkill_1());
             }
@@ -141,6 +150,11 @@ public class PlayerAttack : MonoBehaviour
         else if (changeForm.curForm == ChangeForm.FormType.EAGLE)
         {
             //Shooter 내용
+
+            if(Input.GetKeyDown(KeyCode.Q) && !bIsAttack && !bIsSkill)
+            {
+                StartCoroutine(EagleSkill_1());
+            }
         }
     }
 
@@ -237,7 +251,7 @@ public class PlayerAttack : MonoBehaviour
         rHandTrail.enabled = false;
     }
 
-    void OnHitAttack()  // OnThirdAttack으로 바꿀 예정(애니메이션 이벤트도 변경)
+    void OnClaw()  // OnThirdAttack으로 바꿀 예정(애니메이션 이벤트도 변경)
     {
         //Debug.Log("호랑이 세번째 타격");
         thirdEffect.Play();
@@ -271,26 +285,39 @@ public class PlayerAttack : MonoBehaviour
             StartCoroutine(CoolTimeImg(fireData.f_skillCoolTime, coolImg[0], coolTxt[0]));
             yield return new WaitForSeconds(fireData.f_skillCoolTime);
             canSkills[0] = true;
-            //float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
-            //yield return new WaitForSeconds(animTime); 
+        }
+        else
+        {
+            // 이부분 UI로 표시하면 좋을듯
+            Debug.Log("스킬이 쿨타임 중입니다.");
         }
     }
 
     IEnumerator FoxSkill_2()
     {
-        if(canSkills[1])
+        if (canSkills[1])
         {
-            canSkills[1] = false;
-            coolImg[1].enabled = true;
-            coolTxt[1].enabled = true;
-            animator.SetInteger("SkillState", 2);
-            StartCoroutine(CoolTimeImg(healData.f_skillCoolTime, coolImg[1], coolTxt[1]));
+            // 체력이 가득차 있으면 스킬을 사용하지 않음
+            if (GetComponent<PlayerDamage>().HpBar.fillAmount == 1f)
+            {
+                Debug.Log("체력이 가득차 있습니다.");
+                yield return null;
+            }
+            else
+            {
+                canSkills[1] = false;
+                coolImg[1].enabled = true;
+                coolTxt[1].enabled = true;
+                animator.SetInteger("SkillState", 2);
+                StartCoroutine(CoolTimeImg(healData.f_skillCoolTime, coolImg[1], coolTxt[1]));
 
-            yield return new WaitForSeconds(healData.f_skillCoolTime);
-            canSkills[1] = true;
-
-            //float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
-            //yield return new WaitForSeconds(animTime);
+                yield return new WaitForSeconds(healData.f_skillCoolTime);
+                canSkills[1] = true;
+            }
+        }
+        else
+        {
+            Debug.Log("스킬이 쿨타임 중입니다.");
         }
     }
 
@@ -307,8 +334,32 @@ public class PlayerAttack : MonoBehaviour
 
             yield return new WaitForSeconds(roarData.f_skillCoolTime);
             canSkills[2] = true;
-            //float animTime = animator.GetCurrentAnimatorClipInfo(0).Length;
-            //yield return new WaitForSeconds(animTime);
+        }
+        else
+        {
+            // 이부분 UI로 표시하면 좋을듯
+            Debug.Log("스킬이 쿨타임 중입니다.");
+        }
+    }
+
+    IEnumerator EagleSkill_1()
+    {
+        if(canSkills[3])
+        {
+            canSkills[3] = false;
+            coolImg[3].enabled = true;
+            coolTxt[3].enabled = true;
+            animator.SetInteger("SkillState", 1);
+
+            StartCoroutine(CoolTimeImg(buffData.f_skillCoolTime, coolImg[3], coolTxt[3]));
+
+            yield return new WaitForSeconds(buffData.f_skillCoolTime);
+            canSkills[3] = true;
+        }
+        else
+        {
+            // 이부분 UI로 표시하면 좋을듯
+            Debug.Log("스킬이 쿨타임 중입니다.");
         }
     }
     void OnSkillStart()
@@ -316,6 +367,12 @@ public class PlayerAttack : MonoBehaviour
         bIsSkill = true;
         playerState.state = PlayerState.State.ATTACK;
         moveStop();
+    }
+    void OnSkillEnd()
+    {
+        bIsSkill = false;
+        playerState.state = PlayerState.State.IDLE;
+        animator.SetInteger("SkillState", 0);
     }
 
     void OnFireGuard()
@@ -332,7 +389,6 @@ public class PlayerAttack : MonoBehaviour
         Destroy(Effect, 1.5f);
         PlayerDamage playerDamage = GetComponent<PlayerDamage>();
         playerDamage.RestoreHp(healData.f_skillDamage);
-        //Debug.Log("Heal");
     }
 
     void OnRoar()
@@ -364,11 +420,20 @@ public class PlayerAttack : MonoBehaviour
         target.GetComponent<EnemyDamage>().testSpeed += 2f;
     }
 
-    void OnSkillEnd()
+    void OnBuff()
     {
-        bIsSkill = false;
-        playerState.state = PlayerState.State.IDLE;
-        animator.SetInteger("SkillState", 0);
+        GameObject Effect = Instantiate(buffData.skillEffect, transform.position, Quaternion.identity);
+        Destroy(Effect, 1.5f);
+        Debug.Log("공격력 상승");    // 캐릭터 데이터에 접근하여 공격력 상승하게 할 예정
+        StartCoroutine(AttackBuff());
+    }  
+
+    IEnumerator AttackBuff()
+    {
+        int originAtk = playerStat.atk; // 캐릭터의 원래 공격력 저장(버프가 끝난 후 원래 공격력으로 되돌려야 하므로)
+        playerStat.atk = (int)(playerStat.atk * buffData.f_skillDamage);
+        yield return new WaitForSeconds(buffData.f_skillRange); // 스킬 지속시간동안만 공격력 증가
+        playerStat.atk = originAtk;
     }
     #endregion
 
