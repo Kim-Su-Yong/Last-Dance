@@ -78,8 +78,6 @@ public class Inventory_cy : MonoBehaviour
             itemInfo.itemType = ItemInfo.ItemType.ETC;
             itemInfo.equipType = ItemInfo.EquipType.None;
         }
-
-
         for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
         {
             if (ItemNumber == theData.itemList[i].itemID)

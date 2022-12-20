@@ -11,7 +11,7 @@ public class InventoryUI : MonoBehaviour
 
     public ShopSlot[] shopSlots;
     public Transform shopHolder;
-    public ShopData shopData;
+    private ShopData shopData;
 
     public GameObject shop;
     public Button closeShop;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-public class ShopSlot : MonoBehaviour
+public class ShopSlot : MonoBehaviour, IPointerUpHandler
 {
     public int slotnum;
     public ItemInfo item;
@@ -22,7 +22,7 @@ public class ShopSlot : MonoBehaviour
     }
     public void UpdateSlotUI()
     {
-        //itemIcon.sprite = item.itemImage;
+        itemIcon.sprite = item.itemIcon;
         itemIcon.gameObject.SetActive(true);
         if (soldOut)
             itemIcon.color = new Color(0.5f, 0.5f, 0.5f);
