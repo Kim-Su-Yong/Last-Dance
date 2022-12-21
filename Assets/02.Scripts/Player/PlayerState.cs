@@ -88,7 +88,7 @@ public class PlayerState : MonoBehaviour
                     playerCtrl.enabled = false;
                     shooter.enabled = false;
                     changeForm.enabled = false;
-                    playerAttack.enabled = true;
+                    playerAttack.enabled = false;
                     playerAction.enabled = false;
                     break;
                 case State.TALK:    // 토크 중에는 모든 동작 불가

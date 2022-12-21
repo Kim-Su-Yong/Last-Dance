@@ -318,6 +318,7 @@ public class MonsterAI : MonoBehaviour
                     animator.SetTrigger("Death");
                     isDie = true;
 
+                    // 몬스터 사망시 경험치를 플레이어에 넘겨줘야함
                     GetComponent<Rigidbody>().isKinematic = true;
                     GetComponent<CapsuleCollider>().enabled = false;
                     //StopAllCoroutines();

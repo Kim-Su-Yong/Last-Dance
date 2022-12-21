@@ -44,7 +44,7 @@ public class EnemyDamage : MonoBehaviour
         if(other.CompareTag(fireBallTag))
         {
             renderer.material.color = Color.red;
-            hp -= 10f;
+            hp -= other.GetComponent<FireBall>().damage;
             StartCoroutine(ResetColor());
         }
         if (other.CompareTag(bulletTag))
@@ -56,15 +56,18 @@ public class EnemyDamage : MonoBehaviour
         if(other.CompareTag(foxFireTag))
         {
             renderer.material.color = Color.red;
+            hp -= other.GetComponent<FoxFire>().damage;
             StartCoroutine(ResetColor());
-            hp -= 20f;
+            
         }
         if(other.CompareTag(punchTag))
         {
             renderer.material.color = Color.red;
-            StartCoroutine(ResetColor());
-            hp -= 15f;
+            
+            hp -= other.GetComponent<PunchCollider>().damage;
+            StartCoroutine(ResetColor());            
         }
+        Debug.Log(hp);
     }
 
     IEnumerator ResetColor()

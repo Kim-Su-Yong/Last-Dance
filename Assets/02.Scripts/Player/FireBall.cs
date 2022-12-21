@@ -6,12 +6,14 @@ public class FireBall : MonoBehaviour
 {
     Rigidbody rb;
 
-    public float speed = 1000f;
+    public float speed = 1000f; // 날아가는 속도
 
     [Header("폭발 관련")]
     SphereCollider sphereCollider;
     [SerializeField]
     GameObject ExpEffect;
+
+    public int damage;      // 파이어볼 데미지
     
 
     void Awake()
@@ -24,6 +26,7 @@ public class FireBall : MonoBehaviour
     {
         rb.AddForce(transform.forward * speed);
         StartCoroutine(Explosion(5f));
+        damage = (int)(PlayerStat.instance.atk * 3) + 5;
     }
 
     private void OnDisable()

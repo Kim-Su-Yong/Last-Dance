@@ -42,7 +42,8 @@ public class MonsterDamage : MonoBehaviour
         if (monsterAI.isDie == true) return;
         if (other.CompareTag(fireBallTag))
         {
-            int _damage = (int)(fireBall_Damage + Random.Range(0f, 9f));
+            //int _damage = (int)(fireBall_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
