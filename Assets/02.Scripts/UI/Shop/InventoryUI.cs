@@ -24,14 +24,14 @@ public class InventoryUI : MonoBehaviour
             shopSlots[i].Init(this);
             shopSlots[i].slotnum = i;
         }
-        closeShop.onClick.AddListener(DeActiveShop);
+        closeShop.onClick.AddListener(DeActiveShop); //상점 닫을시
     }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.G))
             Shop();
     }
-    void Shop()
+    void Shop() //상점 함수
     {
         if (!isStoreActive)
         {
@@ -44,11 +44,11 @@ public class InventoryUI : MonoBehaviour
             }
         }
     }
-    public void Buy(int num)
+    public void Buy(int num) //상점에서 아이템 구매 함수
     {
         shopData.soldOuts[num] = true;
     }
-    public void ActiveShop(bool isOpen)
+    public void ActiveShop(bool isOpen) //상점 열기
     {
         if (!activeInventory)
         {
@@ -61,7 +61,7 @@ public class InventoryUI : MonoBehaviour
             }
         }
     }
-    public void DeActiveShop()
+    public void DeActiveShop() //상점 닫기
     {
         ActiveShop(false);
         shopData = null;
@@ -70,7 +70,7 @@ public class InventoryUI : MonoBehaviour
             shopSlots[i].RemoveSlot();
         }
     }
-    public void SellBtn()
+    public void SellBtn() //상점에 아이템 팔기 함수
     {
         for (int i = slots.Length; i > 0; i--)
         {

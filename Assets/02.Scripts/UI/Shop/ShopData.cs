@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ShopData : MonoBehaviour
 {
-    public List<ItemInfo> stocks = new List<ItemInfo>();
+    public List<GameObject> stocks = new List<GameObject>();
     public bool[] soldOuts;
+
     void Start()
     {
-        stocks.Add(DatabaseManager_cy.instance.itemList[0]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[1]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[2]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[3]);
-        stocks.Add(DatabaseManager_cy.instance.itemList[4]);
+        stocks.Add(ItemDatabase.instance.Items[0]);
+        stocks.Add(ItemDatabase.instance.Items[1]);
+        stocks.Add(ItemDatabase.instance.Items[2]);
+        stocks.Add(ItemDatabase.instance.Items[3]);
         soldOuts = new bool[stocks.Count];
         for(int i = 0; i < soldOuts.Length; i++)
         {
