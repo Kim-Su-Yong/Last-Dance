@@ -100,7 +100,7 @@ public class PlayerStat : MonoBehaviour
             GainExp(24);
         }
     }
-    void GainExp(int newEXP)
+    public void GainExp(int newEXP)
     {
         currentEXP += newEXP;
         if (currentEXP >= needExp[character_Lv])

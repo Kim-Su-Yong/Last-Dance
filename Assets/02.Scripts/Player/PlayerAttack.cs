@@ -5,53 +5,55 @@ using UnityEngine.UI;
 
 public class PlayerAttack : MonoBehaviour
 {
+    // 스크립트
     ChangeForm changeForm;
     ThirdPersonCtrl playerCtrl;
     Shooter shooter;
     PlayerState playerState;
-    PlayerStat playerStat;
 
+    // 컴포넌트
     Animator animator;
     CharacterController controller;
 
-    // 캐릭터 근처에 가장 가까이 있는 적을 자동으로 타겟으로 설정하여
-    // 공격시 타겟을 바라보며 공격 모션을 실행
+    // 변수
     public GameObject target;
 
-    [Header("오브젝트 풀링")]
-    public List<GameObject> fireBallPool = new List<GameObject>();
-    int maxCount = 5;    // 오브젝트 풀링할 개수
+    [Header("공격 및 스킬")]
 
-    [Header("파이어볼 발사")]
-    public Transform FirePos;       // 파이어볼 던져질 발사 위치
-    GameObject FireBall;            // 파이어볼 오브젝트
-
-    [Header("여우 스킬")]
+    
+    // 여우 공격
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
-    public bool[] canSkills;
-    //public bool canSkill = true;    // 스킬 사용 가능 상태 유무
     public SkillData fireData;      // 여우불 스킬 데이터
     public SkillData healData;      // 힐 스킬 데이터
 
-    [Header("호랑이 펀치")]
-    public BoxCollider[] punchCollider; // 펀치 충돌 콜라이더 배열
-    int punchCount = 0;
-    public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
-    public TrailRenderer rHandTrail;
+    // 오브젝트 풀링
+    public List<GameObject> fireBallPool = new List<GameObject>();
+    int maxCount = 5;    // 오브젝트 풀링할 개수
 
-    [Header("호랑이 스킬")]
+    public Transform FirePos;       // 파이어볼 던져질 발사 위치
+    GameObject FireBall;            // 파이어볼 오브젝트
+
+    // 호랑이 스킬
+    public BoxCollider[] punchCollider; // 펀치 충돌 콜라이더 배열
+    public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
+    public TrailRenderer rHandTrail;    // 호랑이 세번째 공격 이펙트2
+
     public SkillData roarData;      // 포효 스킬 데이터
+    public SphereCollider roarCollider; // 포효 충돌 콜라이더
     public Transform roarTr;        // 포효 이펙트 위치
 
-    [Header("독수리 스킬")]
+    // 독수리 스킬
     public SkillData buffData;
 
     [Header("제어 변수")]
-    public bool bIsAttack;          //  공격 중인지 확인
+    public bool bIsAttack;          // 공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
+    public bool[] canSkills;        // 스킬 사용 가능 상태 유무 배열
+
     [SerializeField]
     LayerMask enemyLayer;           // 에너미 검출을 위한 레이어
 
+    [Header("UI")]
     public Image[] coolImg;         // 스킬 쿨타임 이미지들
     public Text[] coolTxt;          // 스킬 쿨타임 텍스트들
 
@@ -65,12 +67,10 @@ public class PlayerAttack : MonoBehaviour
         shooter = GetComponent<Shooter>();
         changeForm = GetComponent<ChangeForm>();
         playerState = GetComponent<PlayerState>();
-        playerStat = GetComponent<PlayerStat>();
         controller = GetComponent<CharacterController>();
 
         animator = GetComponent<Animator>();
 
-        //FireBall = Resources.Load("Magic fire") as GameObject;
         FireBall = Resources.Load("Player/Magic Fire Ball") as GameObject;
 
         fireData = Resources.Load("SkillData/FoxFire Data") as SkillData;
@@ -140,7 +140,6 @@ public class PlayerAttack : MonoBehaviour
             else if (Input.GetButtonUp("Fire1"))
             {
                 TigerBaseAttack(false);
-                punchCount = 0;
             }
             if (Input.GetButtonDown("Fire2") && !bIsAttack && !bIsSkill)
             {
@@ -233,7 +232,7 @@ public class PlayerAttack : MonoBehaviour
         playerState.state = PlayerState.State.ATTACK;
         if(count != 0) // 펀치공격
         {
-            if (count < 3)
+            if (count < 3) // 강공격이 아닌경우
             {
                 BoxCollider punch = punchCollider[0].GetComponent<BoxCollider>();
                 StartCoroutine(ColOff(punch));
@@ -241,13 +240,12 @@ public class PlayerAttack : MonoBehaviour
             else if (count == 3)
                 rHandTrail.enabled = true;
             Invoke("TrailOff", 2f);
-            punchCount++;
         }
 
         moveStop();
     }
 
-    IEnumerator ColOff(BoxCollider col)
+    IEnumerator ColOff(Collider col)
     {
         col.enabled = true;
         yield return new WaitForSeconds(0.3f);
@@ -259,24 +257,11 @@ public class PlayerAttack : MonoBehaviour
         rHandTrail.enabled = false;
     }
 
-    void OnClaw()  // OnThirdAttack으로 바꿀 예정(애니메이션 이벤트도 변경)
-    {
-        //Debug.Log("호랑이 세번째 타격");
-        thirdEffect.Play();
-        BoxCollider claw = punchCollider[1].GetComponent<BoxCollider>();
-        StartCoroutine(ColOff(claw));
-        //punchCollider[1].gameObject.SetActive(true);
-
-    }
     void OnAttackEnd(int count)
     {
         bIsAttack = false;
         if (!animator.GetBool("Combo"))
             playerState.state = PlayerState.State.IDLE;
-        if (count != 0) // 펀치공격
-        {
-            punchCount = 0;
-        }
     }
     #endregion
 
@@ -395,32 +380,27 @@ public class PlayerAttack : MonoBehaviour
 
     void OnHeal()
     {
+        int newHP = (int)(healData.f_skillDamage * PlayerStat.instance.maxHP);    // 최대체력의 50%를 회복
         GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity);
         Destroy(Effect, 1.5f);
         PlayerDamage playerDamage = GetComponent<PlayerDamage>();
-        playerDamage.RestoreHp((int)healData.f_skillDamage);
+        playerDamage.RestoreHp(newHP);
     }
-
+    void OnClaw()
+    {
+        thirdEffect.Play();
+        BoxCollider claw = punchCollider[1].GetComponent<BoxCollider>();
+        StartCoroutine(ColOff(claw));
+    }
     void OnRoar()
     {
         // 이펙트 소환
         GameObject Effect = Instantiate(roarData.skillEffect, roarTr.position, roarTr.rotation);
         Destroy(Effect, 1f);
 
-        // 포효 스킬 반경의 에너미 레이어 충돌체를 모두 저장
-        Collider[] Cols = Physics.OverlapSphere(transform.position, roarData.f_skillRange, enemyLayer);
-        
-        // 콜라이더가 에너미들이라면 
-        foreach(Collider col in Cols)
-        {
-            Rigidbody rb = col.GetComponent<Rigidbody>();
-            if(rb != null)
-            {
-                col.GetComponent<EnemyDamage>().OnHitSkill((int)roarData.f_skillDamage, roarData.skillName);
-                StartCoroutine(DownSpeed(col.gameObject));
-            }
-        }
+        StartCoroutine(ColOff(roarCollider));
     }
+
     IEnumerator DownSpeed(GameObject target)
     {
         // 실제 에너미 데이터로 속도 감소 시켜야함
@@ -440,10 +420,12 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator AttackBuff()
     {
-        int originAtk = playerStat.atk; // 캐릭터의 원래 공격력 저장(버프가 끝난 후 원래 공격력으로 되돌려야 하므로)
-        playerStat.atk = (int)(playerStat.atk * buffData.f_skillDamage);
+        // 공격력 증가(20% + (레벨/5)), 10렙일때 22프로 증가
+        int increaseAtk = (int)(PlayerStat.instance.atk * 
+            (buffData.f_skillDamage + (int)PlayerStat.instance.character_Lv / 10));
+        PlayerStat.instance.atk += increaseAtk;      
         yield return new WaitForSeconds(buffData.f_skillRange); // 스킬 지속시간동안만 공격력 증가
-        playerStat.atk = originAtk;
+        PlayerStat.instance.atk -= increaseAtk;
     }
     #endregion
 

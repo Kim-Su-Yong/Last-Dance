@@ -14325,7 +14325,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterType: 0
   M_HP: 0
-  M_MaxHP: 120
+  M_MaxHP: 100
+  M_EXP: 24
   state: 0
   playerTr: {fileID: 0}
   monsterTr: {fileID: 0}

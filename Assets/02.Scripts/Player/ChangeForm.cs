@@ -190,7 +190,6 @@ public class ChangeForm : MonoBehaviour
                 Debug.Log("쿨타임 중입니다.");
             }
         }
-        //CoolDown();
     }
     IEnumerator CoolTimeImg(float cool)
     {
