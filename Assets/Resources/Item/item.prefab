@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: -9125080226026896749}
   m_Layer: 5
   m_Name: item
-  m_TagString: Untagged
+  m_TagString: ITEM
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -241,6 +241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 82449153715518343}
   itemCount_Text: {fileID: 6304026456978812852}
+  itemCount: 0
 --- !u!114 &9025679745677531441
 MonoBehaviour:
   m_ObjectHideFlags: 0

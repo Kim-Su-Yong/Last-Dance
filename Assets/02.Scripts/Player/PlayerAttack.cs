@@ -235,7 +235,8 @@ public class PlayerAttack : MonoBehaviour
         {
             if (count < 3)
             {
-                punchCollider[0].gameObject.SetActive(true);
+                BoxCollider punch = punchCollider[0].GetComponent<BoxCollider>();
+                StartCoroutine(ColOff(punch));
             }
             else if (count == 3)
                 rHandTrail.enabled = true;
@@ -244,6 +245,13 @@ public class PlayerAttack : MonoBehaviour
         }
 
         moveStop();
+    }
+
+    IEnumerator ColOff(BoxCollider col)
+    {
+        col.enabled = true;
+        yield return new WaitForSeconds(0.3f);
+        col.enabled = false;
     }
 
     void TrailOff()
@@ -255,7 +263,9 @@ public class PlayerAttack : MonoBehaviour
     {
         //Debug.Log("호랑이 세번째 타격");
         thirdEffect.Play();
-        punchCollider[1].gameObject.SetActive(true);
+        BoxCollider claw = punchCollider[1].GetComponent<BoxCollider>();
+        StartCoroutine(ColOff(claw));
+        //punchCollider[1].gameObject.SetActive(true);
 
     }
     void OnAttackEnd(int count)
@@ -388,7 +398,7 @@ public class PlayerAttack : MonoBehaviour
         GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity);
         Destroy(Effect, 1.5f);
         PlayerDamage playerDamage = GetComponent<PlayerDamage>();
-        playerDamage.RestoreHp(healData.f_skillDamage);
+        playerDamage.RestoreHp((int)healData.f_skillDamage);
     }
 
     void OnRoar()

@@ -7,6 +7,6 @@ public class InventorySlot_cy : MonoBehaviour
 {
     public Image icon;
     public Text itemCount_Text;
-    
 
+    public int itemCount;
 }

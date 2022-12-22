@@ -46,6 +46,7 @@ public class SaveNLoad : MonoBehaviour
     }
     private PlayerAction thePlayer;
     private PlayerStat thePlayerStat;
+    private PlayerDamage playerDamage;
     private DatabaseManager theDatabase;
     private Inventory theInven;
     private Equipment theEquip;
@@ -57,6 +58,7 @@ public class SaveNLoad : MonoBehaviour
     public void CallSave()
     {
         theDatabase = FindObjectOfType<DatabaseManager>();
+        playerDamage = FindObjectOfType<PlayerDamage>();
         thePlayer = FindObjectOfType<PlayerAction>();
         thePlayerStat = FindObjectOfType<PlayerStat>();
         theEquip = FindObjectOfType<Equipment>();
@@ -67,15 +69,11 @@ public class SaveNLoad : MonoBehaviour
         data.playerZ = thePlayer.transform.position.z;
 
         data.playerLv = thePlayerStat.character_Lv;
-        data.playerHP = thePlayerStat.hp;
-        data.playerMP = thePlayerStat.mp;
-        data.playerCurrentHP = thePlayerStat.currentHP;
-        data.playerCurrentMP = thePlayerStat.currentMP;
+        data.playerHP = thePlayerStat.initHP;
+        data.playerCurrentHP = playerDamage.curHp;
         data.playerCurrentEXP = thePlayerStat.currentEXP;
         data.playerATK = thePlayerStat.atk;
         data.playerDEF = thePlayerStat.def;
-        data.playerHPR = thePlayerStat.recover_hp;
-        data.playerMPR = thePlayerStat.recover_mp;
         data.added_atk = theEquip.added_atk;
         data.added_def = theEquip.added_def;
         data.added_hpr = theEquip.added_hpr;
@@ -131,6 +129,7 @@ public class SaveNLoad : MonoBehaviour
             theDatabase = FindObjectOfType<DatabaseManager>();
             thePlayer = FindObjectOfType<PlayerAction>();
             thePlayerStat = FindObjectOfType<PlayerStat>();
+            playerDamage = FindObjectOfType<PlayerDamage>();
             theEquip = FindObjectOfType<Equipment>();
             theInven = FindObjectOfType<Inventory>();
 
@@ -141,15 +140,11 @@ public class SaveNLoad : MonoBehaviour
             thePlayer.transform.position = vector;
 
             thePlayerStat.character_Lv = data.playerLv;
-            thePlayerStat.hp = data.playerHP;
-            thePlayerStat.mp = data.playerMP;
-            thePlayerStat.currentHP = data.playerCurrentHP;
-            thePlayerStat.currentMP = data.playerCurrentMP;
+            thePlayerStat.initHP = data.playerHP;
+            playerDamage.curHp = data.playerCurrentHP;
             thePlayerStat.currentEXP = data.playerCurrentEXP;
             thePlayerStat.atk = data.playerATK;
             thePlayerStat.def = data.playerDEF;
-            thePlayerStat.recover_hp = data.playerHPR;
-            thePlayerStat.recover_mp = data.playerMPR;
 
             theEquip.added_atk = data.added_atk;
             theEquip.added_def = data.added_def;

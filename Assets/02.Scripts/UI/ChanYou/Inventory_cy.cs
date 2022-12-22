@@ -21,6 +21,8 @@ public class Inventory_cy : MonoBehaviour
 
     [SerializeField]
     private InventorySlot_cy slots; //인벤토리 슬롯들
+    
+    [SerializeField]
     private List<ItemInfo> inventoryItemList; //플레이어가 소지한 아이템 리스트
 
     public GameObject ItemSlot; //인벤토리 하위에 들어갈 아이템 정보가 담긴 오브젝트
@@ -56,72 +58,59 @@ public class Inventory_cy : MonoBehaviour
 
                 ItemNumber = itemID;
                 ItemCount = _count;
-
-                for (int j = 0; j < inventoryItemList.Count; j++)
+                if (theData.itemList[i].itemType == ItemInfo.ItemType.Equip)
                 {
-                    if (theData.itemList[i].itemType == ItemInfo.ItemType.Equip)
-                    {
-                        AddItem(EquipSlots, theData.itemList[i].equipType);
-                        inventoryItemList.Add(theData.itemList[i]);
-                        return;
-                    }
-                    else
-                    {
-                        if (inventoryItemList[j].itemID == itemID)
-                            inventoryItemList[j].itemCount += _count;
-                        else
-                        {
-                            if (theData.itemList[i].itemType == ItemInfo.ItemType.Consume)
-                            {
-                                AddItem(ConsumeSlots);
-                                inventoryItemList.Add(theData.itemList[i]);
-                            }
-                            else
-                            {
-                                AddItem(ETCSlots);
-                                inventoryItemList.Add(theData.itemList[i]);
-                            }
-                        }
-                        return;
-                    }
+                    AddItem(EquipSlots, theData.itemList[i].equipType);
                 }
-                //else
-                //{
-                //    for (int j = 0; j < inventoryItemList.Count; j++)
-                //    {
-                //        if (inventoryItemList[j].itemID == ItemNumber)
-                //            inventoryItemList[j].itemCount += ItemCount;
-                //        else
-                //        {
-                //            if (theData.itemList[i].itemType == ItemInfo.ItemType.Consume)
-                //            {
-                //                AddItem(ConsumeSlots);
-                //                inventoryItemList.Add(theData.itemList[i]);
-                //            }
-                //            else
-                //            {
-                //                AddItem(ETCSlots);
-                //                inventoryItemList.Add(theData.itemList[i]);
-                //            }
-                //        }
-                //        return;
-                //    }
-                //}
-
-                
-                inventoryItemList.Add(theData.itemList[i]);
-                inventoryItemList[inventoryItemList.Count - 1].itemCount = _count;
+                else if (theData.itemList[i].itemType == ItemInfo.ItemType.Consume)
+                {
+                    AddItem(ConsumeSlots);
+                }
+                else
+                {
+                    AddItem(ETCSlots);
+                }
                 return;
             }
         }
     }
+
+    //소비, 기타템 인벤토리에 추가하는 함수
     public void AddItem(GameObject[] ItemTpye)
+    {
+        bool inInventory = false;
+        for (int i = 0; i < inventoryItemList.Count; i++)
+        {
+            if (ItemNumber == inventoryItemList[i].GetComponent<ItemInfo>().itemID)
+            {
+                inInventory = true;
+                if (inInventory == true)
+                {
+                    inventoryItemList[i].GetComponent<InventorySlot_cy>().itemCount += ItemCount;
+                    inventoryItemList[i].GetComponent<InventorySlot_cy>().itemCount_Text.text =
+                        inventoryItemList[i].GetComponent<InventorySlot_cy>().itemCount.ToString();
+                    inventoryItemList[i].GetComponent<HoverTip>().itemCount += ItemCount;
+                    inventoryItemList[i].GetComponent<HoverTip>().countToShow =
+                        "수량 : " + inventoryItemList[i].GetComponent<HoverTip>().itemCount.ToString() + "개";
+                    break;
+
+                }
+            }
+        }
+        if(inInventory==false)
+        {
+            ItemCreate(ItemTpye);
+        }
+    }
+
+    private void ItemCreate(GameObject[] ItemTpye)
     {
         GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
         hoverTip = clone.GetComponent<HoverTip>();
         slots = clone.GetComponent<InventorySlot_cy>();
         itemInfo = clone.GetComponent<ItemInfo>();
+        inventoryItemList.Add(clone.GetComponent<ItemInfo>());
         if (ItemTpye == ConsumeSlots)
         {
             itemInfo.itemType = ItemInfo.ItemType.Consume;
@@ -136,31 +125,21 @@ public class Inventory_cy : MonoBehaviour
         {
             if (ItemNumber == theData.itemList[i].itemID)
             {
-                //for (int j = 0; j < inventoryItemList.Count; j++)
-                //{
-                //    if (inventoryItemList[j].itemID == ItemNumber)
-                //    {
-                //        inventoryItemList[j].itemCount += ItemCount;
-                //        slots.itemCount_Text.text = inventoryItemList[j].itemCount.ToString();
-                //    }
-                //    else
-                //    {
-                //        inventoryItemList.Add(theData.itemList[i]);
-                //        slots.itemCount_Text.text = inventoryItemList[j].itemCount.ToString();
-                //    }
-                    
-                //}
+                itemInfo.itemID = theData.itemList[i].itemID;
                 hoverTip.titleToShow = theData.itemList[i].itemName;
                 hoverTip.tipToShow = theData.itemList[i].itemDescription;
-                hoverTip.countToShow = "수량 : " + theData.itemList[i].itemCount.ToString() + "개";
+                hoverTip.itemCount = theData.itemList[i].itemCount;
+                hoverTip.countToShow = "수량 : " + hoverTip.itemCount.ToString() + "개";
                 hoverTip.itemToShow = theData.itemList[i].itemIcon;
                 slots.icon.sprite = theData.itemList[i].itemIcon;
-                slots.itemCount_Text.text = theData.itemList[i].itemCount.ToString();
-                
+                slots.itemCount = theData.itemList[i].itemCount;
+                slots.itemCount_Text.text = slots.itemCount.ToString();
                 break;
             }
         }
     }
+
+    //장비템 인벤토리에 추가하는 함수
     public void AddItem(GameObject[] ItemTpye, ItemInfo.EquipType equipType)
     {
         GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
@@ -187,12 +166,11 @@ public class Inventory_cy : MonoBehaviour
                 itemInfo.equipType = ItemInfo.EquipType.Totem;
                 break;
         }
-        
+        inventoryItemList.Add(clone.GetComponent<ItemInfo>());
         for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
         {
             if (ItemNumber == theData.itemList[i].itemID)
             {
-                inventoryItemList.Add(theData.itemList[i]);
                 hoverTip.titleToShow = theData.itemList[i].itemName;
                 hoverTip.tipToShow = theData.itemList[i].itemDescription;
                 hoverTip.itemToShow = theData.itemList[i].itemIcon;
@@ -201,6 +179,7 @@ public class Inventory_cy : MonoBehaviour
             }
         }
     }
+
     public GameObject ItemGetIN(GameObject[] ItemTpye)
 
     {
@@ -212,6 +191,21 @@ public class Inventory_cy : MonoBehaviour
                 emptyInven = ItemTpye[i];
                 Debug.Log("부모 찾음");
                 break;
+            }
+        }
+        return emptyInven;
+    }
+
+    public GameObject[] Test(GameObject[] ItemTpye)
+    {
+        GameObject[] emptyInven = null;
+        GameObject test = null;
+        for (int i = 0; i < ItemTpye.Length; i++)
+        {
+            if (ItemTpye[i].transform.childCount != 0)
+            {
+                test = ItemTpye[i];
+                Debug.Log("부모 찾음");
             }
         }
         return emptyInven;

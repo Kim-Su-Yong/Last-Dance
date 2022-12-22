@@ -10,88 +10,117 @@ public class PlayerStat : MonoBehaviour
     public int[] needExp; //만랩 설정
     public int currentEXP;
 
-    public int hp;
-    public int currentHP;
-    public int mp;
-    public int currentMP;
+    public int initHP;      // 시작 체력
+    //public int currentHP;   // 현재 체력
+    public int maxHP;              // 최대 체력
 
-    public int atk;
-    public int def;
+    public int atk;         // 공격력
+    public int def;         // 방어력
 
-    public int recover_hp;
-    public int recover_mp;
+    public float critical;  // 크리티컬 확률
 
-    public string dmgSound;
-
-    [SerializeField]
-    public GameObject prefabs_floating_text;
-    [SerializeField]
-    public GameObject parent;
-    void Start()
+    public GameObject LevelUpEffect;    // 레벨 업 시 이펙트
+    void Awake()
     {
         instance = this;
-        currentHP = hp;
+        // 저장된 데이터 불러오기
+        //if(저장된 데이터가 없다면)
+        InitCharacterData();
     }
-    public void Hit(int _enemyAtk)
+
+    // 최초로 접속한 경우(데이터가 없는 경우 플레이어 스탯 설정)
+    void InitCharacterData()
     {
-        int dmg;
+        character_Lv = 1;
+        currentEXP = 0;
 
-        if (def >= _enemyAtk)
-            dmg = 10;
-        else
-            dmg = _enemyAtk - def;
+        initHP = 100;
+        maxHP = initHP;
+        //currentHP = maxHP;
 
-        currentHP -= dmg;
+        // 기본 장비에 따라 영향을 받을 예정(기본 장비 없는 경우 수정)
+        atk = 5;
+        def = 5;
 
-        if (currentHP <= 0)
-            Debug.Log("체력 0미만, 게임오버");
-
-        SoundManager.instance.Play(dmgSound);
-
-        Vector3 vector = this.transform.position;
-        vector.y += 60;
-
-        GameObject clone = Instantiate(prefabs_floating_text, vector, Quaternion.Euler(Vector3.zero));
-        //clone.GetComponent<FloatingText>().text.text = dmg.ToString();
-        //clone.GetComponent<FloatingText>().text.color = Color.red;
-        //clone.GetComponent<FloatingText>().text.fontSize = 25;
-        //clone.transform.SetParent(parent.transform);
-        //StopAllCoroutines();
-        //StartCoroutine(HitCoroutine());
+        critical = 25f;
     }
-    IEnumerator HitCoroutine()
-    {
-        Color color = GetComponent<SpriteRenderer>().color;
-        color.a = 0;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 1f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 0f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 1f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 0f;
-        GetComponent<SpriteRenderer>().color = color;
-        yield return new WaitForSeconds(0.1f);
-        color.a = 1f;
-        GetComponent<SpriteRenderer>().color = color;
-    }
+
+    //public void Hit(int _enemyAtk)
+    //{
+    //    int dmg;
+
+    //    if (def >= _enemyAtk)
+    //        dmg = 10;
+    //    else
+    //        dmg = _enemyAtk - def;
+
+    //    currentHP -= dmg;
+
+    //    if (currentHP <= 0)
+    //        Debug.Log("체력 0미만, 게임오버");
+
+    //    SoundManager.instance.Play(dmgSound);
+
+    //    Vector3 vector = this.transform.position;
+    //    vector.y += 60;
+
+    //    GameObject clone = Instantiate(prefabs_floating_text, vector, Quaternion.Euler(Vector3.zero));
+    //    //clone.GetComponent<FloatingText>().text.text = dmg.ToString();
+    //    //clone.GetComponent<FloatingText>().text.color = Color.red;
+    //    //clone.GetComponent<FloatingText>().text.fontSize = 25;
+    //    //clone.transform.SetParent(parent.transform);
+    //    //StopAllCoroutines();
+    //    //StartCoroutine(HitCoroutine());
+    //}
+    //IEnumerator HitCoroutine()
+    //{
+    //    Color color = GetComponent<SpriteRenderer>().color;
+    //    color.a = 0;
+    //    GetComponent<SpriteRenderer>().color = color;
+    //    yield return new WaitForSeconds(0.1f);
+    //    color.a = 1f;
+    //    GetComponent<SpriteRenderer>().color = color;
+    //    yield return new WaitForSeconds(0.1f);
+    //    color.a = 0f;
+    //    GetComponent<SpriteRenderer>().color = color;
+    //    yield return new WaitForSeconds(0.1f);
+    //    color.a = 1f;
+    //    GetComponent<SpriteRenderer>().color = color;
+    //    yield return new WaitForSeconds(0.1f);
+    //    color.a = 0f;
+    //    GetComponent<SpriteRenderer>().color = color;
+    //    yield return new WaitForSeconds(0.1f);
+    //    color.a = 1f;
+    //    GetComponent<SpriteRenderer>().color = color;
+    //}
     void Update()
     {
-        if (currentEXP >= needExp[character_Lv])
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            character_Lv++;
-            hp += character_Lv * 2;
-            mp += character_Lv + 2;
-
-            currentHP = hp;
-            currentMP = mp;
-            atk++;
-            def++;
+            GainExp(24);
         }
     }
+    void GainExp(int newEXP)
+    {
+        currentEXP += newEXP;
+        if (currentEXP >= needExp[character_Lv])
+        {
+            Debug.Log("레벨 업!");
+
+            int overExp = currentEXP - needExp[character_Lv];
+            character_Lv++;
+            currentEXP = overExp;
+
+            GameObject Effect = Instantiate(LevelUpEffect, transform.position, Quaternion.identity);
+            Destroy(Effect, 2f);
+            maxHP += 10;        // 레벨업 시 최대 체력 증가
+            GetComponent<PlayerDamage>().curHp = maxHP;
+            GetComponent<PlayerDamage>().hpUpdate();
+            //currentHP = maxHP;  // 레벨업 시 체력이 완전히 회복됨
+            atk++;              // 공격력 증가
+            def++;              // 방어력 증가
+
+        }
+    }
+
 }

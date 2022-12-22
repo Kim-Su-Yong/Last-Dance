@@ -7,6 +7,7 @@ public class FoxFire : MonoBehaviour
     [SerializeField]
     SkillData foxFireData;          // 여우불 스킬데이터
     GameObject expEffect;           // 폭발 이펙트
+    public int damage;
     //SphereCollider sphereCollider;
 
     //Rigidbody rb;
@@ -38,6 +39,11 @@ public class FoxFire : MonoBehaviour
     private void OnDisable()
     {
         StopCoroutine(Delay());     // 비활성화되면(적에게 부딪히면) Delay 코루틴 취소
+    }
+
+    private void Update()
+    {
+        damage = (int)(foxFireData.f_skillDamage + PlayerStat.instance.atk * 3);
     }
 
     //void Update()
