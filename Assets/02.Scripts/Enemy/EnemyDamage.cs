@@ -11,6 +11,7 @@ public class EnemyDamage : MonoBehaviour
     readonly string bulletTag = "BULLET";
     readonly string foxFireTag = "FOX_FIRE";
     readonly string punchTag = "PUNCH";
+    readonly string roarTag = "ROAR";
     public float hp = 0f;
     public float hpMax = 100f;
 
@@ -34,9 +35,9 @@ public class EnemyDamage : MonoBehaviour
         if(skillName == "Roar")
         {
             // 스피드 감소
-            Debug.Log("스피드 감소");
             renderer.material.color = Color.red;
             StartCoroutine(ResetColor());
+            Debug.Log(newDamage);
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -44,27 +45,40 @@ public class EnemyDamage : MonoBehaviour
         if(other.CompareTag(fireBallTag))
         {
             renderer.material.color = Color.red;
-            hp -= 10f;
+            hp -= other.GetComponent<FireBall>().damage;
             StartCoroutine(ResetColor());
+            Debug.Log(other.GetComponent<FireBall>().damage);
         }
         if (other.CompareTag(bulletTag))
         {
             renderer.material.color = Color.red;
             StartCoroutine(ResetColor());
             BulletAttack();
+            //Debug.Log(other.GetComponent<Bullet>().damage);
         }
         if(other.CompareTag(foxFireTag))
         {
             renderer.material.color = Color.red;
+            hp -= other.GetComponent<FoxFire>().damage;
             StartCoroutine(ResetColor());
-            hp -= 20f;
+            Debug.Log(other.GetComponent<FoxFire>().damage);
         }
         if(other.CompareTag(punchTag))
         {
             renderer.material.color = Color.red;
+            
+            hp -= other.GetComponent<PunchCollider>().damage;
             StartCoroutine(ResetColor());
-            hp -= 15f;
+            Debug.Log(other.GetComponent<PunchCollider>().damage);
         }
+        if(other.CompareTag(roarTag))
+        {
+            renderer.material.color = Color.red;
+
+            hp -= other.GetComponent<RoarCollider>().damage;
+            StartCoroutine(ResetColor());
+            Debug.Log(other.GetComponent<RoarCollider>().damage);
+        }       
     }
 
     IEnumerator ResetColor()

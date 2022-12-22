@@ -10,9 +10,7 @@ public class PlayerDamage : MonoBehaviour
     public Text HpText;                 // 체력 텍스트
 
     [Header("Data")]
-    public float curHp;                 // 현재 체력
-    [SerializeField] float initHp;      // 시작시 체력
-    [SerializeField] float maxHp;       // 최대 체력(레벨 or 아이템 장착 여부에 따라 값이 달라질 수 있음)
+    public int curHp;                 // 현재 체력
     public bool isDie;                  // 사망 확인
     public GameObject hitEffect;        // 피격 이펙트
     public GameObject damageUIPrefab;   // 데미지 UI
@@ -23,10 +21,13 @@ public class PlayerDamage : MonoBehaviour
     ThirdPersonCtrl controller;
     PlayerAttack attack;
     PlayerState playerState;
+    PlayerStat playerStat;
 
     readonly int hashDie = Animator.StringToHash("Die");
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
+
+    //public GameObject deathPanel;
 
     private void Awake()
     {
@@ -34,6 +35,8 @@ public class PlayerDamage : MonoBehaviour
         controller = GetComponent<ThirdPersonCtrl>();
         attack = GetComponent<PlayerAttack>();
         playerState = GetComponent<PlayerState>();
+        playerStat = GetComponent<PlayerStat>();
+
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
 
@@ -41,25 +44,22 @@ public class PlayerDamage : MonoBehaviour
     {
         // 데이터가 없다면 체력 상태는 초기화 됨
         //if(데이터가 존재하지 않는다면)
-        InitCharacterData();
+        
+        LoadCharacterData();
         hpUpdate();
     }
 
     // 캐릭터 초기 데이터(데이터 저장된것이 없는 경우 값)
-    void InitCharacterData()
+    void LoadCharacterData()
     {
-        initHp = 1000;              // 디버그를 위해 1000으로 설정해둠
-        maxHp = initHp;             // 처음 시작하면 최대체력은 초기체력과 동일
-        curHp = maxHp;
-        HpBar.fillAmount = 1f;
-        HpBar.color = Color.green;
+        curHp = playerStat.maxHP;
     }
 
     // 체력 업데이트 함수(체력값이 변경될 때 마다 호출해야함
-    private void hpUpdate()
+    public void hpUpdate()
     {
-        HpBar.fillAmount = (float)curHp / initHp;                   // 체력바 이미지 수정
-        HpText.text = curHp.ToString() + " / " + initHp.ToString(); // 체력바 텍스트 수정
+        HpBar.fillAmount = (float)curHp / playerStat.maxHP;                   // 체력바 이미지 수정
+        HpText.text = curHp.ToString() + " / " + playerStat.maxHP.ToString(); // 체력바 텍스트 수정
 
         // 체력이 30퍼이하인 경우 빨간색
         if (HpBar.fillAmount <= 0.3f)
@@ -67,6 +67,7 @@ public class PlayerDamage : MonoBehaviour
         //체력이 50퍼이하인 경우 노란색
         else if (HpBar.fillAmount <= 0.5f)
             HpBar.color = Color.yellow;
+        else HpBar.color = Color.green;
     }
 
     void Update()
@@ -74,8 +75,10 @@ public class PlayerDamage : MonoBehaviour
         // 체력 감소 테스트 및 회복을 위한 테스트용 함수
         if (Input.GetKeyDown(KeyCode.P))
         {
-            curHp -= 100f;
+            curHp -= 10;
             hpUpdate();
+            if (curHp <= 0)
+                StartCoroutine(Die());
         }
             
     }
@@ -94,7 +97,7 @@ public class PlayerDamage : MonoBehaviour
         // + 지은 : 다이나믹한 연출을 위해 데미지 0~9의 값이 랜덤 추가되는 것으로 변경했습니다!
 
         // 현재 체력값이 0 ~ 초기 체력(아마 최대체력으로 변경될 예정)사이의 값만 가지도록 조정
-        curHp = Mathf.Clamp(curHp, 0, initHp);
+        curHp = Mathf.Clamp(curHp, 0, playerStat.maxHP);
         hpUpdate();
 
         playerState.state = PlayerState.State.HIT;  // 플레이어 상태->피격상태 로 변경
@@ -114,14 +117,13 @@ public class PlayerDamage : MonoBehaviour
         isDie = true;
        
         animator.SetTrigger("Die");     // 사망 애니메이션 실행
-        /*
-         * 사망 UI창 띄우기
-         */
-        //Debug.Log("사망하였습니다.");
+        GetComponent<CharacterController>().enabled = false;    // 충돌판정 제거를 위한 캐릭터 컨트롤러 비활성화
+
+        // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
+        yield return new WaitForSeconds(2f);    
+        //deathPanel.SetActive(true);
         yield return new WaitForSeconds(3f);
-        // 
-        //SetPlayerVisible(false);
-        yield return new WaitForSeconds(5f); // 5초뒤 자동부활-> UI버튼으로 부활 클릭하면 그때 부활
+        //deathPanel.SetActive(false);
         Respawn();
     }
     public void Respawn()   // 덜 구현되어 있는 상태
@@ -129,11 +131,17 @@ public class PlayerDamage : MonoBehaviour
         Transform SpawnPoint = GameObject.Find("SpawnManager").
             transform.GetChild(0).GetComponent<Transform>();
         transform.position = SpawnPoint.position;
-        curHp = maxHp;
+        curHp = playerStat.maxHP;
         HpBar.color = Color.green;
         hpUpdate();
         playerState.state = PlayerState.State.IDLE;
+        GetComponent<CharacterController>().enabled = true;
+        GetComponent<ChangeForm>().curForm = ChangeForm.FormType.FOX;
+        GetComponent<ChangeForm>().Staff.enabled = true;
         isDie = false;
+
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -176,15 +184,15 @@ public class PlayerDamage : MonoBehaviour
     }
 
     // 체력 회복 함수(포션 사용, 힐 스킬 사용)
-    public void RestoreHp(float newHp)
+    public void RestoreHp(int newHp)
     {
         // 죽었으면 함수 종료
         if (playerState.state == PlayerState.State.DIE)
             return;
         curHp += newHp;     // newHP만큼 체력 회복
         // 체력된 회복이 최대체력보다 큰 경우 조정
-        if (curHp > initHp)
-            curHp = initHp;
+        if (curHp > playerStat.maxHP)
+            curHp = playerStat.maxHP;
         hpUpdate();
     }
 

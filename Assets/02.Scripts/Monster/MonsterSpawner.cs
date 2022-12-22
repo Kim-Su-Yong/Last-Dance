@@ -126,6 +126,7 @@ public class MonsterSpawner : MonoBehaviour
                             _monster.transform.position = spawnPoint.position;
                         }
                         //Debug.Log("지점 변경 완료"); // 1회만 변경되는 것 확인 완료
+
                         _monster.SetActive(true);
                         _monster.GetComponent<MonsterAI>().isDie = false;
                         _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
@@ -161,10 +162,10 @@ public class MonsterSpawner : MonoBehaviour
 
             Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
             var A_monster = Instantiate(monsterInfos[0].monsterPrefab, spawnPoint.position, spawnPoint.rotation, A_obj.transform);
-            A_monster.GetComponent<MonsterAI>().SetUp(monsterInfos[0].monsterData);
-            A_monster.GetComponent<MonsterAI>().LetMeKnowMonsterType(0);
             A_monster.name = "A_Skeleton" + i.ToString();
             A_monster.SetActive(true);
+            A_monster.GetComponent<MonsterAI>().LetMeKnowMonsterType(0);
+            A_monster.GetComponent<MonsterAI>().SetUp(monsterInfos[0].monsterData);
             MonsterA.Add(A_monster);
         }
     }
@@ -179,9 +180,9 @@ public class MonsterSpawner : MonoBehaviour
             Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
             var B_monster = Instantiate(monsterInfos[1].monsterPrefab, spawnPoint.position, spawnPoint.rotation, B_obj.transform);
             B_monster.name = "B_Fishman" + i.ToString();
-            B_monster.GetComponent<MonsterAI>().SetUp(monsterInfos[1].monsterData);
-            B_monster.GetComponent<MonsterAI>().LetMeKnowMonsterType(1);
             B_monster.SetActive(true);
+            B_monster.GetComponent<MonsterAI>().LetMeKnowMonsterType(1);
+            B_monster.GetComponent<MonsterAI>().SetUp(monsterInfos[1].monsterData);
             MonsterB.Add(B_monster);
         }
     }
@@ -196,10 +197,10 @@ public class MonsterSpawner : MonoBehaviour
             Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)];
             var C_monster = Instantiate(monsterInfos[2].monsterPrefab, spawnPoint.position, spawnPoint.rotation, C_obj.transform);
             C_monster.name = "C_Mushroom" + i.ToString();
-            C_monster.GetComponent<MonsterAI>().SetUp(monsterInfos[2].monsterData);
-            C_monster.GetComponent<MonsterAI>().LetMeKnowMonsterType(2);
             C_monster.SetActive(true);
-            MonsterA.Add(C_monster);
+            C_monster.GetComponent<MonsterAI>().LetMeKnowMonsterType(2);
+            C_monster.GetComponent<MonsterAI>().SetUp(monsterInfos[2].monsterData);
+            MonsterC.Add(C_monster);
         }
     }
 }

@@ -25,14 +25,20 @@ public class ChangeForm : MonoBehaviour
     public Image coolImg; //쿨타임 이미지
     public Text coolTxt; //쿨타임 텍스트
 
+    [Header("폼에 따른 스킬 UI")]
+    public GameObject[] Fox_Skill_Panel;
+    public GameObject[] Tiger_Skill_Panel;
+    public GameObject[] Eagle_Skill_Panel;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+
+        PanelOnOff(curForm);
+
         coolImg.fillAmount = 0f; //초기화
         coolTxt.enabled = false;
         coolImg.enabled = false;
-
     }
 
     void Update()
@@ -41,6 +47,60 @@ public class ChangeForm : MonoBehaviour
         FormChange();
     }
 
+    void PanelOnOff(FormType curForm)
+    {
+        switch(curForm)
+        {
+            case FormType.FOX:
+                foreach (var panel in Fox_Skill_Panel)
+                {
+                    panel.SetActive(true);
+                }
+
+                foreach (var panel in Tiger_Skill_Panel)
+                {
+                    panel.SetActive(false);
+                }
+
+                foreach (var panel in Eagle_Skill_Panel)
+                {
+                    panel.SetActive(false);
+                }
+                break;
+            case FormType.TIGER:
+                foreach (var panel in Fox_Skill_Panel)
+                {
+                    panel.SetActive(false);
+                }
+
+                foreach (var panel in Tiger_Skill_Panel)
+                {
+                    panel.SetActive(true);
+                }
+
+                foreach (var panel in Eagle_Skill_Panel)
+                {
+                    panel.SetActive(false);
+                }
+                break;
+            case FormType.EAGLE:
+                foreach (var panel in Fox_Skill_Panel)
+                {
+                    panel.SetActive(false);
+                }
+
+                foreach (var panel in Tiger_Skill_Panel)
+                {
+                    panel.SetActive(false);
+                }
+
+                foreach (var panel in Eagle_Skill_Panel)
+                {
+                    panel.SetActive(true);
+                }
+                break;
+        }
+    }
 
     void ChangeFormSprite()
     {
@@ -59,10 +119,9 @@ public class ChangeForm : MonoBehaviour
                 * 폼 변환 애니메이션이나 파티클 넣어주기
                 */
                 Staff.enabled = true;   // 여우 폼일때는 지팡이를 사용
-                /*
-                 * 다른 폼에서 무기를 사용한다면 코드 추가
-                */
                 curForm = FormType.FOX;
+                PanelOnOff(curForm);
+                
                 animator.SetInteger("Form", 1);
 
                 ChangeFormSprite();
@@ -70,7 +129,6 @@ public class ChangeForm : MonoBehaviour
                 coolTxt.enabled = true;
                 coolImg.enabled = true;
                 StartCoroutine(CoolTimeImg(charForm_CoolTime));
-
             }
             else
             {
@@ -90,10 +148,9 @@ public class ChangeForm : MonoBehaviour
                */
                 canFormChange = false;
                 Staff.enabled = false;   // 호랑이 폼일때는 지팡이를 사용X
-                /*
-                 * 다른 폼에서 무기를 사용한다면 코드 추가
-                */
+
                 curForm = FormType.TIGER;
+                PanelOnOff(curForm);
                 animator.SetInteger("Form", 2);
                 ChangeFormSprite();
                 //UI 에서 쿨타임 도는 기능 구현
@@ -121,6 +178,7 @@ public class ChangeForm : MonoBehaviour
                  * 다른 폼에서 무기를 사용한다면 코드 추가
                 */
                 curForm = FormType.EAGLE;
+                PanelOnOff(curForm);
                 animator.SetInteger("Form", 3);
                 ChangeFormSprite();
                 coolTxt.enabled = true;
@@ -132,7 +190,6 @@ public class ChangeForm : MonoBehaviour
                 Debug.Log("쿨타임 중입니다.");
             }
         }
-        //CoolDown();
     }
     IEnumerator CoolTimeImg(float cool)
     {

@@ -12,11 +12,9 @@ public class MonsterDamage : MonoBehaviour
     private readonly string bulletTag = "BULLET";
     private readonly string foxFireTag = "FOX_FIRE";
     private readonly string punchTag = "PUNCH";
+    private readonly string roarTag = "ROAR";
 
-    private float fireBall_Damage = 20f;
     private float bullet_Damage = 20f;
-    private float foxFire_Damage = 20f;
-    private float punch_Damage = 20f;
 
     // Scripts
     MonsterAI monsterAI;
@@ -42,12 +40,13 @@ public class MonsterDamage : MonoBehaviour
         if (monsterAI.isDie == true) return;
         if (other.CompareTag(fireBallTag))
         {
-            int _damage = (int)(fireBall_Damage + Random.Range(0f, 9f));
+            //int _damage = (int)(fireBall_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
 
-            Debug.Log("현재 HP :" + monsterAI.M_HP + "데미지 : " + _damage);
+           // Debug.Log("현재 HP :" + monsterAI.M_HP + "데미지 : " + _damage);
 
             monsterAI.animator.SetTrigger("GotHit");
             monsterAI.isDamaged = true;
@@ -55,7 +54,7 @@ public class MonsterDamage : MonoBehaviour
             monsterAI.DamagedUI();
 
             if (!monsterAI.isDie)
-                ShowDamageEffect(other, _damage);
+                ShowDamageEffect(_damage);
         }
         if (other.CompareTag(bulletTag))
         {
@@ -70,11 +69,11 @@ public class MonsterDamage : MonoBehaviour
             monsterAI.DamagedUI();
 
             if (!monsterAI.isDie)
-                ShowDamageEffect(other, _damage);
+                ShowDamageEffect(_damage);
         }
         if (other.CompareTag(foxFireTag))
         {
-            int _damage = (int)(foxFire_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(other.GetComponent<FoxFire>().damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
@@ -85,11 +84,11 @@ public class MonsterDamage : MonoBehaviour
             monsterAI.DamagedUI();
 
             if (!monsterAI.isDie)
-                ShowDamageEffect(other, _damage);
+                ShowDamageEffect(_damage);
         }
         if (other.CompareTag(punchTag))
         {
-            int _damage = (int)(punch_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(other.GetComponent<PunchCollider>().damage + Random.Range(0f, 9f));
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
@@ -100,17 +99,43 @@ public class MonsterDamage : MonoBehaviour
             monsterAI.DamagedUI();
 
             if (!monsterAI.isDie)
-                ShowDamageEffect(other, _damage);
+                ShowDamageEffect(_damage);
+        }
+        if(other.CompareTag(roarTag))
+        {
+            int _damage = (int)(other.GetComponent<RoarCollider>().damage + Random.Range(0f, 9f));
+            monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
+            monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
+            monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
+
+            monsterAI.animator.SetTrigger("GotHit");
+            monsterAI.isDamaged = true;
+            monsterAI.HpUpdate();
+            monsterAI.DamagedUI();
+
+            StartCoroutine(DownAtkSpeed());
+
+
+            if (!monsterAI.isDie)
+                ShowDamageEffect(_damage);
         }
     }
 
+    // 공격속도가 20%감소햇다가 2초뒤에 원래대로 돌아오는 함수
+    IEnumerator DownAtkSpeed()
+    {
+        float originAtkSpd = monsterAI.attackSpeed; // 기존 공격속도 값 저장
+        monsterAI.attackSpeed *= 0.8f;  // 몬스터의 공격속도 감소 
+        yield return new WaitForSeconds(2f);
+        monsterAI.attackSpeed = originAtkSpd;   // 원래 공격속도로 돌아옴
+    }
     void FlyAttack()
     {
         monsterAI.M_HP -= 10f;
         //capsuleCollider.enabled = false;
     }
 
-    void ShowDamageEffect(Collider col, int _damage)
+    void ShowDamageEffect(int _damage)
     {
         /* Monster GotHit Particle Effect (찬희가 다른 스크립트에서 이미 구현함) */
         //Vector3 pos = col.ClosestPoint(transform.position);

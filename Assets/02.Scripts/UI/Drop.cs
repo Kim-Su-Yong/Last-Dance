@@ -38,9 +38,10 @@ public class Drop : MonoBehaviour, IDropHandler
         {
             case WindowType.InvenWindow:
                 // 아이템 카테고리 유효성 검사
-                switch (dragItemInfo.itemCategory)
+                switch (dragItemInfo.itemType)
                 {
-                    case ItemInfo.ItemCategory.Equip:
+                    
+                    case ItemInfo.ItemType.Equip:
                         if (this.slotType == SlotType.EquipmentSlot)
                         {
                             if (transform.childCount == 0)
@@ -50,7 +51,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
 
-                    case ItemInfo.ItemCategory.Consume:
+                    case ItemInfo.ItemType.Consume:
                         if (this.slotType == SlotType.ConsumeSlot)
                         {
                             if (transform.childCount == 0)
@@ -60,7 +61,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
 
-                    case ItemInfo.ItemCategory.Etc:
+                    case ItemInfo.ItemType.ETC:
                         if (this.slotType == SlotType.EtcSlot)
                         {
                             if (transform.childCount == 0)
@@ -74,18 +75,18 @@ public class Drop : MonoBehaviour, IDropHandler
 
             // 장비창 장착 가능한 슬롯인지 유효성 검사
             case WindowType.EquipWindow:
-                switch (dragItemInfo.itemType)
+                switch (dragItemInfo.equipType)
                 {
-                    case ItemInfo.ItemType.Goggles:
-                        if (this.equipType == EquipType.GogglesSlot)
-                        {
-                            if (transform.childCount == 0)
-                            {
-                                Drag.draggingItem.transform.SetParent(this.transform);
-                            }
-                        }
-                        break;
-                    case ItemInfo.ItemType.Helmet:
+                    //case ItemInfo.EquipType.Goggles:
+                    //    if (this.equipType == EquipType.GogglesSlot)
+                    //    {
+                    //        if (transform.childCount == 0)
+                    //        {
+                    //            Drag.draggingItem.transform.SetParent(this.transform);
+                    //        }
+                    //    }
+                    //    break;
+                    case ItemInfo.EquipType.Helmet:
                         if (this.equipType == EquipType.HelmetSlot)
                         {
                             if (transform.childCount == 0)
@@ -94,7 +95,7 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    case ItemInfo.ItemType.Totem:
+                    case ItemInfo.EquipType.Totem:
                         if (this.equipType == EquipType.TotemSlot)
                         {
                             if (transform.childCount == 0)
@@ -103,7 +104,7 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    case ItemInfo.ItemType.Weapon:
+                    case ItemInfo.EquipType.Weapon:
                         if (this.equipType == EquipType.WeaponSlot)
                         {
                             if (transform.childCount == 0)
@@ -112,7 +113,7 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    case ItemInfo.ItemType.Armor:
+                    case ItemInfo.EquipType.Armor:
                         if (this.equipType == EquipType.ArmorSlot)
                         {
                             if (transform.childCount == 0)
@@ -121,25 +122,25 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    case ItemInfo.ItemType.Gloves:
-                        if (this.equipType == EquipType.GlovesSlot)
-                        {
-                            if (transform.childCount == 0)
-                            {
-                                Drag.draggingItem.transform.SetParent(this.transform);
-                            }
-                        }
-                        break;
-                    case ItemInfo.ItemType.Shield:
-                        if (this.equipType == EquipType.ShieldSlot)
-                        {
-                            if (transform.childCount == 0)
-                            {
-                                Drag.draggingItem.transform.SetParent(this.transform);
-                            }
-                        }
-                        break;
-                    case ItemInfo.ItemType.Boots:
+                    //case ItemInfo.ItemType.Gloves:
+                    //    if (this.equipType == EquipType.GlovesSlot)
+                    //    {
+                    //        if (transform.childCount == 0)
+                    //        {
+                    //            Drag.draggingItem.transform.SetParent(this.transform);
+                    //        }
+                    //    }
+                    //    break;
+                    //case ItemInfo.ItemType.Shield:
+                    //    if (this.equipType == EquipType.ShieldSlot)
+                    //    {
+                    //        if (transform.childCount == 0)
+                    //        {
+                    //            Drag.draggingItem.transform.SetParent(this.transform);
+                    //        }
+                    //    }
+                    //    break;
+                    case ItemInfo.EquipType.Boots:
                         if (this.equipType == EquipType.BootsSlot)
                         {
                             if (transform.childCount == 0)
@@ -148,15 +149,15 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    case ItemInfo.ItemType.Backpack:
-                        if (this.equipType == EquipType.BackpackSlot)
-                        {
-                            if (transform.childCount == 0)
-                            {
-                                Drag.draggingItem.transform.SetParent(this.transform);
-                            }
-                        }
-                        break;
+                    //case ItemInfo.ItemType.Backpack:
+                    //    if (this.equipType == EquipType.BackpackSlot)
+                    //    {
+                    //        if (transform.childCount == 0)
+                    //        {
+                    //            Drag.draggingItem.transform.SetParent(this.transform);
+                    //        }
+                    //    }
+                    //    break;
                 }
                 break;
         }

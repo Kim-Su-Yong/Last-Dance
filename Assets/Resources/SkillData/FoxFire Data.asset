@@ -20,5 +20,5 @@ MonoBehaviour:
     5\uCD08\uAC04 \uACF5\uC804\uD558\uBA70, \uC801\uC5D0\uAC8C \uB2FF\uC558\uC744
     \uC2DC \uD3ED\uBC1C\uD558\uBA70 \uB370\uBBF8\uC9C0\uB97C \uC900\uB2E4."
   f_skillRange: 5
-  f_skillDamage: 15
+  f_skillDamage: 20
   f_skillCoolTime: 10

@@ -4,15 +4,29 @@ using UnityEngine;
 
 public class PunchCollider : MonoBehaviour
 {
+    public int damage;      // 펀치 데미지
+    public bool powerPunch; // 강펀치 판단변수
+    BoxCollider collider;
+
+    private void Awake()
+    {
+        collider = GetComponent<BoxCollider>();
+        collider.enabled = false;
+        //damage = 20;//(int)(PlayerStat.instance.atk * 2) + 6;
+    }
     void OnEnable()
     {
-        StartCoroutine(AutoDisable());
+        //
+        
     }
 
-    // 0.3초 후에 자동으로 비활성화
-    IEnumerator AutoDisable()
+    private void Update()
     {
-        yield return new WaitForSeconds(0.3f);
-        gameObject.SetActive(false);
+        if(!powerPunch)
+            damage = (int)(PlayerStat.instance.atk * 2) + 6;
+        else
+            damage = (int)((PlayerStat.instance.atk * 2) + 6) * 2;
+
     }
+
 }

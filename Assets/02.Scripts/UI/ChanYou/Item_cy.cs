@@ -26,4 +26,9 @@ public class Item_cy
         itemCount = _itemCount;
         itemIcon = Resources.Load("ItemImage/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
     }
+    public bool Use()
+    {
+        bool isUsed = false;
+        return isUsed;
+    }
 }

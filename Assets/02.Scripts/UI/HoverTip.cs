@@ -7,6 +7,8 @@ public class HoverTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public string titleToShow;
     public string tipToShow;
+    public string countToShow;
+    public int itemCount;
     public Sprite itemToShow;
     private float timeToWait = 0.5f;
 
@@ -23,7 +25,7 @@ public class HoverTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     private void ShowMessage()
     {
-        HoverTipManager.OnMouseHover(titleToShow, tipToShow, itemToShow, Input.mousePosition);
+        HoverTipManager.OnMouseHover(titleToShow, tipToShow, countToShow, itemToShow, Input.mousePosition);
     }
     private IEnumerator StartTimer()
     {
