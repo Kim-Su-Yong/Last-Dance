@@ -87,7 +87,9 @@ public class PlayerDamage : MonoBehaviour
     IEnumerator Hit(GameObject Enemy)
     {
         // Move, Idle인 경우에만 피격 모션 발생하도록 수정 예쩡
-        animator.SetTrigger(hashHit);     // 피격 애니메이션 재생
+        // 현재 캐릭터가 공격중이 아니라면 애니메이션 실행
+        if(playerState.state != PlayerState.State.ATTACK)
+            animator.SetTrigger(hashHit);     // 피격 애니메이션 재생
         animator.SetFloat(hashSpeed, 0f); // 피격 애니메이션 실행시 움직이지 않도록 멈춤
 
         // 에너미AI로부터 데미지 값을 받아옴(+ 랜덤하게 0~9사이 데미지 추가)
