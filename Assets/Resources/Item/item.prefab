@@ -257,6 +257,7 @@ MonoBehaviour:
   titleToShow: 
   tipToShow: 
   countToShow: 
+  itemCount: 0
   itemToShow: {fileID: 0}
 --- !u!114 &-9125080226026896749
 MonoBehaviour:
@@ -277,6 +278,7 @@ MonoBehaviour:
   itemIcon: {fileID: 0}
   itemType: 0
   equipType: 0
+  equipStat: []
 --- !u!1 &8777576734132340283
 GameObject:
   m_ObjectHideFlags: 0

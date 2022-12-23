@@ -13,7 +13,6 @@ public class ItemDrop : MonoBehaviour
 
     public bool isDrop = false;
 
-
     void Start()
     {
         ConsumeItems = Resources.LoadAll<GameObject>("ItemPrefabs/Consume");
@@ -28,7 +27,8 @@ public class ItemDrop : MonoBehaviour
     {
         if (!isDrop) //한번만 실행 되도록
             itemDrop();
-            //dropItem();
+        //dropItem();
+        
     }
 
     void dropItem()
@@ -42,6 +42,7 @@ public class ItemDrop : MonoBehaviour
         }
 
     }
+    
 
     #region 확률 조정 함수
     public void itemDrop()

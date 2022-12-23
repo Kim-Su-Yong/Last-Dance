@@ -77,15 +77,6 @@ public class Drop : MonoBehaviour, IDropHandler
             case WindowType.EquipWindow:
                 switch (dragItemInfo.equipType)
                 {
-                    //case ItemInfo.EquipType.Goggles:
-                    //    if (this.equipType == EquipType.GogglesSlot)
-                    //    {
-                    //        if (transform.childCount == 0)
-                    //        {
-                    //            Drag.draggingItem.transform.SetParent(this.transform);
-                    //        }
-                    //    }
-                    //    break;
                     case ItemInfo.EquipType.Helmet:
                         if (this.equipType == EquipType.HelmetSlot)
                         {
@@ -131,15 +122,6 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    //case ItemInfo.ItemType.Shield:
-                    //    if (this.equipType == EquipType.ShieldSlot)
-                    //    {
-                    //        if (transform.childCount == 0)
-                    //        {
-                    //            Drag.draggingItem.transform.SetParent(this.transform);
-                    //        }
-                    //    }
-                    //    break;
                     case ItemInfo.EquipType.Boots:
                         if (this.equipType == EquipType.BootsSlot)
                         {
@@ -149,15 +131,6 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    //case ItemInfo.ItemType.Backpack:
-                    //    if (this.equipType == EquipType.BackpackSlot)
-                    //    {
-                    //        if (transform.childCount == 0)
-                    //        {
-                    //            Drag.draggingItem.transform.SetParent(this.transform);
-                    //        }
-                    //    }
-                    //    break;
                 }
                 break;
         }

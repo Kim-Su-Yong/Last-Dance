@@ -8,6 +8,7 @@ public class Inventory_cy : MonoBehaviour
     public static Inventory_cy instance;
 
     private DatabaseManager_cy theData;
+    private SoundManager theSound;
 
     private HoverTip hoverTip;
     private ItemInfo itemInfo;
@@ -42,6 +43,7 @@ public class Inventory_cy : MonoBehaviour
     {
         instance = this;
         theData = FindObjectOfType<DatabaseManager_cy>();
+        theSound = FindObjectOfType<SoundManager>();
         inventoryItemList = new List<ItemInfo>();
         
         ItemSlot = Resources.Load<GameObject>("Item/item");
@@ -175,6 +177,14 @@ public class Inventory_cy : MonoBehaviour
                 hoverTip.tipToShow = theData.itemList[i].itemDescription;
                 hoverTip.itemToShow = theData.itemList[i].itemIcon;
                 slots.icon.sprite = theData.itemList[i].itemIcon;
+                if (theData.itemList[i].Atk != 0)
+                    hoverTip.countToShow = "공격력 + " + theData.itemList[i].Atk.ToString();
+                else if(theData.itemList[i].Def != 0)
+                    hoverTip.countToShow = "방어력 + " + theData.itemList[i].Def.ToString();
+                else if (theData.itemList[i].AddHp != 0)
+                    hoverTip.countToShow = "최대체력 + " + theData.itemList[i].AddHp.ToString();
+                else if (theData.itemList[i].Speed != 0)
+                    hoverTip.countToShow = "이동속도 + " + theData.itemList[i].Speed.ToString();
                 break;
             }
         }
