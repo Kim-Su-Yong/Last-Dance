@@ -17,7 +17,7 @@ public class ItemInfo : MonoBehaviour
     // 장비 2차 분류
     public enum EquipType
     {
-        None, Weapon, Helmet, Armor, Boots, Totem
+        None, Weapon, Helmet, Armor, Boots, Gloves, Totem
     }
     public ItemType itemType;
 
@@ -30,7 +30,7 @@ public class ItemInfo : MonoBehaviour
         itemDescription = _itemDes;
         itemType = _itemType;
         itemCount = _itemCount;
-        itemIcon = Resources.Load("ItemImage/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
+        itemIcon = Resources.Load("ItemImages/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
     }
     public ItemInfo(int _itemID, string _itemName, string _itemDes, ItemType _itemType, EquipType _equipType, int _itemCount = 1)
     {
@@ -40,7 +40,7 @@ public class ItemInfo : MonoBehaviour
         itemType = _itemType;
         equipType = _equipType;
         itemCount = _itemCount;
-        itemIcon = Resources.Load("ItemImage/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
+        itemIcon = Resources.Load("ItemImages/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
     }
 
     //// 아이템 2차 분류
