@@ -122,15 +122,15 @@ public class Drop : MonoBehaviour, IDropHandler
                             }
                         }
                         break;
-                    //case ItemInfo.ItemType.Gloves:
-                    //    if (this.equipType == EquipType.GlovesSlot)
-                    //    {
-                    //        if (transform.childCount == 0)
-                    //        {
-                    //            Drag.draggingItem.transform.SetParent(this.transform);
-                    //        }
-                    //    }
-                    //    break;
+                    case ItemInfo.EquipType.Gloves:
+                        if (this.equipType == EquipType.GlovesSlot)
+                        {
+                            if (transform.childCount == 0)
+                            {
+                                Drag.draggingItem.transform.SetParent(this.transform);
+                            }
+                        }
+                        break;
                     //case ItemInfo.ItemType.Shield:
                     //    if (this.equipType == EquipType.ShieldSlot)
                     //    {
