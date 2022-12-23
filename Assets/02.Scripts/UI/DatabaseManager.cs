@@ -5,10 +5,7 @@ using UnityEngine;
 public class DatabaseManager : MonoBehaviour
 {
     static public DatabaseManager instance;
-    private PlayerStat thePlayerStat;
-    PlayerDamage playerDamage;
-    public GameObject prefabs_Floating_Text;
-    public GameObject parent;
+    
     private void Awake()
     {
         if (instance != null)
@@ -27,47 +24,43 @@ public class DatabaseManager : MonoBehaviour
     public string[] switch_name;
     public bool[] switches;
 
-    public List<Item> itemList = new List<Item>();
-    private void FloatingText(int number, string color)
-    {
-        Vector3 vector = thePlayerStat.transform.position;
-        vector.y += 60;
-
-        GameObject clone = Instantiate(prefabs_Floating_Text, vector, Quaternion.Euler(Vector3.zero));
-        clone.GetComponent<FloatingText>().text.text = number.ToString();
-        if(color == "GREEN")
-            clone.GetComponent<FloatingText>().text.color = Color.green;
-        else if(color == "BLUE")
-            clone.GetComponent<FloatingText>().text.color = Color.blue;
-        clone.GetComponent<FloatingText>().text.fontSize = 25;
-        clone.transform.SetParent(parent.transform);
-    }
-    public void UseItem(int _itemID)
-    {
-        switch(_itemID)
-        {
-            case 10001:
-                if (thePlayerStat.initHP >= playerDamage.curHp + 50)
-                    playerDamage.curHp += 50;
-                else
-                    playerDamage.curHp = thePlayerStat.initHP;
-                FloatingText(50, "GREEN");
-                break;
-        }
-    }
+    public List<ItemInfo> itemList = new List<ItemInfo>();
+    //public List<EquipStat> equipStat = new List<EquipStat>();
     void Start()
     {
-        thePlayerStat = FindObjectOfType<PlayerStat>();
-        playerDamage = FindObjectOfType<PlayerDamage>();
-        itemList.Add(new Item(10001, "빨간 포션", "체력을 50 회복시켜주는 기적의 물약", Item.ItemType.Use));
-        itemList.Add(new Item(10002, "파란 포션", "마나를 15 회복시켜주는 기적의 물약", Item.ItemType.Use));
-        itemList.Add(new Item(10003, "농축 빨간 포션", "체력을 350 회복시켜주는 기적의 농축 물약", Item.ItemType.Use));
-        itemList.Add(new Item(10004, "농축 파란 포션", "마나를 80 회복시켜주는 기적의 농축 물약", Item.ItemType.Use));
-        itemList.Add(new Item(11001, "랜덤 상자", "랜덤으로 포션이 나온다. 낮은 확률로 꽝", Item.ItemType.Use));
-        itemList.Add(new Item(20001, "짧은 검", "기본적인 용사의 검", Item.ItemType.Equip));
-        itemList.Add(new Item(20301, "사파이어 반지", "1분에 미니 1을 회복시켜주는 마법 반지", Item.ItemType.Equip));
-        itemList.Add(new Item(30001, "고대 유물의 조각1", "반으로 쪼개진 고대 유물의 파편", Item.ItemType.Quest));
-        itemList.Add(new Item(30002, "고대 유물의 조각2", "반으로 쪼개진 고대 유물의 파편", Item.ItemType.Quest));
-        itemList.Add(new Item(30003, "고대 유물", "고대 유적에 잠들어있던 고대의 유물", Item.ItemType.Quest));
+        itemList.Add(new ItemInfo(111, "일반체력포션", "체력을 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 50));
+        itemList.Add(new ItemInfo(112, "고급체력포션", "체력을 150 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 150));
+        itemList.Add(new ItemInfo(113, "전설체력포션", "체력을 300 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 300));
+        itemList.Add(new ItemInfo(121, "일반마나포션", "마나를 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(122, "고급마나포션", "마나를 150 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(123, "전설마나포션", "마나를 300 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(211, "일반 검", "일반 용사의 검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 5));
+        itemList.Add(new ItemInfo(212, "고급 검", "고급 용사의 검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 10));
+        itemList.Add(new ItemInfo(213, "전설 검", "전설 용사의검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 20));
+        itemList.Add(new ItemInfo(214, "일반 완드", "일반 마법사의 지팡이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 5));
+        itemList.Add(new ItemInfo(215, "고급 완드", "고급 마법사의 지팡이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 10));
+        itemList.Add(new ItemInfo(216, "전설 완드", "전설 마법사의 지팡이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 20));
+        itemList.Add(new ItemInfo(221, "일반 투구", "일반 투구", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Helmet, 0, 5));
+        itemList.Add(new ItemInfo(222, "고급 투구", "고급 투구", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Helmet, 0, 10));
+        itemList.Add(new ItemInfo(223, "전설 투구", "전설 투구", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Helmet, 0, 20));
+        itemList.Add(new ItemInfo(231, "일반 갑옷", "일반 갑옷", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor, 0, 5));
+        itemList.Add(new ItemInfo(232, "고급 갑옷", "고급 갑옷", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor, 0, 10));
+        itemList.Add(new ItemInfo(233, "전설 갑옷", "전설 갑옷", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor, 0, 20));
+        itemList.Add(new ItemInfo(241, "일반 신발", "일반 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 2f));
+        itemList.Add(new ItemInfo(242, "고급 신발", "고급 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 4f));
+        itemList.Add(new ItemInfo(243, "전설 신발", "전설 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 7f));
+        itemList.Add(new ItemInfo(251, "일반 장갑", "일반 장갑", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Gloves, 3));
+        itemList.Add(new ItemInfo(252, "고급 장갑", "고급 장갑", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Gloves, 5));
+        itemList.Add(new ItemInfo(253, "전설 장갑", "전설 장갑", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Gloves, 10));
+        itemList.Add(new ItemInfo(261, "일반 반지", "일반 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 50));
+        itemList.Add(new ItemInfo(262, "고급 반지", "고급 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 100));
+        itemList.Add(new ItemInfo(263, "전설 반지", "전설 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 200));
+        itemList.Add(new ItemInfo(264, "일반 목걸이", "일반 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 50));
+        itemList.Add(new ItemInfo(265, "고급 목걸이", "고급 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 100));
+        itemList.Add(new ItemInfo(266, "전설 목걸이", "전설 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 200));
+        itemList.Add(new ItemInfo(311, "버섯", "자연산 송이버섯", ItemInfo.ItemType.ETC));
+        itemList.Add(new ItemInfo(312, "해골", "스켈레톤의 해골", ItemInfo.ItemType.ETC));
+        itemList.Add(new ItemInfo(313, "생선", "피쉬맨이 잡은 생선", ItemInfo.ItemType.ETC));
+        itemList.Add(new ItemInfo(314, "두루마리", "고대 상형문자가 쓰여있는 두루마리", ItemInfo.ItemType.ETC));
     }
 }

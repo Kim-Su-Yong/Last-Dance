@@ -24,7 +24,7 @@ public class InventoryUI : MonoBehaviour
             shopSlots[i].Init(this);
             shopSlots[i].slotnum = i;
         }
-        closeShop.onClick.AddListener(DeActiveShop); //상점 닫을시
+        //closeShop.onClick.AddListener(DeActiveShop); //상점 닫을시
     }
     void Update()
     {
@@ -35,7 +35,7 @@ public class InventoryUI : MonoBehaviour
     {
         if (!isStoreActive)
         {
-            ActiveShop(true);
+            //ActiveShop(true);
             shopData = GetComponent<ShopData>();
             for (int i = 0; i < shopData.stocks.Count; i++)
             {
@@ -48,33 +48,33 @@ public class InventoryUI : MonoBehaviour
     {
         shopData.soldOuts[num] = true;
     }
-    public void ActiveShop(bool isOpen) //상점 열기
-    {
-        if (!activeInventory)
-        {
-            isStoreActive = isOpen;
-            shop.SetActive(isOpen);
-            //inventoryPanel.SetActive(isOpen);
-            for (int i = 0; i < slots.Length; i++)
-            {
-                slots[i].isShopMode = isOpen;
-            }
-        }
-    }
-    public void DeActiveShop() //상점 닫기
-    {
-        ActiveShop(false);
-        shopData = null;
-        for (int i = 0; i < shopSlots.Length; i++)
-        {
-            shopSlots[i].RemoveSlot();
-        }
-    }
-    public void SellBtn() //상점에 아이템 팔기 함수
-    {
-        for (int i = slots.Length; i > 0; i--)
-        {
-            slots[i - 1].SellItem();
-        }
-    }
+    //public void ActiveShop(bool isOpen) //상점 열기
+    //{
+    //    if (!activeInventory)
+    //    {
+    //        isStoreActive = isOpen;
+    //        shop.SetActive(isOpen);
+    //        //inventoryPanel.SetActive(isOpen);
+    //        for (int i = 0; i < slots.Length; i++)
+    //        {
+    //            slots[i].isShopMode = isOpen;
+    //        }
+    //    }
+    //}
+    //public void DeActiveShop() //상점 닫기
+    //{
+    //    ActiveShop(false);
+    //    shopData = null;
+    //    for (int i = 0; i < shopSlots.Length; i++)
+    //    {
+    //        shopSlots[i].RemoveSlot();
+    //    }
+    //}
+    //public void SellBtn() //상점에 아이템 팔기 함수
+    //{
+    //    for (int i = slots.Length; i > 0; i--)
+    //    {
+    //        slots[i - 1].SellItem();
+    //    }
+    //}
 }
