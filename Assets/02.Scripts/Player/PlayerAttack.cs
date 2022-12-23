@@ -265,7 +265,6 @@ public class PlayerAttack : MonoBehaviour
 
     void OnAttackEnd(int count)
     {
-        Debug.Log("°ø°Ý ³¡");
         bIsAttack = false;
         //if (!animator.GetBool("Combo"))
         playerState.state = PlayerState.State.IDLE;

@@ -9,7 +9,7 @@ public class ThirdPersonCtrl : MonoBehaviour
 {
     [Header("Player")]
     [Tooltip("캐릭터 이동 속도(기본 이동 - 달리기)")]
-    public float MoveSpeed = 6f;
+    public float MoveSpeed;
 
     [Tooltip("걷기 이동 속도")]
     public float WalkSpeed = 2f;
@@ -207,6 +207,7 @@ public class ThirdPersonCtrl : MonoBehaviour
         if (bIsAction == true)
             return;
 
+        MoveSpeed = PlayerStat.instance.speed;  // 캐릭터 스텟의 스피드 값 적용
         // 걷기 유무에 따른 이동속도 할당
         float targetSpeed = input.isWalk ? WalkSpeed : MoveSpeed;
 
