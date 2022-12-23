@@ -69,13 +69,13 @@ public class ItemDrop : MonoBehaviour
                             break;
                         case 1:
                             Debug.Log("장비아이템 생성");
-                            GameObject equipitem = (GameObject)Instantiate(EquipItems[Random.Range(0, ConsumeItems.Length)],
+                            GameObject equipitem = (GameObject)Instantiate(EquipItems[Random.Range(0, EquipItems.Length)],
                                 new Vector3(tr.position.x, tr.position.y + 0.5f, tr.position.z), Quaternion.identity);
                             isDrop = true;
                             break;
                         case 2:
                             Debug.Log("기타아이템 생성");
-                            GameObject etcitem = (GameObject)Instantiate(ETCItems[Random.Range(0, ConsumeItems.Length)],
+                            GameObject etcitem = (GameObject)Instantiate(ETCItems[Random.Range(0, ETCItems.Length)],
                                 new Vector3(tr.position.x, tr.position.y + 0.5f, tr.position.z), Quaternion.identity);
                             isDrop = true;
                             break;
