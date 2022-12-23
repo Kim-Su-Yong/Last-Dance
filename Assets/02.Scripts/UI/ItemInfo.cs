@@ -10,6 +10,10 @@ public class ItemInfo : MonoBehaviour
     public int itemID; //아이템의 고유 ID값. 중복 불가
     public string itemName; //아이템의 이름. 중복 가능
     public string itemDescription; //아이템 설명
+    public int Atk; //공격력
+    public int Def; //방어력
+    public int AddHp; //체력
+    public float Speed; //이동속도
     public int itemCount; //소지 갯수
     public Sprite itemIcon; //아이템의 아이콘.
     // 아이템 1차 분류
@@ -19,26 +23,31 @@ public class ItemInfo : MonoBehaviour
     {
         None, Weapon, Helmet, Armor, Boots, Gloves, Totem
     }
+       
     public ItemType itemType;
-
     public EquipType equipType;
 
-    public ItemInfo(int _itemID, string _itemName, string _itemDes, ItemType _itemType, int _itemCount = 1)
+    //public List<EquipStat> equipStat = new List<EquipStat>();
+
+    public ItemInfo(int _itemID, string _itemName, string _itemDes, ItemType _itemType, int _AddHp = 0, int _itemCount = 1)
     {
         itemID = _itemID;
         itemName = _itemName;
         itemDescription = _itemDes;
         itemType = _itemType;
+        AddHp = _AddHp;
         itemCount = _itemCount;
         itemIcon = Resources.Load("ItemImages/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
     }
-    public ItemInfo(int _itemID, string _itemName, string _itemDes, ItemType _itemType, EquipType _equipType, int _itemCount = 1)
+    public ItemInfo(int _itemID, string _itemName, string _itemDes, ItemType _itemType, EquipType _equipType,
+        int _Atk = 0, int _Def = 0, int _AddHp = 0, float _Speed = 0, int _itemCount = 1)
     {
         itemID = _itemID;
         itemName = _itemName;
         itemDescription = _itemDes;
         itemType = _itemType;
         equipType = _equipType;
+        Atk = _Atk; Def = _Def; AddHp = _AddHp; Speed = _Speed;
         itemCount = _itemCount;
         itemIcon = Resources.Load("ItemImages/" + _itemID.ToString(), typeof(Sprite)) as Sprite;
     }
