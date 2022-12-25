@@ -11,7 +11,7 @@ public class SkillManager : MonoBehaviour
 
     void Start()
     {
-        
+        instance = this;
     }
 
     // Update is called once per frame

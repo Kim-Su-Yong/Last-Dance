@@ -344,7 +344,7 @@ public class MonsterAI : MonoBehaviour
         Hp_Bar.fillAmount = M_HP / M_MaxHP;
         Hp_Bar_Before.fillAmount = _beforeHP / M_MaxHP;
 
-        Debug.Log("Hp_Bar.fillAmount 값 : " + Hp_Bar.fillAmount * M_MaxHP);
+        //Debug.Log("Hp_Bar.fillAmount 값 : " + Hp_Bar.fillAmount * M_MaxHP);
         Hp_Text.text = ((int)M_HP).ToString() + " / " + ((int)M_MaxHP).ToString();
 
         // HP 값의 범위 지정

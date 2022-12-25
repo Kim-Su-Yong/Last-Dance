@@ -135,12 +135,13 @@ public class PlayerAttack : MonoBehaviour
         {
             if (Input.GetButtonDown("Fire1") && !bIsSkill)
             {
-                TigerBaseAttack(true);
+                //TigerBaseAttack(true);
+                TigerBaseAttack();
             }
-            else if (Input.GetButtonUp("Fire1"))
-            {
-                TigerBaseAttack(false);
-            }
+            //else if (Input.GetButtonUp("Fire1"))
+            //{
+            //    TigerBaseAttack(false);
+            //}
             if (Input.GetButtonDown("Fire2") && !bIsAttack && !bIsSkill)
             {
                 StartCoroutine(TigerSkill_1());
@@ -214,6 +215,11 @@ public class PlayerAttack : MonoBehaviour
         animator.SetBool(hashCombo, isPunching);
     }
 
+    void TigerBaseAttack()
+    {
+        animator.SetTrigger("ComboAttack");
+    }
+
     void OnFire()
     {
         // 오브젝트 풀링 방식
@@ -260,8 +266,8 @@ public class PlayerAttack : MonoBehaviour
     void OnAttackEnd(int count)
     {
         bIsAttack = false;
-        if (!animator.GetBool("Combo"))
-            playerState.state = PlayerState.State.IDLE;
+        //if (!animator.GetBool("Combo"))
+        playerState.state = PlayerState.State.IDLE;
     }
     #endregion
 

@@ -46,7 +46,7 @@ public class ShopSlot : MonoBehaviour //, IPointerUpHandler
             //if (DatabaseManager.instance.money >= item.itemCost && !soldOut && Inventory.instance.items.Count < Inventory.instance.SlotCnt)
             //{
                 //DatabaseManager.instance.money -= item.itemCost;
-                Inventory_cy.instance.GetAnItem(itemID, _count);
+                Inventory.instance.GetAnItem(itemID, _count);
                 soldOut = true;
                 button.interactable = false;
                 button1.interactable = false;

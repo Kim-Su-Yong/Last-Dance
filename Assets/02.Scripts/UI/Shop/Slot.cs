@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Slot : MonoBehaviour, IPointerUpHandler
 {
     public int slotnum;
-    public Item_cy item;
+    public ItemInfo item;
     public Image itemIcon;
 
     public bool isShopMode;
