@@ -24,13 +24,14 @@ public class Inventory : MonoBehaviour
     private InventorySlot slots; //인벤토리 슬롯들
     
     [SerializeField]
-    private List<ItemInfo> inventoryItemList; //플레이어가 소지한 아이템 리스트
+    public List<ItemInfo> inventoryItemList; //플레이어가 소지한 아이템 리스트
 
     public GameObject ItemSlot; //인벤토리 하위에 들어갈 아이템 정보가 담긴 오브젝트
 
-
     public GameObject prefab_floating_text;
     public Transform messageTr;
+
+    public GameObject clone;
     private void Awake()
     {
         EquipSlots = GameObject.FindGameObjectsWithTag("Equip");
@@ -85,7 +86,7 @@ public class Inventory : MonoBehaviour
             if (ItemNumber == inventoryItemList[i].GetComponent<ItemInfo>().itemID)
             {
                 inInventory = true;
-                if (inInventory == true)
+                if (inInventory == true) //아이템 중복시
                 {
                     inventoryItemList[i].GetComponent<InventorySlot>().itemCount += ItemCount;
                     inventoryItemList[i].GetComponent<InventorySlot>().itemCount_Text.text =
@@ -104,7 +105,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    private void ItemCreate(GameObject[] ItemTpye)
+    public void ItemCreate(GameObject[] ItemTpye) //아이템 중복 안될시 생성하는 함수
     {
         GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
@@ -143,7 +144,7 @@ public class Inventory : MonoBehaviour
     //장비템 인벤토리에 추가하는 함수
     public void AddItem(GameObject[] ItemTpye, ItemInfo.EquipType equipType)
     {
-        GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
+        clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
         hoverTip = clone.GetComponent<HoverTip>();
         slots = clone.GetComponent<InventorySlot>();
@@ -190,7 +191,6 @@ public class Inventory : MonoBehaviour
     }
 
     public GameObject ItemGetIN(GameObject[] ItemTpye)
-
     {
         GameObject emptyInven = null;
         for (int i = 0; i < ItemTpye.Length; i++)
