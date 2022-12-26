@@ -13,11 +13,11 @@ public class UIManager : MonoBehaviour
 
     public GameObject invenGO; // 인벤토리 오브젝트
     public GameObject equipGO; // 장비창 오브젝트
+    public GameObject shopGO;
 
-    public bool activInven; //인벤토리가 켜지면 true
-    public bool activEquip; //장비창이 켜지면 true
-
-
+    public bool activeInven; //인벤토리가 켜지면 true
+    public bool activeEquip; //장비창이 켜지면 true
+    public bool activeShop;
 
     void Start()
     {
@@ -27,8 +27,6 @@ public class UIManager : MonoBehaviour
         coolImg.enabled = false;
         isCool = true;
     }
-
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.X) && isCool)
@@ -40,6 +38,7 @@ public class UIManager : MonoBehaviour
         }
         ShowInven();
         ShowEquip();
+        ShowShop();
     }
     IEnumerator CoolTime(float cool)
     {
@@ -60,8 +59,8 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            activInven = !activInven;
-            if (activInven)
+            activeInven = !activeInven;
+            if (activeInven)
             {
                 invenGO.SetActive(true);
                 //SeletedItem();
@@ -76,8 +75,8 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            activEquip = !activEquip;
-            if (activEquip)
+            activeEquip = !activeEquip;
+            if (activeEquip)
             {
                 equipGO.SetActive(true);
             }
@@ -86,5 +85,27 @@ public class UIManager : MonoBehaviour
                 equipGO.SetActive(false);
             }
         }
+    }
+    void ShowShop()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            activeShop = !activeShop;
+            if (activeShop)
+            {
+                shopGO.SetActive(true);
+                invenGO.SetActive(true);
+            }
+            else
+            {
+                shopGO.SetActive(false);
+                invenGO.SetActive(false);
+            }
+        }
+    }
+    public void CloseShop()
+    {
+        shopGO.SetActive(false);
+        invenGO.SetActive(false);
     }
 }
