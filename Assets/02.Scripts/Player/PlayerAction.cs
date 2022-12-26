@@ -27,7 +27,7 @@ public class PlayerAction : MonoBehaviour
             else
                 playerState.state = PlayerState.State.IDLE;
 
-            g_manager.Action();                         // 상호작용 실행
+            g_manager.Action(nearObject);                         // 상호작용 실행
         }            
     }
     private void Awake()

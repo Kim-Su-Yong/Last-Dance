@@ -51,7 +51,6 @@ public class PlayerState : MonoBehaviour
         {
             // 0.3초마다 상태 체크
             yield return new WaitForSeconds(0.3f);
-
             switch(state)
             {
                 case State.IDLE: // 캐릭터가 IDLE, MOVE상태에선 모든 동작이 가능
@@ -61,6 +60,7 @@ public class PlayerState : MonoBehaviour
                     playerCtrl.enabled = true;
                     changeForm.enabled = true;
                     playerAction.enabled = true;
+                    GetComponent<PlayerDamage>().enabled = true;
                     break;
                 case State.ATTACK:  // 공격 중에는 공격을 제외한 모든 동작 불가
                     shooter.enabled = false;
@@ -97,7 +97,7 @@ public class PlayerState : MonoBehaviour
                     shooter.enabled = false;
                     changeForm.enabled = false;
                     playerAttack.enabled = false;
-                    
+                    GetComponent<PlayerDamage>().enabled = false;
                     break;
             }
         }

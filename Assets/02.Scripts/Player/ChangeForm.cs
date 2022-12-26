@@ -149,7 +149,7 @@ public class ChangeForm : MonoBehaviour
         {
             canFormChange = false;
             curForm = form;
-            StartCoroutine(ActiveAura());
+            StartCoroutine(ActiveAura());           // 오라 활성화 코루틴
             /* 
             * 폼 변환 애니메이션이나 파티클 넣어주기
             */
@@ -175,7 +175,7 @@ public class ChangeForm : MonoBehaviour
         }
     }
 
-    IEnumerator ActiveAura()
+    IEnumerator ActiveAura()    // 폼에 따른 오라 활성화 코루틴(2초간 활성화)
     {
         Aura[(int)curForm].SetActive(true);
         yield return new WaitForSeconds(2f);
