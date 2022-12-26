@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1273174, g: 0.13414761, b: 0.12107885, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -87222,7 +87222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b4b214fc27e1a14eabc2baed768cce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  talkManager: {fileID: 0}
+  talkManager: {fileID: 1563871381}
   talkIndex: 0
   talkImage: {fileID: 427864728}
   talkText: {fileID: 2060218289}
