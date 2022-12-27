@@ -15,10 +15,12 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     public static GameObject draggingItem = null;
 
-    public bool isEquip = false;
+    public static bool isEquip = false;
 
+    PlayerDamage playerDamage;
     void Start()
     {
+        playerDamage = FindObjectOfType<PlayerDamage>();
         itemTr = GetComponent<Transform>();
         inventoryTr = GameObject.Find("Inventory").GetComponent<Transform>();
         //inventorySlotTr = GameObject.Find("SlotList").GetComponent<Transform>();
@@ -68,6 +70,7 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             PlayerStat.instance.speed -= draggingItem.GetComponent<ItemInfo>().Speed;
             PlayerStat.instance.maxHP -= draggingItem.GetComponent<ItemInfo>().AddHp;
             Inventory.instance.equipmentItemList.Remove(draggingItem.GetComponent<ItemInfo>());
+            playerDamage.hpUpdate();
             isEquip = false;
         }
 

@@ -19,13 +19,19 @@ public class Drop : MonoBehaviour, IDropHandler
         GlovesSlot  = 5,
         ShieldSlot  = 6,
         BootsSlot   = 7,
-        BackpackSlot= 8 };
+        BackpackSlot= 8,
+        Totem2Slot = 3, };
     public EquipType equipType;
 
     // 슬롯 분류(아이템 카테고리와 대응 -> ItemInfo.cs 참고)
     public enum SlotType { EquipmentSlot, ConsumeSlot, EtcSlot, EquipSlot };
     public SlotType slotType;
 
+    PlayerDamage playerDamage;
+    void Start()
+    {
+        playerDamage = FindObjectOfType<PlayerDamage>();
+    }
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -100,6 +106,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.maxHP += Drag.draggingItem.GetComponent<ItemInfo>().AddHp;
+                                    playerDamage.hpUpdate();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
@@ -156,6 +163,21 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.speed += Drag.draggingItem.GetComponent<ItemInfo>().Speed;
+                                    Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
+                                }
+                            }
+                        }
+                        break;
+                    case ItemInfo.EquipType.Totem2:
+                        if (this.equipType == EquipType.Totem2Slot)
+                        {
+                            if (transform.childCount == 0)
+                            {
+                                Drag.draggingItem.transform.SetParent(this.transform);
+                                if (Input.GetMouseButtonUp(0))
+                                {
+                                    PlayerStat.instance.maxHP += Drag.draggingItem.GetComponent<ItemInfo>().AddHp;
+                                    playerDamage.hpUpdate();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }

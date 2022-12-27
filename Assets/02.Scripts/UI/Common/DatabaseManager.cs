@@ -31,9 +31,6 @@ public class DatabaseManager : MonoBehaviour
         itemList.Add(new ItemInfo(111, "일반체력포션", "체력을 10 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 10));
         itemList.Add(new ItemInfo(112, "고급체력포션", "체력을 20 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 20));
         itemList.Add(new ItemInfo(113, "전설체력포션", "체력을 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 50));
-        //itemList.Add(new ItemInfo(121, "일반마나포션", "마나를 10 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
-        //itemList.Add(new ItemInfo(122, "고급마나포션", "마나를 20 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
-        //itemList.Add(new ItemInfo(123, "전설마나포션", "마나를 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
         itemList.Add(new ItemInfo(211, "일반 검", "일반 용사의 검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 5));
         itemList.Add(new ItemInfo(212, "고급 검", "고급 용사의 검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 10));
         itemList.Add(new ItemInfo(213, "전설 검", "전설 용사의검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 20));
@@ -55,9 +52,9 @@ public class DatabaseManager : MonoBehaviour
         itemList.Add(new ItemInfo(261, "일반 반지", "일반 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 50));
         itemList.Add(new ItemInfo(262, "고급 반지", "고급 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 100));
         itemList.Add(new ItemInfo(263, "전설 반지", "전설 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 200));
-        itemList.Add(new ItemInfo(264, "일반 목걸이", "일반 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 50));
-        itemList.Add(new ItemInfo(265, "고급 목걸이", "고급 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 100));
-        itemList.Add(new ItemInfo(266, "전설 목걸이", "전설 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 200));
+        itemList.Add(new ItemInfo(264, "일반 목걸이", "일반 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem2, 0, 0, 50));
+        itemList.Add(new ItemInfo(265, "고급 목걸이", "고급 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem2, 0, 0, 100));
+        itemList.Add(new ItemInfo(266, "전설 목걸이", "전설 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem2, 0, 0, 200));
         itemList.Add(new ItemInfo(311, "버섯", "자연산 송이버섯", ItemInfo.ItemType.ETC));
         itemList.Add(new ItemInfo(312, "해골", "스켈레톤의 해골", ItemInfo.ItemType.ETC));
         itemList.Add(new ItemInfo(313, "생선", "피쉬맨이 잡은 생선", ItemInfo.ItemType.ETC));
