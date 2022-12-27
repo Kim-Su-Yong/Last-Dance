@@ -38,23 +38,20 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadWaitCoroutine()
     {
         yield return new WaitForSeconds(0.5f);
-        thePlayer = FindObjectOfType<PlayerAction>(); 
+        thePlayer = FindObjectOfType<PlayerAction>();
     }
     public void Action(GameObject nearObject)
     {            
-        if (talkImage.gameObject.activeInHierarchy == false)
-        {
-            isAction = true;
-            ObjData objData = nearObject.GetComponent<ObjData>();
-            Talk(objData.id, objData.isNpc);
-            followCam.gameObject.SetActive(false);          // 팔로우 카메라 비활성화
-            npcCam.gameObject.SetActive(true);   // NPC 확대 카메라 활성화
+        ObjData objData = nearObject.GetComponent<ObjData>();
+        Talk(objData.id);
 
-            talkImage.gameObject.SetActive(true);
-            canvasUI.gameObject.SetActive(false);
-            //talkText.text = "루나NPC입니다. 무엇을 도와드릴까요?";
-        }
-        else
+    }
+
+    void Talk(int id)
+    {
+        string talkData = talkManager.GetTalk(id, talkIndex);
+
+        if (talkData == null)    // 더이상 대화할 문장이 없다면 대화 종료
         {
             isAction = false;
             followCam.gameObject.SetActive(true);          // 팔로우 카메라 활성화
@@ -62,16 +59,19 @@ public class GameManager : MonoBehaviour
 
             talkImage.gameObject.SetActive(false);
             canvasUI.gameObject.SetActive(true);
-        }
-    }
 
-    void Talk(int id, bool isNpc)
-    {
-        string talkData = talkManager.GetTalk(id, talkIndex);
-
-        if(isNpc)
-        {
-            talkText.text = talkData;
+            talkIndex = 0;
+            return;
         }
+            
+        talkText.text = talkData;
+
+        isAction = true;
+        followCam.gameObject.SetActive(false);          // 팔로우 카메라 비활성화
+        npcCam.gameObject.SetActive(true);   // NPC 확대 카메라 활성화
+
+        talkImage.gameObject.SetActive(true);
+        canvasUI.gameObject.SetActive(false);
+        talkIndex++;        // 다음 문장으로 넘어감
     }
 }

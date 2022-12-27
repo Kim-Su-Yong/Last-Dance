@@ -28,7 +28,7 @@ public class PlayerAttack : MonoBehaviour
 
     // 오브젝트 풀링
     public List<GameObject> fireBallPool = new List<GameObject>();
-    int maxCount = 5;    // 오브젝트 풀링할 개수
+    int maxCount = 10;    // 오브젝트 풀링할 개수
 
     public Transform FirePos;       // 파이어볼 던져질 발사 위치
     GameObject FireBall;            // 파이어볼 오브젝트
