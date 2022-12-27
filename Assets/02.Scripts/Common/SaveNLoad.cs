@@ -15,22 +15,15 @@ public class SaveNLoad : MonoBehaviour
 
         public int playerLv;
         public int playerHP;
-        public int playerMP;
 
         public int playerCurrentHP;
-        public int playerCurrentMP;
         public int playerCurrentEXP;
-
-        public int playerHPR;
-        public int playerMPR;
 
         public int playerATK;
         public int playerDEF;
 
         public int added_atk;
         public int added_def;
-        public int added_hpr;
-        public int added_mpr;
 
         public List<int> playerItemInventroy;
         public List<int> playerITemInventoryCount;
@@ -76,8 +69,6 @@ public class SaveNLoad : MonoBehaviour
         data.playerDEF = thePlayerStat.def;
         data.added_atk = theEquip.added_atk;
         data.added_def = theEquip.added_def;
-        data.added_hpr = theEquip.added_hpr;
-        data.added_mpr = theEquip.added_mpr;
 
         data.mapName = thePlayer.currentMapName;
         data.sceneName = thePlayer.currentSceneName;
@@ -88,17 +79,17 @@ public class SaveNLoad : MonoBehaviour
         data.playerITemInventoryCount.Clear();
         data.playerEquipItem.Clear();
 
-        for (int i = 0; i < theDatabase.var_name.Length; i++)
-        {
-            data.varNameList.Add(theDatabase.var_name[i]);
-            data.varNumberList.Add(theDatabase.var[i]);
-        }
-        for (int i = 0; i < theDatabase.switch_name.Length; i++)
-        {
-            data.swNameList.Add(theDatabase.switch_name[i]);
-            data.swList.Add(theDatabase.switches[i]);
-        }
-        List<Item> itemList = theInven.SaveItem();
+        //for (int i = 0; i < theDatabase.var_name.Length; i++)
+        //{
+        //    data.varNameList.Add(theDatabase.var_name[i]);
+        //    data.varNumberList.Add(theDatabase.var[i]);
+        //}
+        //for (int i = 0; i < theDatabase.switch_name.Length; i++)
+        //{
+        //    data.swNameList.Add(theDatabase.switch_name[i]);
+        //    data.swList.Add(theDatabase.switches[i]);
+        //}
+        List<ItemInfo> itemList = theInven.SaveItem();
         for (int i = 0; i < itemList.Count; i++)
         {
             Debug.Log("인벤토리의 아이템 저장 완료 : " + itemList[i].itemID);
@@ -148,8 +139,6 @@ public class SaveNLoad : MonoBehaviour
 
             theEquip.added_atk = data.added_atk;
             theEquip.added_def = data.added_def;
-            theEquip.added_hpr = data.added_hpr;
-            theEquip.added_mpr = data.added_mpr;
 
             theDatabase.var = data.varNumberList.ToArray();
             theDatabase.var_name = data.varNameList.ToArray();
@@ -169,7 +158,7 @@ public class SaveNLoad : MonoBehaviour
                 }
             }
 
-            List<Item> itemList = new List<Item>();
+            List<ItemInfo> itemList = new List<ItemInfo>();
 
             for (int i = 0; i < data.playerItemInventroy.Count; i++)
             {

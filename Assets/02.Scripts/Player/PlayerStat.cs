@@ -6,18 +6,19 @@ public class PlayerStat : MonoBehaviour
 {
     public static PlayerStat instance;
 
-    public int character_Lv;
-    public int[] needExp; //만랩 설정
+    public int character_Lv;    // 플레이어 레벨
+    public int[] needExp;       // 레벨에 따른 필요 경험치
     public int currentEXP;
 
-    public int initHP;      // 시작 체력
-    //public int currentHP;   // 현재 체력
-    public int maxHP;              // 최대 체력
+    public int initHP;          // 시작 체력
+    public int maxHP;           // 최대 체력
 
-    public int atk;         // 공격력
-    public int def;         // 방어력
+    public int atk;             // 공격력
+    public int def;             // 방어력
 
-    public float critical;  // 크리티컬 확률
+    public float speed;         // 이동 속도
+
+    public float critical;      // 크리티컬 확률-뺄 가능성 높음
 
     public GameObject LevelUpEffect;    // 레벨 업 시 이펙트
     void Awake()
@@ -36,6 +37,8 @@ public class PlayerStat : MonoBehaviour
 
         initHP = 100;
         maxHP = initHP;
+
+        speed = 6f;
         //currentHP = maxHP;
 
         // 기본 장비에 따라 영향을 받을 예정(기본 장비 없는 경우 수정)
@@ -95,28 +98,34 @@ public class PlayerStat : MonoBehaviour
     //}
     void Update()
     {
+        // 경험치 획득 테스트
         if (Input.GetKeyDown(KeyCode.R))
         {
             GainExp(24);
         }
     }
-    void GainExp(int newEXP)
+
+    // 경험치 획득 함수(몹을 잡거나 퀘스트 클리어시 사용)
+    public void GainExp(int newEXP)
     {
-        currentEXP += newEXP;
-        if (currentEXP >= needExp[character_Lv])
+        currentEXP += newEXP;       // 현재 경험치 + 획득 경험치
+        if (currentEXP >= needExp[character_Lv])    // 현재 경험치가 레벨업시 필요경험치 이상이면
         {
-            Debug.Log("레벨 업!");
+            //Debug.Log("레벨 업!");
 
-            int overExp = currentEXP - needExp[character_Lv];
-            character_Lv++;
-            currentEXP = overExp;
+            int overExp = currentEXP - needExp[character_Lv];   // 초과 경험치 계산
+            character_Lv++;         // 레벨 업
+            currentEXP = overExp;   // 현재 경험치를 초과 경험치로 변경(0이면 0으로 변경)
 
+            // 레벨업 이펙트
             GameObject Effect = Instantiate(LevelUpEffect, transform.position, Quaternion.identity);
             Destroy(Effect, 2f);
+            
+            // 스텟 증가
             maxHP += 10;        // 레벨업 시 최대 체력 증가
-            GetComponent<PlayerDamage>().curHp = maxHP;
+            // UI 변경사항 적용(체력바)
+            GetComponent<PlayerDamage>().curHp = maxHP; // 현재 체력을 최대체력으로 변경(레벨업시 풀피 회복)
             GetComponent<PlayerDamage>().hpUpdate();
-            //currentHP = maxHP;  // 레벨업 시 체력이 완전히 회복됨
             atk++;              // 공격력 증가
             def++;              // 방어력 증가
 

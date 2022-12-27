@@ -19,5 +19,5 @@ MonoBehaviour:
     \uC2DC\uAC04\uB3D9\uC548 \uCE90\uB9AD\uD130\uC758 \uACF5\uACA9\uB825\uC744 \uC0C1\uC2B9\uC2DC\uCF1C\uC900\uB2E4.
     \uD3FC \uC804\uD658 \uD6C4\uC5D0\uB3C4 \uBC84\uD504\uB294 \uC801\uC6A9\uB41C\uB2E4."
   f_skillRange: 10
-  f_skillDamage: 1.2
+  f_skillDamage: 0.2
   f_skillCoolTime: 15

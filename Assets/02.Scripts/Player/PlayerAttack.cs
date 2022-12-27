@@ -5,53 +5,55 @@ using UnityEngine.UI;
 
 public class PlayerAttack : MonoBehaviour
 {
+    // 스크립트
     ChangeForm changeForm;
     ThirdPersonCtrl playerCtrl;
     Shooter shooter;
     PlayerState playerState;
-    PlayerStat playerStat;
 
+    // 컴포넌트
     Animator animator;
     CharacterController controller;
 
-    // 캐릭터 근처에 가장 가까이 있는 적을 자동으로 타겟으로 설정하여
-    // 공격시 타겟을 바라보며 공격 모션을 실행
-    public GameObject target;
+    // 변수
+    public GameObject target;       // 자동으로 타겟팅할 목표(에너미)
 
-    [Header("오브젝트 풀링")]
-    public List<GameObject> fireBallPool = new List<GameObject>();
-    int maxCount = 5;    // 오브젝트 풀링할 개수
+    [Header("공격 및 스킬")]
 
-    [Header("파이어볼 발사")]
-    public Transform FirePos;       // 파이어볼 던져질 발사 위치
-    GameObject FireBall;            // 파이어볼 오브젝트
-
-    [Header("여우 스킬")]
+    
+    // 여우 공격
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
-    public bool[] canSkills;
-    //public bool canSkill = true;    // 스킬 사용 가능 상태 유무
     public SkillData fireData;      // 여우불 스킬 데이터
     public SkillData healData;      // 힐 스킬 데이터
 
-    [Header("호랑이 펀치")]
-    public BoxCollider[] punchCollider; // 펀치 충돌 콜라이더 배열
-    int punchCount = 0;
-    public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
-    public TrailRenderer rHandTrail;
+    // 오브젝트 풀링
+    public List<GameObject> fireBallPool = new List<GameObject>();
+    int maxCount = 5;    // 오브젝트 풀링할 개수
 
-    [Header("호랑이 스킬")]
+    public Transform FirePos;       // 파이어볼 던져질 발사 위치
+    GameObject FireBall;            // 파이어볼 오브젝트
+
+    // 호랑이 스킬
+    public BoxCollider[] punchCollider; // 펀치 충돌 콜라이더 배열
+    public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
+    public TrailRenderer rHandTrail;    // 호랑이 세번째 공격 이펙트2
+
     public SkillData roarData;      // 포효 스킬 데이터
+    public SphereCollider roarCollider; // 포효 충돌 콜라이더
     public Transform roarTr;        // 포효 이펙트 위치
 
-    [Header("독수리 스킬")]
-    public SkillData buffData;
+    // 독수리 스킬
+    public SkillData buffData;      // 독수리 스킬 데이터
 
     [Header("제어 변수")]
-    public bool bIsAttack;          //  공격 중인지 확인
+    public bool bIsAttack;          // 공격 중인지 확인
     public bool bIsSkill;           // 스킬 사용중인지 확인
+    public bool[] canSkills;        // 스킬 사용 가능 상태 유무 배열
+
     [SerializeField]
     LayerMask enemyLayer;           // 에너미 검출을 위한 레이어
 
+    [Header("UI")]
     public Image[] coolImg;         // 스킬 쿨타임 이미지들
     public Text[] coolTxt;          // 스킬 쿨타임 텍스트들
 
@@ -65,12 +67,10 @@ public class PlayerAttack : MonoBehaviour
         shooter = GetComponent<Shooter>();
         changeForm = GetComponent<ChangeForm>();
         playerState = GetComponent<PlayerState>();
-        playerStat = GetComponent<PlayerStat>();
         controller = GetComponent<CharacterController>();
 
         animator = GetComponent<Animator>();
 
-        //FireBall = Resources.Load("Magic fire") as GameObject;
         FireBall = Resources.Load("Player/Magic Fire Ball") as GameObject;
 
         fireData = Resources.Load("SkillData/FoxFire Data") as SkillData;
@@ -81,14 +81,14 @@ public class PlayerAttack : MonoBehaviour
 
     private void Start()
     {
-        CreateFireBallPool();
+        CreateFireBallPool();       // 파이어볼 오브젝트 풀 생성
 
-        foreach(var img in coolImg)
+        foreach(var img in coolImg) // 쿨타임 이미지 초기화
         {
             img.fillAmount = 0f;
             img.enabled = false;
         }
-        foreach(var txt in coolTxt)
+        foreach(var txt in coolTxt) // 쿨타임 텍스트 초기화
         {
             txt.enabled = false;
         }
@@ -96,8 +96,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnEnable()
     {
-        thirdEffect.Stop();
-        rHandTrail.enabled = false;
+        thirdEffect.Stop();         // 이펙트 파티클 정지
+        rHandTrail.enabled = false; // 라인렌더러 비활성화
     }
     void Update()
     {
@@ -114,7 +114,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Attack()
     {
-        if (changeForm.curForm == ChangeForm.FormType.FOX)
+        if (changeForm.curForm == ChangeForm.FormType.FOX)  // 여우 폼
         {
             // 왼쪽 마우스 버튼 누르면 기본 공격(fireRate는 발사 대기 시간)
             if (Input.GetButtonDown("Fire1") && !bIsSkill)
@@ -131,23 +131,18 @@ public class PlayerAttack : MonoBehaviour
                 StartCoroutine(FoxSkill_2());
             }
         }
-        else if (changeForm.curForm == ChangeForm.FormType.TIGER)
+        else if (changeForm.curForm == ChangeForm.FormType.TIGER)   // 호랑이 폼
         {
             if (Input.GetButtonDown("Fire1") && !bIsSkill)
             {
-                TigerBaseAttack(true);
-            }
-            else if (Input.GetButtonUp("Fire1"))
-            {
-                TigerBaseAttack(false);
-                punchCount = 0;
+                TigerBaseAttack();
             }
             if (Input.GetButtonDown("Fire2") && !bIsAttack && !bIsSkill)
             {
                 StartCoroutine(TigerSkill_1());
             }
         }
-        else if (changeForm.curForm == ChangeForm.FormType.EAGLE)
+        else if (changeForm.curForm == ChangeForm.FormType.EAGLE)   // 독수리 폼
         {
             //Shooter 내용
 
@@ -210,12 +205,17 @@ public class PlayerAttack : MonoBehaviour
         animator.SetTrigger("Attack");
     }
 
-    private void TigerBaseAttack(bool isPunching)
+    //private void TigerBaseAttack(bool isPunching)
+    //{
+    //    animator.SetBool(hashCombo, isPunching);
+    //}
+
+    void TigerBaseAttack()
     {
-        animator.SetBool(hashCombo, isPunching);
+        animator.SetTrigger("ComboAttack");
     }
 
-    void OnFire()
+    void OnFire()       // 여우 기본 공격 애니메이션 이벤트
     {
         // 오브젝트 풀링 방식
         GameObject _fireBall = GetFireBall();
@@ -226,77 +226,68 @@ public class PlayerAttack : MonoBehaviour
             _fireBall.SetActive(true);
         }
     }
-    void OnAttackStart(int count)
+    void OnAttackStart(int count)   // 기본 공격 애니메이션 이벤트
     {
         bIsAttack = true;
-        LookAtTarget();
-        playerState.state = PlayerState.State.ATTACK;
-        if(count != 0) // 펀치공격
+        LookAtTarget();             // 타겟을 바라보며 공격
+        playerState.state = PlayerState.State.ATTACK;   // 플레이어 상태 = 공격 상태
+        if(count != 0) // 펀치공격(여우, 독수리 기본공격은 count 값이 0)
         {
-            if (count < 3)
+            if (count < 3) // 강공격이 아닌경우
             {
                 BoxCollider punch = punchCollider[0].GetComponent<BoxCollider>();
                 StartCoroutine(ColOff(punch));
             }
             else if (count == 3)
-                rHandTrail.enabled = true;
-            Invoke("TrailOff", 2f);
-            punchCount++;
+                rHandTrail.enabled = true;  // 라인 렌더러 활성화
+            Invoke("TrailOff", 2f);         // 2초후 라인 렌더러 비활성화
         }
 
-        moveStop();
+        moveStop();                         // 공격중에 이동하지 않도록 하는 함수
     }
 
-    IEnumerator ColOff(BoxCollider col)
+    IEnumerator ColOff(Collider col)        // 타격 콜라이더 비활성화 코루틴(0.3초)
     {
         col.enabled = true;
         yield return new WaitForSeconds(0.3f);
         col.enabled = false;
     }
 
-    void TrailOff()
+    void TrailOff()                         // 라인 렌더러 비활성화 함수
     {
         rHandTrail.enabled = false;
     }
 
-    void OnClaw()  // OnThirdAttack으로 바꿀 예정(애니메이션 이벤트도 변경)
-    {
-        //Debug.Log("호랑이 세번째 타격");
-        thirdEffect.Play();
-        BoxCollider claw = punchCollider[1].GetComponent<BoxCollider>();
-        StartCoroutine(ColOff(claw));
-        //punchCollider[1].gameObject.SetActive(true);
-
-    }
-    void OnAttackEnd(int count)
+    void OnAttackEnd(int count)             // 기본 공격 종료 함수
     {
         bIsAttack = false;
-        if (!animator.GetBool("Combo"))
-            playerState.state = PlayerState.State.IDLE;
-        if (count != 0) // 펀치공격
-        {
-            punchCount = 0;
-        }
+        //if (!animator.GetBool("Combo"))
+        playerState.state = PlayerState.State.IDLE; // 공격 상태가 끝나면 IDLE로 돌아옴
     }
     #endregion
 
     #region 스킬
     IEnumerator FoxSkill_1()
     {
-        if (canSkills[0])
+        if (canSkills[0])           // 여우불 스킬이 사용 가능한 상태라면
         {
-            canSkills[0] = false;
-            coolImg[0].enabled = true;
+            canSkills[0] = false;   // 여우불 스킬 사용 불가능 상태
+            // 쿨타임 표시 활성화
+            coolImg[0].enabled = true;      
             coolTxt[0].enabled = true;
-            animator.SetInteger("SkillState", 1);
+            animator.SetInteger("SkillState", 1);   // 애니메이션 실행
+            // 이펙트 생성 후 1초후 제거
             GameObject Effect = Instantiate(fireData.skillEffect, transform.position, Quaternion.identity);
             Destroy(Effect, 1f);
 
+            // 쿨타임 코루틴 시작
             StartCoroutine(CoolTimeImg(fireData.f_skillCoolTime, coolImg[0], coolTxt[0]));
+            // 스킬 쿨타임 만큼 기다림
             yield return new WaitForSeconds(fireData.f_skillCoolTime);
+            // 여우불 스킬 가능 상태로 변경
             canSkills[0] = true;
         }
-        else
+        else    // 해당 스킬이 쿨타임 중이라면
         {
             // 이부분 UI로 표시하면 좋을듯
             Debug.Log("스킬이 쿨타임 중입니다.");
@@ -305,7 +296,7 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator FoxSkill_2()
     {
-        if (canSkills[1])
+        if (canSkills[1])   // 힐 스킬 사용 가능한 상태라면
         {
             // 체력이 가득차 있으면 스킬을 사용하지 않음
             if (GetComponent<PlayerDamage>().HpBar.fillAmount == 1f)
@@ -313,19 +304,21 @@ public class PlayerAttack : MonoBehaviour
                 Debug.Log("체력이 가득차 있습니다.");
                 yield return null;
             }
-            else
+            else    // 체력이 꽉차있지 않다면
             {
-                canSkills[1] = false;
-                coolImg[1].enabled = true;
+                canSkills[1] = false;       // 힐 스킬 불가능 상태
+                // 쿨타임 표시 활성화
+                coolImg[1].enabled = true;  
                 coolTxt[1].enabled = true;
-                animator.SetInteger("SkillState", 2);
+                animator.SetInteger("SkillState", 2);   // 애니메이션 실행
+                // 쿨타임 코루틴 실행
                 StartCoroutine(CoolTimeImg(healData.f_skillCoolTime, coolImg[1], coolTxt[1]));
 
                 yield return new WaitForSeconds(healData.f_skillCoolTime);
-                canSkills[1] = true;
+                canSkills[1] = true;    // 쿨타임이 다 되면 힐 스킬 사용가능한 상태
             }
         }
-        else
+        else    // 해당 스킬이 쿨타임 중이라면
         {
             Debug.Log("스킬이 쿨타임 중입니다.");
         }
@@ -333,19 +326,20 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator TigerSkill_1()
     {
-        if (canSkills[2])
+        if (canSkills[2])       // 포효 스킬이 사용 가능한 상태라면
         {
-            canSkills[2] = false;
+            canSkills[2] = false;   // 포효 스킬 불가능 상태
+            // 쿨타임 표시 활성화
             coolImg[2].enabled = true;
             coolTxt[2].enabled = true;
-            animator.SetInteger("SkillState", 1);
-
+            animator.SetInteger("SkillState", 1);   // 애니메이션 실행
+            // 쿨타임 코루틴 실행
             StartCoroutine(CoolTimeImg(roarData.f_skillCoolTime, coolImg[2], coolTxt[2]));
 
             yield return new WaitForSeconds(roarData.f_skillCoolTime);
-            canSkills[2] = true;
+            canSkills[2] = true;    // 쿨타임이 다 되면 포효 스킬 사용가능한 상태
         }
-        else
+        else    // 해당 스킬이 쿨타임 중이라면
         {
             // 이부분 UI로 표시하면 좋을듯
             Debug.Log("스킬이 쿨타임 중입니다.");
@@ -353,100 +347,101 @@ public class PlayerAttack : MonoBehaviour
     }
 
     IEnumerator EagleSkill_1()
-    {
-        if(canSkills[3])
+    {   
+        if(canSkills[3])        // 버프 스킬 사용가능한 상태라면
         {
-            canSkills[3] = false;
+            canSkills[3] = false;   // 버프 스킬 불가능 상태
+            // 쿨타임 표시 활성화
             coolImg[3].enabled = true;
             coolTxt[3].enabled = true;
-            animator.SetInteger("SkillState", 1);
-
+            animator.SetInteger("SkillState", 1);   // 애니메이션 실행
+            // 쿨타임 코루틴 실행
             StartCoroutine(CoolTimeImg(buffData.f_skillCoolTime, coolImg[3], coolTxt[3]));
 
             yield return new WaitForSeconds(buffData.f_skillCoolTime);
-            canSkills[3] = true;
+            canSkills[3] = true;    // 쿨타임이 다 되면 버프 스킬 사용가능한 상태
         }
-        else
+        else    // 해당 스킬이 쿨타임 중이라면
         {
             // 이부분 UI로 표시하면 좋을듯
             Debug.Log("스킬이 쿨타임 중입니다.");
         }
     }
-    void OnSkillStart()
+    void OnSkillStart()     // 스킬 시작 애니메이션 이벤트
     {
         bIsSkill = true;
-        playerState.state = PlayerState.State.ATTACK;
-        moveStop();
+        playerState.state = PlayerState.State.ATTACK;   // 스킬 사용시 공격상태로 변경(다른 동작을 막기 위함)
+        moveStop(); // 스킬 사용중 이동 불가
     }
-    void OnSkillEnd()
+    void OnSkillEnd()       // 스킬 종료 애니메이션 이벤트
     {
         bIsSkill = false;
-        playerState.state = PlayerState.State.IDLE;
-        animator.SetInteger("SkillState", 0);
+        playerState.state = PlayerState.State.IDLE;     // 플레이어 => IDLE로 변경
+        animator.SetInteger("SkillState", 0);           // 애니메이션 상태 IDLE
     }
 
-    void OnFireGuard()
+    void OnFireGuard()  // 여우불 스킬 발동 이벤트
     {
-        foreach (GameObject fire in FoxFires)
+        foreach (GameObject fire in FoxFires)   // 여우불 활성화(애니메이션과 타이밍을 맞게 하기 위한 이벤트)
         {
             fire.SetActive(true);
         }
     }
 
-    void OnHeal()
+    void OnHeal()       // 힐 스킬 발동 이벤트
     {
-        GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity);
+        int newHP = (int)(healData.f_skillDamage * PlayerStat.instance.maxHP);    // 최대체력의 50%를 회복
+        GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity); // 이펙트 Instantiate 후 1.5초 후 제거
         Destroy(Effect, 1.5f);
         PlayerDamage playerDamage = GetComponent<PlayerDamage>();
-        playerDamage.RestoreHp((int)healData.f_skillDamage);
+        playerDamage.RestoreHp(newHP);  // 체력 회복
     }
-
-    void OnRoar()
+    void OnClaw()       // 호랑이 강펀치 스킬 이벤트
     {
-        // 이펙트 소환
+        thirdEffect.Play(); // 이펙트 파티클 실행
+        BoxCollider claw = punchCollider[1].GetComponent<BoxCollider>();    
+        StartCoroutine(ColOff(claw)); // 강펀치 콜라이더 비활성화 코루틴 실행
+    }
+    void OnRoar()       // 호랑이 포효 스킬 이벤트
+    {
+        // 이펙트 Instantiate 후 1초 후 제거
         GameObject Effect = Instantiate(roarData.skillEffect, roarTr.position, roarTr.rotation);
         Destroy(Effect, 1f);
 
-        // 포효 스킬 반경의 에너미 레이어 충돌체를 모두 저장
-        Collider[] Cols = Physics.OverlapSphere(transform.position, roarData.f_skillRange, enemyLayer);
-        
-        // 콜라이더가 에너미들이라면 
-        foreach(Collider col in Cols)
-        {
-            Rigidbody rb = col.GetComponent<Rigidbody>();
-            if(rb != null)
-            {
-                col.GetComponent<EnemyDamage>().OnHitSkill((int)roarData.f_skillDamage, roarData.skillName);
-                StartCoroutine(DownSpeed(col.gameObject));
-            }
-        }
-    }
-    IEnumerator DownSpeed(GameObject target)
-    {
-        // 실제 에너미 데이터로 속도 감소 시켜야함
-        // *수정 할 예정*
-        target.GetComponent<EnemyDamage>().testSpeed -= 2f;
-        yield return new WaitForSeconds(2f);
-        target.GetComponent<EnemyDamage>().testSpeed += 2f;
+        // 콜라이더 비활성화 코루틴 실행
+        StartCoroutine(ColOff(roarCollider));
     }
 
-    void OnBuff()
+    //IEnumerator DownSpeed(GameObject target)    // 테스트함수(최적화시 제거할 예정)
+    //{
+    //    // 실제 에너미 데이터로 속도 감소 시켜야함
+    //    // *수정 할 예정*
+    //    target.GetComponent<EnemyDamage>().testSpeed -= 2f;
+    //    yield return new WaitForSeconds(2f);
+    //    target.GetComponent<EnemyDamage>().testSpeed += 2f;
+    //}
+
+    void OnBuff()   // 독수리 버프 스킬 이벤트
     {
+        // 이펙트 Instantiate 후 1.5초 후 제거
         GameObject Effect = Instantiate(buffData.skillEffect, transform.position, Quaternion.identity);
         Destroy(Effect, 1.5f);
-        Debug.Log("공격력 상승");    // 캐릭터 데이터에 접근하여 공격력 상승하게 할 예정
+        // 공격력 증가 코루틴 실행
         StartCoroutine(AttackBuff());
     }  
 
-    IEnumerator AttackBuff()
+    IEnumerator AttackBuff()    // 공격력 증가 버프 코루틴
     {
-        int originAtk = playerStat.atk; // 캐릭터의 원래 공격력 저장(버프가 끝난 후 원래 공격력으로 되돌려야 하므로)
-        playerStat.atk = (int)(playerStat.atk * buffData.f_skillDamage);
+        // 공격력 증가(20% + (레벨/5)), 10렙일때 22프로 증가
+        int increaseAtk = (int)(PlayerStat.instance.atk * 
+            (buffData.f_skillDamage + (int)PlayerStat.instance.character_Lv / 10));
+        PlayerStat.instance.atk += increaseAtk;     // 플레이어 스탯(공격력) 증가
         yield return new WaitForSeconds(buffData.f_skillRange); // 스킬 지속시간동안만 공격력 증가
-        playerStat.atk = originAtk;
+        PlayerStat.instance.atk -= increaseAtk;     // 증가한 만큼 감소
     }
     #endregion
 
+    // 쿨타임 표시 코루틴
     IEnumerator CoolTimeImg(float cool, Image coolImg, Text coolTxt)
     {
         float cooltime = cool;

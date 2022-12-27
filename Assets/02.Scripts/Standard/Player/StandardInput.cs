@@ -45,10 +45,13 @@ public class StandardInput : MonoBehaviour
     }
     public void OnJump(InputValue value)
     {
+        // 플레이어가 상호 작용시, 죽었을 시 입력을 받지 않음
         if (GetComponent<PlayerDamage>().isDie)
         {
             return;
         }
+        if (GameManager.instance.isAction)  
+            return;
         JumpInput(value.isPressed);
     }
     public void OnWalk(InputValue value)

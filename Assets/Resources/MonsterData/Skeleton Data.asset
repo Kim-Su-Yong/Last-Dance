@@ -20,3 +20,4 @@ MonoBehaviour:
   attackDist: 2
   traceDist: 5
   MadTraceDist: 15
+  EXP: 24

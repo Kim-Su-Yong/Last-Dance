@@ -21,6 +21,7 @@ public class MonsterAI : MonoBehaviour
     // Monster
     public float M_HP = 0f;
     public float M_MaxHP = 100f;
+    public int M_EXP = 0;      // 각 몬스터마타 경험치가 다르므로 선언
 
     // Monster AI Move
     public enum State
@@ -195,6 +196,7 @@ public class MonsterAI : MonoBehaviour
     public void SetUp(MonsterData monsterData)
     {
         M_MaxHP = monsterData.HP;
+        M_EXP = monsterData.EXP;    // 경험치 변수 추가
         damage = monsterData.damage;
         attackSpeed = monsterData.attackSpeed;
         moveAgent.patrolSpeed = monsterData.patrolSpeed;
@@ -318,12 +320,17 @@ public class MonsterAI : MonoBehaviour
                     animator.SetTrigger("Death");
                     isDie = true;
 
-                    // 몬스터 사망시 경험치를 플레이어에 넘겨줘야함
+                    
                     GetComponent<Rigidbody>().isKinematic = true;
                     GetComponent<CapsuleCollider>().enabled = false;
                     //StopAllCoroutines();
 
                     StartCoroutine(PushPool());
+
+                    // 몬스터 사망시 플레이어 경험치 증가
+                    PlayerStat.instance.GainExp(M_EXP);
+                    // 사망시 더이상 코루틴을 수행하지 않음
+                    StopAllCoroutines();
 
                     break;
             }
@@ -337,7 +344,7 @@ public class MonsterAI : MonoBehaviour
         Hp_Bar.fillAmount = M_HP / M_MaxHP;
         Hp_Bar_Before.fillAmount = _beforeHP / M_MaxHP;
 
-        Debug.Log("Hp_Bar.fillAmount 값 : " + Hp_Bar.fillAmount * M_MaxHP);
+        //Debug.Log("Hp_Bar.fillAmount 값 : " + Hp_Bar.fillAmount * M_MaxHP);
         Hp_Text.text = ((int)M_HP).ToString() + " / " + ((int)M_MaxHP).ToString();
 
         // HP 값의 범위 지정

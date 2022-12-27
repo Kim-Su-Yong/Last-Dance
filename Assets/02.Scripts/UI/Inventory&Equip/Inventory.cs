@@ -1,0 +1,229 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Inventory : MonoBehaviour
+{
+    public static Inventory instance;
+
+    private DatabaseManager theData;
+    private SoundManager theSound;
+
+    private HoverTip hoverTip;
+    private ItemInfo itemInfo;
+
+    public GameObject[] EquipSlots;
+    public GameObject[] ConsumeSlots;
+    public GameObject[] ETCSlots;
+    
+    public int ItemNumber; //아이템 아이디
+    public int ItemCount; //아이템 수량
+
+    [SerializeField]
+    private InventorySlot slots; //인벤토리 슬롯들
+    
+    [SerializeField]
+    public List<ItemInfo> inventoryItemList; //플레이어가 소지한 아이템 리스트
+
+    public GameObject ItemSlot; //인벤토리 하위에 들어갈 아이템 정보가 담긴 오브젝트
+
+    public GameObject prefab_floating_text;
+    public Transform messageTr;
+
+    public GameObject clone;
+    private void Awake()
+    {
+        EquipSlots = GameObject.FindGameObjectsWithTag("Equip");
+        ConsumeSlots = GameObject.FindGameObjectsWithTag("Consume");
+        ETCSlots = GameObject.FindGameObjectsWithTag("ETC");
+        ConsumeSlots[0].transform.parent.gameObject.SetActive(false);
+        ETCSlots[0].transform.parent.gameObject.SetActive(false);
+    }
+    void Start()
+    {
+        instance = this;
+        theData = FindObjectOfType<DatabaseManager>();
+        theSound = FindObjectOfType<SoundManager>();
+        inventoryItemList = new List<ItemInfo>();
+        ItemSlot = Resources.Load<GameObject>("Item/item");
+    }
+    public void GetAnItem(int itemID, int _count)
+    {
+        for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
+        {
+            if (itemID == theData.itemList[i].itemID)
+            {
+                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone.GetComponent<FloatingText>().text.text = theData.itemList[i].itemName + " " + _count + "개 획득 +";
+                clone.transform.SetParent(this.transform);
+
+                ItemNumber = itemID;
+                ItemCount = _count;
+                if (theData.itemList[i].itemType == ItemInfo.ItemType.Equip)
+                {
+                    AddItem(EquipSlots, theData.itemList[i].equipType);
+                }
+                else if (theData.itemList[i].itemType == ItemInfo.ItemType.Consume)
+                {
+                    AddItem(ConsumeSlots);
+                }
+                else
+                {
+                    AddItem(ETCSlots);
+                }
+                return;
+            }
+        }
+    }
+
+    //소비, 기타템 인벤토리에 추가하는 함수
+    public void AddItem(GameObject[] ItemTpye)
+    {
+        bool inInventory = false;
+        for (int i = 0; i < inventoryItemList.Count; i++)
+        {
+            if (ItemNumber == inventoryItemList[i].GetComponent<ItemInfo>().itemID)
+            {
+                inInventory = true;
+                if (inInventory == true) //아이템 중복시
+                {
+                    inventoryItemList[i].GetComponent<InventorySlot>().itemCount += ItemCount;
+                    inventoryItemList[i].GetComponent<InventorySlot>().itemCount_Text.text =
+                        inventoryItemList[i].GetComponent<InventorySlot>().itemCount.ToString();
+                    inventoryItemList[i].GetComponent<HoverTip>().itemCount += ItemCount;
+                    inventoryItemList[i].GetComponent<HoverTip>().countToShow =
+                        "수량 : " + inventoryItemList[i].GetComponent<HoverTip>().itemCount.ToString() + "개";
+                    break;
+
+                }
+            }
+        }
+        if(inInventory==false)
+        {
+            ItemCreate(ItemTpye);
+        }
+    }
+
+    public void ItemCreate(GameObject[] ItemTpye) //아이템 중복 안될시 생성하는 함수
+    {
+        GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
+        clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
+        hoverTip = clone.GetComponent<HoverTip>();
+        slots = clone.GetComponent<InventorySlot>();
+        itemInfo = clone.GetComponent<ItemInfo>();
+        inventoryItemList.Add(clone.GetComponent<ItemInfo>());
+        if (ItemTpye == ConsumeSlots)
+        {
+            itemInfo.itemType = ItemInfo.ItemType.Consume;
+            itemInfo.equipType = ItemInfo.EquipType.None;
+        }
+        else
+        {
+            itemInfo.itemType = ItemInfo.ItemType.ETC;
+            itemInfo.equipType = ItemInfo.EquipType.None;
+        }
+        for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
+        {
+            if (ItemNumber == theData.itemList[i].itemID)
+            {
+                itemInfo.itemID = theData.itemList[i].itemID;
+                hoverTip.titleToShow = theData.itemList[i].itemName;
+                hoverTip.tipToShow = theData.itemList[i].itemDescription;
+                hoverTip.itemCount = theData.itemList[i].itemCount;
+                hoverTip.countToShow = "수량 : " + hoverTip.itemCount.ToString() + "개";
+                hoverTip.itemToShow = theData.itemList[i].itemIcon;
+                slots.icon.sprite = theData.itemList[i].itemIcon;
+                slots.itemCount = theData.itemList[i].itemCount;
+                slots.itemCount_Text.text = slots.itemCount.ToString();
+                break;
+            }
+        }
+    }
+
+    //장비템 인벤토리에 추가하는 함수
+    public void AddItem(GameObject[] ItemTpye, ItemInfo.EquipType equipType)
+    {
+        clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
+        clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
+        hoverTip = clone.GetComponent<HoverTip>();
+        slots = clone.GetComponent<InventorySlot>();
+        itemInfo = clone.GetComponent<ItemInfo>();
+        itemInfo.itemType = ItemInfo.ItemType.Equip;
+        switch (equipType)
+        {
+            case ItemInfo.EquipType.Weapon:
+                itemInfo.equipType = ItemInfo.EquipType.Weapon;
+                break;
+            case ItemInfo.EquipType.Helmet:
+                itemInfo.equipType = ItemInfo.EquipType.Helmet;
+                break;
+            case ItemInfo.EquipType.Armor:
+                itemInfo.equipType = ItemInfo.EquipType.Armor;
+                break;
+            case ItemInfo.EquipType.Boots:
+                itemInfo.equipType = ItemInfo.EquipType.Boots;
+                break;
+            case ItemInfo.EquipType.Totem:
+                itemInfo.equipType = ItemInfo.EquipType.Totem;
+                break;
+        }
+        inventoryItemList.Add(clone.GetComponent<ItemInfo>());
+        for (int i = 0; i < theData.itemList.Count; i++) //데이터베이스에서 아이템 검색
+        {
+            if (ItemNumber == theData.itemList[i].itemID)
+            {
+                hoverTip.titleToShow = theData.itemList[i].itemName;
+                hoverTip.tipToShow = theData.itemList[i].itemDescription;
+                hoverTip.itemToShow = theData.itemList[i].itemIcon;
+                slots.icon.sprite = theData.itemList[i].itemIcon;
+                if (theData.itemList[i].Atk != 0)
+                    hoverTip.countToShow = "공격력 + " + theData.itemList[i].Atk.ToString();
+                else if(theData.itemList[i].Def != 0)
+                    hoverTip.countToShow = "방어력 + " + theData.itemList[i].Def.ToString();
+                else if (theData.itemList[i].AddHp != 0)
+                    hoverTip.countToShow = "최대체력 + " + theData.itemList[i].AddHp.ToString();
+                else if (theData.itemList[i].Speed != 0)
+                    hoverTip.countToShow = "이동속도 + " + theData.itemList[i].Speed.ToString();
+                break;
+            }
+        }
+    }
+
+    public GameObject ItemGetIN(GameObject[] ItemTpye)
+    {
+        GameObject emptyInven = null;
+        for (int i = 0; i < ItemTpye.Length; i++)
+        {
+            if (ItemTpye[i].transform.childCount == 0)
+            {
+                emptyInven = ItemTpye[i];
+                Debug.Log("부모 찾음");
+                break;
+            }
+        }
+        return emptyInven;
+    }
+    public List<ItemInfo> SaveItem()
+    {
+        return inventoryItemList;
+    }
+    public void LoadItem(List<ItemInfo> _itemList)
+    {
+        inventoryItemList = _itemList;
+    }
+    public GameObject[] Test(GameObject[] ItemTpye)
+    {
+        GameObject[] emptyInven = null;
+        GameObject test = null;
+        for (int i = 0; i < ItemTpye.Length; i++)
+        {
+            if (ItemTpye[i].transform.childCount != 0)
+            {
+                test = ItemTpye[i];
+                Debug.Log("부모 찾음");
+            }
+        }
+        return emptyInven;
+    }
+}

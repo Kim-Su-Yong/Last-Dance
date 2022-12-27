@@ -21,6 +21,7 @@ TagManager:
   - Consume
   - ETC
   - ITEM
+  - ROAR
   layers:
   - Default
   - TransparentFX

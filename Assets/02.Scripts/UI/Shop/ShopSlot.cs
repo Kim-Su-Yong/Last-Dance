@@ -2,57 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-public class ShopSlot : MonoBehaviour //, IPointerUpHandler
+public class ShopSlot : MonoBehaviour
 {
-    public int slotnum;
-    public GameObject item;
-    public Image itemIcon;
-    public bool soldOut = false;
-    InventoryUI inventoryUI;
-
+    public bool soldOut;
     public int itemID;
     public int _count;
-    public Button button;
-    public Button button1;
+    private Button button;
+    private Button button1;
+    private Button button2;
+
+    public Inventory theInven;
     private void Awake()
     {
-        //ConsumeSlots = GameObject.FindGameObjectsWithTag("Consume");
         button = GetComponent<Button>();
-        button1 = button.transform.GetChild(2).GetComponentInChildren<Button>();
+        button1 = button.transform.GetChild(1).GetComponentInChildren<Button>();
+        button2 = button.transform.GetChild(2).GetComponentInChildren<Button>();
     }
-    public void Init(InventoryUI lui) //게임 처음 시작했을때 쓰이는 함수
+    void Update()
     {
-        inventoryUI = lui;
+        if(Input.GetMouseButtonDown(1))
+        {
+            Sell();
+        }
     }
-    public void UpdateSlotUI() //상점 열었을때 슬롯 업데이트하는 함수
-    {
-        //itemIcon.sprite = item.GetComponent<Item>().itemIcon;
-        itemIcon.gameObject.SetActive(true);
-        if (soldOut)
-            itemIcon.color = new Color(0.5f, 0.5f, 0.5f);
-    }
-    public void RemoveSlot() //상점 닫았을때 슬롯 안보이게 하는 함수
-    {
-        item = null;
-        soldOut = false;
-        itemIcon.gameObject.SetActive(false);
-    }
-    //public void OnPointerUp(PointerEventData eventData)
     public void Buy()
-    { 
-        //if (item != null)
-        //{
-            //if (DatabaseManager.instance.money >= item.itemCost && !soldOut && Inventory.instance.items.Count < Inventory.instance.SlotCnt)
-            //{
-                //DatabaseManager.instance.money -= item.itemCost;
-                Inventory_cy.instance.GetAnItem(itemID, _count);
-                soldOut = true;
-                button.interactable = false;
-                button1.interactable = false;
-                //inventoryUI.Buy(slotnum);
-                UpdateSlotUI();
-            //}
-        //}
+    {
+        Inventory.instance.GetAnItem(111, 1);
+        soldOut = true;
+        button1.interactable = false;
+        button2.interactable = false;
+    }
+    public void Sell()
+    {
+        //theInven.inventoryItemList.Remove(theInven.ItemSlot);
+        //Destroy(theInven.ItemSlot);
+        DestroyImmediate(theInven.ItemSlot, true);
     }
 }

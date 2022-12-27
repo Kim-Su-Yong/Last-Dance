@@ -10,19 +10,21 @@ public class PlayerDamage : MonoBehaviour
     public Text HpText;                 // 체력 텍스트
 
     [Header("Data")]
-    public int curHp;                 // 현재 체력
+    public int curHp;                   // 현재 체력
     public bool isDie;                  // 사망 확인
     public GameObject hitEffect;        // 피격 이펙트
     public GameObject damageUIPrefab;   // 데미지 UI
 
-    readonly string M_AttackTag = "M_ATTACK";   // 몬스터 공격 콜라이더 태그
-
+ 
+    // 컴포넌트
     Animator animator;
+    // 스크립트
     ThirdPersonCtrl controller;
     PlayerAttack attack;
     PlayerState playerState;
-    PlayerStat playerStat;
 
+    // read only
+    readonly string M_AttackTag = "M_ATTACK";   // 몬스터 공격 콜라이더 태그
     readonly int hashDie = Animator.StringToHash("Die");
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
@@ -35,7 +37,6 @@ public class PlayerDamage : MonoBehaviour
         controller = GetComponent<ThirdPersonCtrl>();
         attack = GetComponent<PlayerAttack>();
         playerState = GetComponent<PlayerState>();
-        playerStat = GetComponent<PlayerStat>();
 
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
@@ -52,14 +53,14 @@ public class PlayerDamage : MonoBehaviour
     // 캐릭터 초기 데이터(데이터 저장된것이 없는 경우 값)
     void LoadCharacterData()
     {
-        curHp = playerStat.maxHP;
+        curHp = PlayerStat.instance.maxHP;
     }
 
     // 체력 업데이트 함수(체력값이 변경될 때 마다 호출해야함
     public void hpUpdate()
     {
-        HpBar.fillAmount = (float)curHp / playerStat.maxHP;                   // 체력바 이미지 수정
-        HpText.text = curHp.ToString() + " / " + playerStat.maxHP.ToString(); // 체력바 텍스트 수정
+        HpBar.fillAmount = (float)curHp / PlayerStat.instance.maxHP;                   // 체력바 이미지 수정
+        HpText.text = curHp.ToString() + " / " + PlayerStat.instance.maxHP.ToString(); // 체력바 텍스트 수정
 
         // 체력이 30퍼이하인 경우 빨간색
         if (HpBar.fillAmount <= 0.3f)
@@ -87,7 +88,9 @@ public class PlayerDamage : MonoBehaviour
     IEnumerator Hit(GameObject Enemy)
     {
         // Move, Idle인 경우에만 피격 모션 발생하도록 수정 예쩡
-        animator.SetTrigger(hashHit);     // 피격 애니메이션 재생
+        // 현재 캐릭터가 공격중이 아니라면 애니메이션 실행
+        if(playerState.state != PlayerState.State.ATTACK)
+            animator.SetTrigger(hashHit); // 피격 애니메이션 재생
         animator.SetFloat(hashSpeed, 0f); // 피격 애니메이션 실행시 움직이지 않도록 멈춤
 
         // 에너미AI로부터 데미지 값을 받아옴(+ 랜덤하게 0~9사이 데미지 추가)
@@ -97,7 +100,7 @@ public class PlayerDamage : MonoBehaviour
         // + 지은 : 다이나믹한 연출을 위해 데미지 0~9의 값이 랜덤 추가되는 것으로 변경했습니다!
 
         // 현재 체력값이 0 ~ 초기 체력(아마 최대체력으로 변경될 예정)사이의 값만 가지도록 조정
-        curHp = Mathf.Clamp(curHp, 0, playerStat.maxHP);
+        curHp = Mathf.Clamp(curHp, 0, PlayerStat.instance.maxHP);
         hpUpdate();
 
         playerState.state = PlayerState.State.HIT;  // 플레이어 상태->피격상태 로 변경
@@ -126,20 +129,26 @@ public class PlayerDamage : MonoBehaviour
         //deathPanel.SetActive(false);
         Respawn();
     }
-    public void Respawn()   // 덜 구현되어 있는 상태
+    public void Respawn()
     {
+        // 스폰 포인트 오브젝트 탐색
         Transform SpawnPoint = GameObject.Find("SpawnManager").
             transform.GetChild(0).GetComponent<Transform>();
+        // 스폰 포인트에 리스폰
         transform.position = SpawnPoint.position;
-        curHp = playerStat.maxHP;
+        // 체력은 꽉 찬 상태로 리스폰
+        curHp = PlayerStat.instance.maxHP;
         HpBar.color = Color.green;
         hpUpdate();
+        // 플레이어 상태 = IDLE
         playerState.state = PlayerState.State.IDLE;
+        // 각종 컴포넌트 활성화(부활시 여우 상태로 부활)
         GetComponent<CharacterController>().enabled = true;
         GetComponent<ChangeForm>().curForm = ChangeForm.FormType.FOX;
         GetComponent<ChangeForm>().Staff.enabled = true;
-        isDie = false;
+        isDie = false;  // 사망상태 해제
 
+        // onEnable함수를 불러오기 위한 작업
         gameObject.SetActive(false);
         gameObject.SetActive(true);
     }
@@ -178,7 +187,7 @@ public class PlayerDamage : MonoBehaviour
         Effect_M_DamageAmount.GetComponent<TextMeshPro>().color = new Color(150f, 0f, 255f);
     }
 
-    void OnHit()
+    void OnHit()    // 피격 이벤트
     {
         animator.SetFloat(hashSpeed, 0f);
     }
@@ -191,10 +200,8 @@ public class PlayerDamage : MonoBehaviour
             return;
         curHp += newHp;     // newHP만큼 체력 회복
         // 체력된 회복이 최대체력보다 큰 경우 조정
-        if (curHp > playerStat.maxHP)
-            curHp = playerStat.maxHP;
+        if (curHp > PlayerStat.instance.maxHP)
+            curHp = PlayerStat.instance.maxHP;
         hpUpdate();
     }
-
-
 }
