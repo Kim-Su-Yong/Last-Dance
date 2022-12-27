@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 82449154037647327}
   - component: {fileID: 4886226808813469414}
   - component: {fileID: 9025679745677531441}
-  - component: {fileID: -9125080226026896749}
+  - component: {fileID: -5649952651115127089}
   m_Layer: 5
   m_Name: item
   m_TagString: ITEM
@@ -259,7 +259,7 @@ MonoBehaviour:
   countToShow: 
   itemCount: 0
   itemToShow: {fileID: 0}
---- !u!114 &-9125080226026896749
+--- !u!114 &-5649952651115127089
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -274,11 +274,14 @@ MonoBehaviour:
   itemID: 0
   itemName: 
   itemDescription: 
+  Atk: 0
+  Def: 0
+  AddHp: 0
+  Speed: 0
   itemCount: 0
   itemIcon: {fileID: 0}
   itemType: 0
   equipType: 0
-  equipStat: []
 --- !u!1 &8777576734132340283
 GameObject:
   m_ObjectHideFlags: 0

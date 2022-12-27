@@ -23,15 +23,17 @@ public class Inventory : MonoBehaviour
     [SerializeField]
     private InventorySlot slots; //인벤토리 슬롯들
     
-    [SerializeField]
     public List<ItemInfo> inventoryItemList; //플레이어가 소지한 아이템 리스트
 
     public GameObject ItemSlot; //인벤토리 하위에 들어갈 아이템 정보가 담긴 오브젝트
+    public GameObject theItem;
 
     public GameObject prefab_floating_text;
     public Transform messageTr;
 
     public GameObject clone;
+    public GameObject obj1;
+    public GameObject[] ItemType;
     private void Awake()
     {
         EquipSlots = GameObject.FindGameObjectsWithTag("Equip");
@@ -40,6 +42,7 @@ public class Inventory : MonoBehaviour
         ConsumeSlots[0].transform.parent.gameObject.SetActive(false);
         ETCSlots[0].transform.parent.gameObject.SetActive(false);
         ItemSlot = Resources.Load<GameObject>("Item/item");
+        obj1 = transform.GetChild(1).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
     }
     void Start()
     {
@@ -47,7 +50,7 @@ public class Inventory : MonoBehaviour
         theData = FindObjectOfType<DatabaseManager>();
         theSound = FindObjectOfType<SoundManager>();
         inventoryItemList = new List<ItemInfo>();
-//        ItemSlot = Resources.Load<GameObject>("Item/item");
+        //ItemSlot = Resources.Load<GameObject>("Item/item");
     }
     public void GetAnItem(int itemID, int _count)
     {
@@ -79,7 +82,7 @@ public class Inventory : MonoBehaviour
     }
 
     //소비, 기타템 인벤토리에 추가하는 함수
-    public void AddItem(GameObject[] ItemTpye)
+    public void AddItem(GameObject[] ItemType)
     {
         bool inInventory = false;
         for (int i = 0; i < inventoryItemList.Count; i++)
@@ -102,19 +105,19 @@ public class Inventory : MonoBehaviour
         }
         if(inInventory==false)
         {
-            ItemCreate(ItemTpye);
+            ItemCreate(ItemType);
         }
     }
 
-    public void ItemCreate(GameObject[] ItemTpye) //아이템 중복 안될시 생성하는 함수
+    public void ItemCreate(GameObject[] ItemType) //아이템 중복 안될시 생성하는 함수
     {
         clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
-        clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
+        clone.transform.SetParent(ItemGetIN(ItemType).transform);
         hoverTip = clone.GetComponent<HoverTip>();
         slots = clone.GetComponent<InventorySlot>();
         itemInfo = clone.GetComponent<ItemInfo>();
         inventoryItemList.Add(clone.GetComponent<ItemInfo>());
-        if (ItemTpye == ConsumeSlots)
+        if (ItemType == ConsumeSlots)
         {
             itemInfo.itemType = ItemInfo.ItemType.Consume;
             itemInfo.equipType = ItemInfo.EquipType.None;
@@ -145,10 +148,10 @@ public class Inventory : MonoBehaviour
     }
 
     //장비템 인벤토리에 추가하는 함수
-    public void AddItem(GameObject[] ItemTpye, ItemInfo.EquipType equipType)
+    public void AddItem(GameObject[] ItemType, ItemInfo.EquipType equipType)
     {
         clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
-        clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
+        clone.transform.SetParent(ItemGetIN(ItemType).transform);
         hoverTip = clone.GetComponent<HoverTip>();
         slots = clone.GetComponent<InventorySlot>();
         itemInfo = clone.GetComponent<ItemInfo>();
@@ -210,20 +213,29 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public GameObject ItemGetIN(GameObject[] ItemTpye)
+    public GameObject ItemGetIN(GameObject[] ItemType)
     {
         GameObject emptyInven = null;
-        for (int i = 0; i < ItemTpye.Length; i++)
+        for (int i = 0; i < ItemType.Length; i++)
         {
-            if (ItemTpye[i].transform.childCount == 0)
+            if (ItemType[i].transform.childCount == 0)
             {
-                emptyInven = ItemTpye[i];
+                emptyInven = ItemType[i];
                 Debug.Log("부모 찾음");
                 break;
+            }
+            else if(ItemType[i].transform.childCount == 1 && !ItemType[i].transform.gameObject)
+            {
+                //낼 추가 예정
             }
         }
         return emptyInven;
     }
+    //public void Sell()
+    //{
+    //    inventoryItemList.RemoveAt(0); //아이콘이 남아있음
+    //    obj1.transform.GetChild(0).gameObject.SetActive(false); //판매되는것처럼 보이는데 그 칸에 아이템이 안들어감
+    //}
     public List<ItemInfo> SaveItem()
     {
         return inventoryItemList;
