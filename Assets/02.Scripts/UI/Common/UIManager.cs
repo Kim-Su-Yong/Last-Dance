@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        equipGO.SetActive(false);
         invenGO.SetActive(false);
         coolImg.fillAmount = 0f;
         cooltxt.enabled = false;

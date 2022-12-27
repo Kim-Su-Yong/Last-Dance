@@ -83,6 +83,11 @@ public class Drop : MonoBehaviour, IDropHandler
                             if (transform.childCount == 0)
                             {
                                 Drag.draggingItem.transform.SetParent(this.transform);
+                                if (Input.GetMouseButtonUp(0))
+                                {
+                                    PlayerStat.instance.def += Drag.draggingItem.GetComponent<ItemInfo>().Def;
+                                    Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
+                                }
                             }
                         }
                         break;
@@ -92,6 +97,11 @@ public class Drop : MonoBehaviour, IDropHandler
                             if (transform.childCount == 0)
                             {
                                 Drag.draggingItem.transform.SetParent(this.transform);
+                                if (Input.GetMouseButtonUp(0))
+                                {
+                                    PlayerStat.instance.maxHP += Drag.draggingItem.GetComponent<ItemInfo>().AddHp;
+                                    Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
+                                }
                             }
                         }
                         break;
@@ -101,6 +111,11 @@ public class Drop : MonoBehaviour, IDropHandler
                             if (transform.childCount == 0)
                             {
                                 Drag.draggingItem.transform.SetParent(this.transform);
+                                if (Input.GetMouseButtonUp(0))
+                                {
+                                    PlayerStat.instance.atk += Drag.draggingItem.GetComponent<ItemInfo>().Atk;
+                                    Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
+                                }
                             }
                         }
                         break;
@@ -110,6 +125,11 @@ public class Drop : MonoBehaviour, IDropHandler
                             if (transform.childCount == 0)
                             {
                                 Drag.draggingItem.transform.SetParent(this.transform);
+                                if (Input.GetMouseButtonUp(0))
+                                {
+                                    PlayerStat.instance.def += Drag.draggingItem.GetComponent<ItemInfo>().Def;
+                                    Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
+                                }
                             }
                         }
                         break;
@@ -119,6 +139,11 @@ public class Drop : MonoBehaviour, IDropHandler
                             if (transform.childCount == 0)
                             {
                                 Drag.draggingItem.transform.SetParent(this.transform);
+                                if (Input.GetMouseButtonUp(0))
+                                {
+                                    PlayerStat.instance.atk += Drag.draggingItem.GetComponent<ItemInfo>().Atk;
+                                    Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
+                                }
                             }
                         }
                         break;
@@ -128,6 +153,11 @@ public class Drop : MonoBehaviour, IDropHandler
                             if (transform.childCount == 0)
                             {
                                 Drag.draggingItem.transform.SetParent(this.transform);
+                                if (Input.GetMouseButtonUp(0))
+                                {
+                                    PlayerStat.instance.speed += Drag.draggingItem.GetComponent<ItemInfo>().Speed;
+                                    Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
+                                }
                             }
                         }
                         break;

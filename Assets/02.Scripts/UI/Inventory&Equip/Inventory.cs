@@ -23,8 +23,8 @@ public class Inventory : MonoBehaviour
     [SerializeField]
     private InventorySlot slots; //인벤토리 슬롯들
     
-    [SerializeField]
     public List<ItemInfo> inventoryItemList; //플레이어가 소지한 아이템 리스트
+    public List<ItemInfo> equipmentItemList; //장비창에 들어있는 아이템 리스트
 
     public GameObject ItemSlot; //인벤토리 하위에 들어갈 아이템 정보가 담긴 오브젝트
 
@@ -47,7 +47,7 @@ public class Inventory : MonoBehaviour
         theData = FindObjectOfType<DatabaseManager>();
         theSound = FindObjectOfType<SoundManager>();
         inventoryItemList = new List<ItemInfo>();
-//        ItemSlot = Resources.Load<GameObject>("Item/item");
+        equipmentItemList = new List<ItemInfo>();
     }
     public void GetAnItem(int itemID, int _count)
     {
@@ -89,6 +89,7 @@ public class Inventory : MonoBehaviour
                 inInventory = true;
                 if (inInventory == true) //아이템 중복시
                 {
+                    inventoryItemList[i].GetComponent<ItemInfo>().itemCount += ItemCount;
                     inventoryItemList[i].GetComponent<InventorySlot>().itemCount += ItemCount;
                     inventoryItemList[i].GetComponent<InventorySlot>().itemCount_Text.text =
                         inventoryItemList[i].GetComponent<InventorySlot>().itemCount.ToString();
@@ -128,6 +129,7 @@ public class Inventory : MonoBehaviour
         {
             if (ItemNumber == theData.itemList[i].itemID)
             {
+                itemInfo.itemCount = theData.itemList[i].itemCount;
                 itemInfo.itemIcon = theData.itemList[i].itemIcon;
                 itemInfo.AddHp = theData.itemList[i].AddHp;
                 itemInfo.itemID = theData.itemList[i].itemID;

@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 4886226808813469414}
   - component: {fileID: 9025679745677531441}
   - component: {fileID: -9125080226026896749}
+  - component: {fileID: 517983077777136379}
   m_Layer: 5
   m_Name: item
   m_TagString: ITEM
@@ -215,6 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!225 &82449154037647327
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -274,11 +276,26 @@ MonoBehaviour:
   itemID: 0
   itemName: 
   itemDescription: 
+  Atk: 0
+  Def: 0
+  AddHp: 0
+  Speed: 0
   itemCount: 0
   itemIcon: {fileID: 0}
   itemType: 0
   equipType: 0
-  equipStat: []
+--- !u!114 &517983077777136379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82449154037647321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58521c373f1c16845b0bc1511ca0fdf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8777576734132340283
 GameObject:
   m_ObjectHideFlags: 0

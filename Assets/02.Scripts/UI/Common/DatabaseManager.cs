@@ -28,12 +28,12 @@ public class DatabaseManager : MonoBehaviour
     //public List<EquipStat> equipStat = new List<EquipStat>();
     void Start()
     {
-        itemList.Add(new ItemInfo(111, "일반체력포션", "체력을 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 50));
-        itemList.Add(new ItemInfo(112, "고급체력포션", "체력을 150 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 150));
-        itemList.Add(new ItemInfo(113, "전설체력포션", "체력을 300 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 300));
-        itemList.Add(new ItemInfo(121, "일반마나포션", "마나를 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
-        itemList.Add(new ItemInfo(122, "고급마나포션", "마나를 150 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
-        itemList.Add(new ItemInfo(123, "전설마나포션", "마나를 300 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        itemList.Add(new ItemInfo(111, "일반체력포션", "체력을 10 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 10));
+        itemList.Add(new ItemInfo(112, "고급체력포션", "체력을 20 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 20));
+        itemList.Add(new ItemInfo(113, "전설체력포션", "체력을 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume, 50));
+        //itemList.Add(new ItemInfo(121, "일반마나포션", "마나를 10 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        //itemList.Add(new ItemInfo(122, "고급마나포션", "마나를 20 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
+        //itemList.Add(new ItemInfo(123, "전설마나포션", "마나를 50 회복시켜주는 기적의 물약", ItemInfo.ItemType.Consume));
         itemList.Add(new ItemInfo(211, "일반 검", "일반 용사의 검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 5));
         itemList.Add(new ItemInfo(212, "고급 검", "고급 용사의 검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 10));
         itemList.Add(new ItemInfo(213, "전설 검", "전설 용사의검", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Weapon, 20));
@@ -46,9 +46,9 @@ public class DatabaseManager : MonoBehaviour
         itemList.Add(new ItemInfo(231, "일반 갑옷", "일반 갑옷", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor, 0, 5));
         itemList.Add(new ItemInfo(232, "고급 갑옷", "고급 갑옷", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor, 0, 10));
         itemList.Add(new ItemInfo(233, "전설 갑옷", "전설 갑옷", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Armor, 0, 20));
-        itemList.Add(new ItemInfo(241, "일반 신발", "일반 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 2f));
-        itemList.Add(new ItemInfo(242, "고급 신발", "고급 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 4f));
-        itemList.Add(new ItemInfo(243, "전설 신발", "전설 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 7f));
+        itemList.Add(new ItemInfo(241, "일반 신발", "일반 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 1f));
+        itemList.Add(new ItemInfo(242, "고급 신발", "고급 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 2f));
+        itemList.Add(new ItemInfo(243, "전설 신발", "전설 신발", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Boots, 0, 0, 0, 4f));
         itemList.Add(new ItemInfo(251, "일반 장갑", "일반 장갑", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Gloves, 3));
         itemList.Add(new ItemInfo(252, "고급 장갑", "고급 장갑", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Gloves, 5));
         itemList.Add(new ItemInfo(253, "전설 장갑", "전설 장갑", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Gloves, 10));
