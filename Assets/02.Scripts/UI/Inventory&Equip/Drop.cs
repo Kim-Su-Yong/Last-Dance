@@ -27,6 +27,11 @@ public class Drop : MonoBehaviour, IDropHandler
     public enum SlotType { EquipmentSlot, ConsumeSlot, EtcSlot, EquipSlot };
     public SlotType slotType;
 
+    PlayerDamage playerDamage;
+    void Start()
+    {
+        playerDamage = FindObjectOfType<PlayerDamage>();
+    }
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -101,6 +106,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.maxHP += Drag.draggingItem.GetComponent<ItemInfo>().AddHp;
+                                    playerDamage.hpUpdate();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
@@ -171,6 +177,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.maxHP += Drag.draggingItem.GetComponent<ItemInfo>().AddHp;
+                                    playerDamage.hpUpdate();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
