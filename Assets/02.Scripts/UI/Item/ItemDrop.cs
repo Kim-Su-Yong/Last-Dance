@@ -43,6 +43,7 @@ public class ItemDrop : MonoBehaviour
     #region 확률 조정 함수
     public void itemDrop()
     {
+        //Choose(new float[3] { 0f, 15f, 0f });
         Choose(new float[3] { 35f, 15f, 50f });
         float Choose(float[] probs)
         {

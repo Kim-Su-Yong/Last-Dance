@@ -24,6 +24,7 @@ public class Inventory : MonoBehaviour
     private InventorySlot slots; //인벤토리 슬롯들
     
     public List<ItemInfo> inventoryItemList; //플레이어가 소지한 아이템 리스트
+    public List<ItemInfo> equipmentItemList; //장비창에 들어있는 아이템 리스트
 
     public GameObject ItemSlot; //인벤토리 하위에 들어갈 아이템 정보가 담긴 오브젝트
     public GameObject theItem;
@@ -33,7 +34,14 @@ public class Inventory : MonoBehaviour
 
     public GameObject clone;
     public GameObject obj1;
-    public GameObject[] ItemType;
+
+    [Header("PlayerStat관련")]
+    public Text LvText;
+    public Text AtkText;
+    public Text DefText;
+    public Text MaxhpText;
+    public Text SpeedText;
+
     private void Awake()
     {
         EquipSlots = GameObject.FindGameObjectsWithTag("Equip");
@@ -50,7 +58,15 @@ public class Inventory : MonoBehaviour
         theData = FindObjectOfType<DatabaseManager>();
         theSound = FindObjectOfType<SoundManager>();
         inventoryItemList = new List<ItemInfo>();
-        //ItemSlot = Resources.Load<GameObject>("Item/item");
+        equipmentItemList = new List<ItemInfo>();
+    }
+    private void Update()
+    {
+        LvText.text = "LV : " + PlayerStat.instance.character_Lv.ToString();
+        AtkText.text = "공격력 : " + PlayerStat.instance.atk.ToString();
+        DefText.text = "방어력 : " + PlayerStat.instance.def.ToString();
+        MaxhpText.text = "최대체력 : " + PlayerStat.instance.maxHP.ToString();
+        SpeedText.text = "이동속도 : " + PlayerStat.instance.speed.ToString();
     }
     public void GetAnItem(int itemID, int _count)
     {
@@ -92,6 +108,7 @@ public class Inventory : MonoBehaviour
                 inInventory = true;
                 if (inInventory == true) //아이템 중복시
                 {
+                    inventoryItemList[i].GetComponent<ItemInfo>().itemCount += ItemCount;
                     inventoryItemList[i].GetComponent<InventorySlot>().itemCount += ItemCount;
                     inventoryItemList[i].GetComponent<InventorySlot>().itemCount_Text.text =
                         inventoryItemList[i].GetComponent<InventorySlot>().itemCount.ToString();
@@ -131,6 +148,7 @@ public class Inventory : MonoBehaviour
         {
             if (ItemNumber == theData.itemList[i].itemID)
             {
+                itemInfo.itemCount = theData.itemList[i].itemCount;
                 itemInfo.itemIcon = theData.itemList[i].itemIcon;
                 itemInfo.AddHp = theData.itemList[i].AddHp;
                 itemInfo.itemID = theData.itemList[i].itemID;
@@ -175,6 +193,9 @@ public class Inventory : MonoBehaviour
                 break;
             case ItemInfo.EquipType.Totem:
                 itemInfo.equipType = ItemInfo.EquipType.Totem;
+                break;
+            case ItemInfo.EquipType.Totem2:
+                itemInfo.equipType = ItemInfo.EquipType.Totem2;
                 break;
         }
         inventoryItemList.Add(clone.GetComponent<ItemInfo>());

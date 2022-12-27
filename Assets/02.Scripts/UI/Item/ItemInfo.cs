@@ -20,7 +20,7 @@ public class ItemInfo : MonoBehaviour
     // 장비 2차 분류
     public enum EquipType
     {
-        None, Weapon, Helmet, Armor, Boots, Gloves, Totem
+        None, Weapon, Helmet, Armor, Boots, Gloves, Totem, Totem2
     }
        
     public ItemType itemType;
