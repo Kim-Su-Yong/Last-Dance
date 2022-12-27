@@ -32,6 +32,15 @@ public class Inventory : MonoBehaviour
     public Transform messageTr;
 
     public GameObject clone;
+
+    //PlayerStat관련
+    [Header("PlayerStat관련")]
+    public Text LvText;
+    public Text AtkText;
+    public Text DefText;
+    public Text MaxhpText;
+    public Text SpeedText;
+
     private void Awake()
     {
         EquipSlots = GameObject.FindGameObjectsWithTag("Equip");
@@ -48,6 +57,14 @@ public class Inventory : MonoBehaviour
         theSound = FindObjectOfType<SoundManager>();
         inventoryItemList = new List<ItemInfo>();
         equipmentItemList = new List<ItemInfo>();
+    }
+    private void Update()
+    {
+        LvText.text = "LV : " + PlayerStat.instance.character_Lv.ToString();
+        AtkText.text = "공격력 : " + PlayerStat.instance.atk.ToString();
+        DefText.text = "방어력 : " + PlayerStat.instance.def.ToString();
+        MaxhpText.text = "최대체력 : " + PlayerStat.instance.maxHP.ToString();
+        SpeedText.text = "이동속도 : " + PlayerStat.instance.speed.ToString();
     }
     public void GetAnItem(int itemID, int _count)
     {
@@ -174,6 +191,9 @@ public class Inventory : MonoBehaviour
                 break;
             case ItemInfo.EquipType.Totem:
                 itemInfo.equipType = ItemInfo.EquipType.Totem;
+                break;
+            case ItemInfo.EquipType.Totem2:
+                itemInfo.equipType = ItemInfo.EquipType.Totem2;
                 break;
         }
         inventoryItemList.Add(clone.GetComponent<ItemInfo>());

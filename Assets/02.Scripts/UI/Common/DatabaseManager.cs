@@ -55,9 +55,9 @@ public class DatabaseManager : MonoBehaviour
         itemList.Add(new ItemInfo(261, "일반 반지", "일반 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 50));
         itemList.Add(new ItemInfo(262, "고급 반지", "고급 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 100));
         itemList.Add(new ItemInfo(263, "전설 반지", "전설 반지", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 200));
-        itemList.Add(new ItemInfo(264, "일반 목걸이", "일반 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 50));
-        itemList.Add(new ItemInfo(265, "고급 목걸이", "고급 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 100));
-        itemList.Add(new ItemInfo(266, "전설 목걸이", "전설 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem, 0, 0, 200));
+        itemList.Add(new ItemInfo(264, "일반 목걸이", "일반 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem2, 0, 0, 50));
+        itemList.Add(new ItemInfo(265, "고급 목걸이", "고급 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem2, 0, 0, 100));
+        itemList.Add(new ItemInfo(266, "전설 목걸이", "전설 목걸이", ItemInfo.ItemType.Equip, ItemInfo.EquipType.Totem2, 0, 0, 200));
         itemList.Add(new ItemInfo(311, "버섯", "자연산 송이버섯", ItemInfo.ItemType.ETC));
         itemList.Add(new ItemInfo(312, "해골", "스켈레톤의 해골", ItemInfo.ItemType.ETC));
         itemList.Add(new ItemInfo(313, "생선", "피쉬맨이 잡은 생선", ItemInfo.ItemType.ETC));
