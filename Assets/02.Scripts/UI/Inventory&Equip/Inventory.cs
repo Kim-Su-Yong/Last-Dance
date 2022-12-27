@@ -39,6 +39,7 @@ public class Inventory : MonoBehaviour
         ETCSlots = GameObject.FindGameObjectsWithTag("ETC");
         ConsumeSlots[0].transform.parent.gameObject.SetActive(false);
         ETCSlots[0].transform.parent.gameObject.SetActive(false);
+        ItemSlot = Resources.Load<GameObject>("Item/item");
     }
     void Start()
     {
@@ -46,7 +47,7 @@ public class Inventory : MonoBehaviour
         theData = FindObjectOfType<DatabaseManager>();
         theSound = FindObjectOfType<SoundManager>();
         inventoryItemList = new List<ItemInfo>();
-        ItemSlot = Resources.Load<GameObject>("Item/item");
+//        ItemSlot = Resources.Load<GameObject>("Item/item");
     }
     public void GetAnItem(int itemID, int _count)
     {
@@ -54,7 +55,7 @@ public class Inventory : MonoBehaviour
         {
             if (itemID == theData.itemList[i].itemID)
             {
-                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
                 clone.GetComponent<FloatingText>().text.text = theData.itemList[i].itemName + " " + _count + "개 획득 +";
                 clone.transform.SetParent(this.transform);
 
@@ -107,7 +108,7 @@ public class Inventory : MonoBehaviour
 
     public void ItemCreate(GameObject[] ItemTpye) //아이템 중복 안될시 생성하는 함수
     {
-        GameObject clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
+        clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN(ItemTpye).transform);
         hoverTip = clone.GetComponent<HoverTip>();
         slots = clone.GetComponent<InventorySlot>();
@@ -127,6 +128,8 @@ public class Inventory : MonoBehaviour
         {
             if (ItemNumber == theData.itemList[i].itemID)
             {
+                itemInfo.itemIcon = theData.itemList[i].itemIcon;
+                itemInfo.AddHp = theData.itemList[i].AddHp;
                 itemInfo.itemID = theData.itemList[i].itemID;
                 hoverTip.titleToShow = theData.itemList[i].itemName;
                 hoverTip.tipToShow = theData.itemList[i].itemDescription;
@@ -164,6 +167,9 @@ public class Inventory : MonoBehaviour
             case ItemInfo.EquipType.Boots:
                 itemInfo.equipType = ItemInfo.EquipType.Boots;
                 break;
+            case ItemInfo.EquipType.Gloves:
+                itemInfo.equipType = ItemInfo.EquipType.Gloves;
+                break;
             case ItemInfo.EquipType.Totem:
                 itemInfo.equipType = ItemInfo.EquipType.Totem;
                 break;
@@ -173,18 +179,32 @@ public class Inventory : MonoBehaviour
         {
             if (ItemNumber == theData.itemList[i].itemID)
             {
+                itemInfo.itemID = theData.itemList[i].itemID;
+                itemInfo.itemIcon = theData.itemList[i].itemIcon;
                 hoverTip.titleToShow = theData.itemList[i].itemName;
                 hoverTip.tipToShow = theData.itemList[i].itemDescription;
                 hoverTip.itemToShow = theData.itemList[i].itemIcon;
                 slots.icon.sprite = theData.itemList[i].itemIcon;
                 if (theData.itemList[i].Atk != 0)
+                {
+                    itemInfo.Atk = theData.itemList[i].Atk;
                     hoverTip.countToShow = "공격력 + " + theData.itemList[i].Atk.ToString();
-                else if(theData.itemList[i].Def != 0)
+                }
+                else if (theData.itemList[i].Def != 0)
+                {
+                    itemInfo.Def = theData.itemList[i].Def;
                     hoverTip.countToShow = "방어력 + " + theData.itemList[i].Def.ToString();
+                }
                 else if (theData.itemList[i].AddHp != 0)
+                {
+                    itemInfo.AddHp = theData.itemList[i].AddHp;
                     hoverTip.countToShow = "최대체력 + " + theData.itemList[i].AddHp.ToString();
+                }
                 else if (theData.itemList[i].Speed != 0)
+                {
+                    itemInfo.Speed = theData.itemList[i].Speed;
                     hoverTip.countToShow = "이동속도 + " + theData.itemList[i].Speed.ToString();
+                }
                 break;
             }
         }
@@ -211,19 +231,5 @@ public class Inventory : MonoBehaviour
     public void LoadItem(List<ItemInfo> _itemList)
     {
         inventoryItemList = _itemList;
-    }
-    public GameObject[] Test(GameObject[] ItemTpye)
-    {
-        GameObject[] emptyInven = null;
-        GameObject test = null;
-        for (int i = 0; i < ItemTpye.Length; i++)
-        {
-            if (ItemTpye[i].transform.childCount != 0)
-            {
-                test = ItemTpye[i];
-                Debug.Log("부모 찾음");
-            }
-        }
-        return emptyInven;
     }
 }
