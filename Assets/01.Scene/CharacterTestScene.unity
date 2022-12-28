@@ -5613,7 +5613,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &99618412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16699,7 +16698,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &314610248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27629,7 +27627,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &547229027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50273,6 +50270,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 9084632996224683169, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
+      propertyPath: M_EXP
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084632996224683169, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
       propertyPath: M_MaxHP
       value: 1000
       objectReference: {fileID: 0}
@@ -50282,7 +50283,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9084632996224683170, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9084632996224719042, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
       propertyPath: m_RootOrder
@@ -59615,7 +59616,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &1217114502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75155,7 +75155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &1531779069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83967,7 +83966,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &1673624915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91460,7 +91458,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &1857094093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93476,7 +93473,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &1903918118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95535,7 +95531,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
-  isEquip: 0
 --- !u!114 &1943189839
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -19,8 +19,6 @@ public class PlayerAttack : MonoBehaviour
     public GameObject target;       // 자동으로 타겟팅할 목표(에너미)
 
     [Header("공격 및 스킬")]
-
-    
     // 여우 공격
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
     public SkillData fireData;      // 여우불 스킬 데이터
@@ -58,8 +56,10 @@ public class PlayerAttack : MonoBehaviour
     public Text[] coolTxt;          // 스킬 쿨타임 텍스트들
 
     // 최적화를 위한 변수
-    readonly int hashCombo = Animator.StringToHash("Combo");
+    readonly int hashAttack = Animator.StringToHash("Attack");
+    readonly int hashComoboAttack = Animator.StringToHash("ComboAttack");
     readonly int hashSpeed = Animator.StringToHash("Speed");
+    readonly int hashSkillState = Animator.StringToHash("SkillState");
 
     void Awake()
     {
@@ -202,7 +202,7 @@ public class PlayerAttack : MonoBehaviour
     #region 기본 공격
     void FoxBaseAttack()
     {
-        animator.SetTrigger("Attack");
+        animator.SetTrigger(hashAttack);
     }
 
     //private void TigerBaseAttack(bool isPunching)
@@ -212,7 +212,7 @@ public class PlayerAttack : MonoBehaviour
 
     void TigerBaseAttack()
     {
-        animator.SetTrigger("ComboAttack");
+        animator.SetTrigger(hashComoboAttack);
     }
 
     void OnFire()       // 여우 기본 공격 애니메이션 이벤트
@@ -275,7 +275,7 @@ public class PlayerAttack : MonoBehaviour
             // 쿨타임 표시 활성화
             coolImg[0].enabled = true;      
             coolTxt[0].enabled = true;
-            animator.SetInteger("SkillState", 1);   // 애니메이션 실행
+            animator.SetInteger(hashSkillState, 1);   // 애니메이션 실행
             // 이펙트 생성 후 1초후 제거
             GameObject Effect = Instantiate(fireData.skillEffect, transform.position, Quaternion.identity);
             Destroy(Effect, 1f);
@@ -310,7 +310,7 @@ public class PlayerAttack : MonoBehaviour
                 // 쿨타임 표시 활성화
                 coolImg[1].enabled = true;  
                 coolTxt[1].enabled = true;
-                animator.SetInteger("SkillState", 2);   // 애니메이션 실행
+                animator.SetInteger(hashSkillState, 2);   // 애니메이션 실행
                 // 쿨타임 코루틴 실행
                 StartCoroutine(CoolTimeImg(healData.f_skillCoolTime, coolImg[1], coolTxt[1]));
 
@@ -332,7 +332,7 @@ public class PlayerAttack : MonoBehaviour
             // 쿨타임 표시 활성화
             coolImg[2].enabled = true;
             coolTxt[2].enabled = true;
-            animator.SetInteger("SkillState", 1);   // 애니메이션 실행
+            animator.SetInteger(hashSkillState, 1);   // 애니메이션 실행
             // 쿨타임 코루틴 실행
             StartCoroutine(CoolTimeImg(roarData.f_skillCoolTime, coolImg[2], coolTxt[2]));
 
@@ -354,7 +354,7 @@ public class PlayerAttack : MonoBehaviour
             // 쿨타임 표시 활성화
             coolImg[3].enabled = true;
             coolTxt[3].enabled = true;
-            animator.SetInteger("SkillState", 1);   // 애니메이션 실행
+            animator.SetInteger(hashSkillState, 1);   // 애니메이션 실행
             // 쿨타임 코루틴 실행
             StartCoroutine(CoolTimeImg(buffData.f_skillCoolTime, coolImg[3], coolTxt[3]));
 
@@ -377,7 +377,7 @@ public class PlayerAttack : MonoBehaviour
     {
         bIsSkill = false;
         playerState.state = PlayerState.State.IDLE;     // 플레이어 => IDLE로 변경
-        animator.SetInteger("SkillState", 0);           // 애니메이션 상태 IDLE
+        animator.SetInteger(hashSkillState, 0);           // 애니메이션 상태 IDLE
     }
 
     void OnFireGuard()  // 여우불 스킬 발동 이벤트
