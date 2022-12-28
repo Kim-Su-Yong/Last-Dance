@@ -88,6 +88,7 @@ public class MonsterSpawner : MonoBehaviour
                         _monster.SetActive(true);
                         _monster.GetComponent<MonsterAI>().isDie = false;
                         _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
+                        _monster.GetComponent<ItemDrop>().isDrop = false;
                         break;
                     }
                 }
@@ -109,6 +110,7 @@ public class MonsterSpawner : MonoBehaviour
                         _monster.SetActive(true);
                         _monster.GetComponent<MonsterAI>().isDie = false;
                         _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
+                        _monster.GetComponent<ItemDrop>().isDrop = false;
                         break;
                     }
                 }
@@ -130,6 +132,7 @@ public class MonsterSpawner : MonoBehaviour
                         _monster.SetActive(true);
                         _monster.GetComponent<MonsterAI>().isDie = false;
                         _monster.GetComponent<MonsterAI>().state = MonsterAI.State.PATROL;
+                        _monster.GetComponent<ItemDrop>().isDrop = false;
                         break;
                     }
                 }
