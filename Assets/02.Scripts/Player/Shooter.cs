@@ -32,6 +32,9 @@ public class Shooter : MonoBehaviour
     ThirdPersonCtrl playerctrl;
     ChangeForm Form;
     PlayerState playerState;
+
+    readonly int hashAttack = Animator.StringToHash("Attack");
+
     private void OnEnable()
     {
         //StartCoroutine(ChangeTarget());
@@ -66,7 +69,7 @@ public class Shooter : MonoBehaviour
                     m_distanceFromEnd = 1;
                     m_shotCount = 1;
                     m_shotCountEveryInterval = 1;
-                    animator.SetTrigger("Attack");
+                    animator.SetTrigger(hashAttack);
                     StartCoroutine(CreateMissile());                    
                 }
                 CanFire = false;

@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    private StandardInput cursorLock;
+
     public Image coolImg; //쿨타임 이미지
     public Text cooltxt;  //쿨타임 시간 텍스트
     public bool isCool;   //쿨타임인지 판단
@@ -21,6 +23,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        cursorLock = FindObjectOfType<StandardInput>();
         equipGO.SetActive(false);
         invenGO.SetActive(false);
         coolImg.fillAmount = 0f;
@@ -63,11 +66,15 @@ public class UIManager : MonoBehaviour
             activeInven = !activeInven;
             if (activeInven)
             {
+                cursorLock.cursorLocked = false;
+                cursorLock.SetCursorState(cursorLock.cursorLocked);
                 invenGO.SetActive(true);
                 //SeletedItem();
             }
             else
             {
+                cursorLock.cursorLocked = true;
+                cursorLock.SetCursorState(cursorLock.cursorLocked);
                 invenGO.SetActive(false);
             }
         }
@@ -79,10 +86,14 @@ public class UIManager : MonoBehaviour
             activeEquip = !activeEquip;
             if (activeEquip)
             {
+                //cursorLock.cursorLocked = false;
+                //cursorLock.SetCursorState(cursorLock.cursorLocked);
                 equipGO.SetActive(true);
             }
             else
             {
+                //cursorLock.cursorLocked = true;
+                //cursorLock.SetCursorState(cursorLock.cursorLocked);
                 equipGO.SetActive(false);
             }
         }

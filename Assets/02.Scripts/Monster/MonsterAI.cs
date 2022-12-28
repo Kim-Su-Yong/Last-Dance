@@ -330,7 +330,8 @@ public class MonsterAI : MonoBehaviour
                     // 몬스터 사망시 플레이어 경험치 증가
                     PlayerStat.instance.GainExp(M_EXP);
                     // 사망시 더이상 코루틴을 수행하지 않음
-                    StopAllCoroutines();
+                    Invoke("StopAllCoroutines", 3.5f);
+                    //StopAllCoroutines();
 
                     break;
             }
@@ -371,11 +372,15 @@ public class MonsterAI : MonoBehaviour
 
     IEnumerator PushPool()
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(3.0f);
         ReturnUIColor();
         this.gameObject.SetActive(false);
         GetComponent<Rigidbody>().isKinematic = false;
         GetComponent<CapsuleCollider>().enabled = true;
         M_HP = M_MaxHP;
+    }
+    IEnumerator wait()
+    {
+        yield return new WaitForSeconds(3.5f);
     }
 }

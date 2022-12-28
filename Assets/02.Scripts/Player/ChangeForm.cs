@@ -35,6 +35,8 @@ public class ChangeForm : MonoBehaviour
     public GameObject[] Tiger_Skill_Panel;
     public GameObject[] Eagle_Skill_Panel;
 
+    // readonly
+    readonly int hashForm = Animator.StringToHash("Form");
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -57,7 +59,7 @@ public class ChangeForm : MonoBehaviour
     }
 
     // 폼에 따른 스킬 Panel 활성화/비활성화
-    void PanelOnOff(FormType curForm)
+    public void PanelOnOff(FormType curForm)
     {
         switch(curForm)
         {
@@ -160,7 +162,7 @@ public class ChangeForm : MonoBehaviour
 
             PanelOnOff(curForm);
 
-            animator.SetInteger("Form", (int)form + 1);
+            animator.SetInteger(hashForm, (int)form + 1);
 
             ChangeFormSprite();
             //UI 에서 쿨타임 도는 기능 구현

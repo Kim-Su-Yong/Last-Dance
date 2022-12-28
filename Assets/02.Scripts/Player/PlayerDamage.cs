@@ -14,7 +14,6 @@ public class PlayerDamage : MonoBehaviour
     public bool isDie;                  // 사망 확인
     public GameObject hitEffect;        // 피격 이펙트
     public GameObject damageUIPrefab;   // 데미지 UI
-
  
     // 컴포넌트
     Animator animator;
@@ -22,8 +21,9 @@ public class PlayerDamage : MonoBehaviour
     ThirdPersonCtrl controller;
     PlayerAttack attack;
     PlayerState playerState;
+    ChangeForm changeForm;
 
-    // read only
+    // readonly
     readonly string M_AttackTag = "M_ATTACK";   // 몬스터 공격 콜라이더 태그
     readonly int hashDie = Animator.StringToHash("Die");
     readonly int hashHit = Animator.StringToHash("Hit");
@@ -37,6 +37,7 @@ public class PlayerDamage : MonoBehaviour
         controller = GetComponent<ThirdPersonCtrl>();
         attack = GetComponent<PlayerAttack>();
         playerState = GetComponent<PlayerState>();
+        changeForm = GetComponent<ChangeForm>();
 
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
@@ -110,7 +111,16 @@ public class PlayerDamage : MonoBehaviour
         Destroy(hitEff, 1.5f);
         
         // 피격후 1초뒤 플레이어 상태->Idle 로 변경
-        yield return new WaitForSeconds(1f);
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Hit") &&
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
+        {
+            Debug.Log("Hit 종료");
+        }
+
+        /*
+        * 애니메이션 종료시 상태변화하게끔 수정해야함
+        */
+        yield return new WaitForSeconds(0.4f);  
         playerState.state = PlayerState.State.IDLE;
     }
 
@@ -119,7 +129,7 @@ public class PlayerDamage : MonoBehaviour
         playerState.state = PlayerState.State.DIE;  // 사망 상태로 변경
         isDie = true;
        
-        animator.SetTrigger("Die");     // 사망 애니메이션 실행
+        animator.SetTrigger(hashDie);     // 사망 애니메이션 실행
         GetComponent<CharacterController>().enabled = false;    // 충돌판정 제거를 위한 캐릭터 컨트롤러 비활성화
 
         // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
@@ -144,13 +154,28 @@ public class PlayerDamage : MonoBehaviour
         playerState.state = PlayerState.State.IDLE;
         // 각종 컴포넌트 활성화(부활시 여우 상태로 부활)
         GetComponent<CharacterController>().enabled = true;
-        GetComponent<ChangeForm>().curForm = ChangeForm.FormType.FOX;
-        GetComponent<ChangeForm>().Staff.enabled = true;
+        changeForm.curForm = ChangeForm.FormType.FOX;
+        changeForm.Staff.enabled = true;
         isDie = false;  // 사망상태 해제
 
         // onEnable함수를 불러오기 위한 작업
         gameObject.SetActive(false);
         gameObject.SetActive(true);
+    }
+
+    private void OnEnable()
+    {
+        //// 체력은 꽉 찬 상태로 리스폰
+        //curHp = PlayerStat.instance.maxHP;
+        //HpBar.color = Color.green;
+        //hpUpdate();
+        //// 플레이어 상태 = IDLE
+        //playerState.state = PlayerState.State.IDLE;
+        
+        //GetComponent<CharacterController>().enabled = true;
+        //changeForm.curForm = ChangeForm.FormType.FOX;
+        
+        //GetComponent<ChangeForm>().Staff.enabled = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -168,9 +193,7 @@ public class PlayerDamage : MonoBehaviour
             StartCoroutine(Hit(EnemyInfo));
             // 체력이 0이하가 되면 Die코루틴 실행
             if (curHp <= 0)
-            {
                 StartCoroutine("Die");
-            }
         }
     }
 

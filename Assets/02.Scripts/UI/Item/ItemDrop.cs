@@ -37,7 +37,6 @@ public class ItemDrop : MonoBehaviour
             isDrop = true;
             //단순히 리소스에 저장 된 아이템 정보를 받아서 랜덤으로 생성되도록 되어있다.(확률 동일)
         }
-
     }
     
     #region 확률 조정 함수
@@ -72,10 +71,27 @@ public class ItemDrop : MonoBehaviour
                             isDrop = true;
                             break;
                         case 2:
-                            Debug.Log("기타아이템 생성");
-                            GameObject etcitem = (GameObject)Instantiate(ETCItems[Random.Range(0, ETCItems.Length)],
-                                new Vector3(tr.position.x, tr.position.y + 0.5f, tr.position.z), Quaternion.identity);
-                            isDrop = true;
+                            if (monsterAI.monsterType == MonsterAI.MonsterType.C_Mushroom)
+                            {
+                                Debug.Log("버섯아이템 생성");
+                                GameObject etcitem = (GameObject)Instantiate(ETCItems[0],
+                                    new Vector3(tr.position.x, tr.position.y + 0.5f, tr.position.z), Quaternion.identity);
+                                isDrop = true;
+                            }
+                            else if (monsterAI.monsterType == MonsterAI.MonsterType.A_Skeleton)
+                            {
+                                Debug.Log("해골아이템 생성");
+                                GameObject etcitem = (GameObject)Instantiate(ETCItems[1],
+                                    new Vector3(tr.position.x, tr.position.y + 0.5f, tr.position.z), Quaternion.identity);
+                                isDrop = true;
+                            }
+                            else if (monsterAI.monsterType == MonsterAI.MonsterType.B_Fishman)
+                            {
+                                Debug.Log("생선아이템 생성");
+                                GameObject etcitem = (GameObject)Instantiate(ETCItems[2],
+                                    new Vector3(tr.position.x, tr.position.y + 0.5f, tr.position.z), Quaternion.identity);
+                                isDrop = true;
+                            }
                             break;
                     }
                     return i;
