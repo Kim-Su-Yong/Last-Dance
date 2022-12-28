@@ -15,8 +15,12 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     public static GameObject draggingItem = null;
 
+    public static bool isEquip = false;
+
+    PlayerDamage playerDamage;
     void Start()
     {
+        playerDamage = FindObjectOfType<PlayerDamage>();
         itemTr = GetComponent<Transform>();
         inventoryTr = GameObject.Find("Inventory").GetComponent<Transform>();
         //inventorySlotTr = GameObject.Find("SlotList").GetComponent<Transform>();
@@ -29,6 +33,10 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     // 드래그를 시작할 때 한 번 호출되는 이벤트
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (this.transform.parent.CompareTag("Equipment"))
+        {
+            isEquip = true;
+        }
         originTr = transform.parent;
         // 부모를 Inventory로 변경
         this.transform.SetParent(inventoryTr);
@@ -54,6 +62,18 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         {
             itemTr.SetParent(originTr);
         }
+
+        if (this.transform.parent.CompareTag("Equip") && isEquip)
+        {
+            PlayerStat.instance.atk -= draggingItem.GetComponent<ItemInfo>().Atk;
+            PlayerStat.instance.def -= draggingItem.GetComponent<ItemInfo>().Def;
+            PlayerStat.instance.speed -= draggingItem.GetComponent<ItemInfo>().Speed;
+            PlayerStat.instance.maxHP -= draggingItem.GetComponent<ItemInfo>().AddHp;
+            Inventory.instance.equipmentItemList.Remove(draggingItem.GetComponent<ItemInfo>());
+            playerDamage.hpUpdate();
+            isEquip = false;
+        }
+
         // 드래그가 종료되면 드래그 아이템을 null로 변경
         draggingItem = null;
         originTr = null;

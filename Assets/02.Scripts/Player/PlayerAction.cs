@@ -6,7 +6,7 @@ public class PlayerAction : MonoBehaviour
 {
     [SerializeField]
     GameObject nearObject;  // 캐릭터와 가장 가까운 오브젝트를 저장
-    PlayerState playerState;
+    public PlayerState playerState;
     public GameManager g_manager;
     public static PlayerAction instance;
     public string currentMapName;
@@ -22,12 +22,12 @@ public class PlayerAction : MonoBehaviour
         {
             if (nearObject == null) return;             // 근처에 오브젝트가 없으면 종료
             theSound.Play(call_sound);                  // 호출 소리 재생
-            if (playerState.state != PlayerState.State.TALK)
-                playerState.state = PlayerState.State.TALK; // 플레이어 상태 전환 : talk(이동 및 공격 불가)
+
+            g_manager.Action(nearObject);                         // 상호작용 실행
+            if (g_manager.isAction)
+                playerState.state = PlayerState.State.TALK;
             else
                 playerState.state = PlayerState.State.IDLE;
-
-            g_manager.Action();                         // 상호작용 실행
         }            
     }
     private void Awake()
@@ -45,6 +45,7 @@ public class PlayerAction : MonoBehaviour
     void Update()
     {
         Interaction();
+   
     }
     private void OnTriggerStay(Collider other)
     {

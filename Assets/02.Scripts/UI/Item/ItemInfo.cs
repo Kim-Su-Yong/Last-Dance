@@ -6,7 +6,6 @@ using UnityEngine;
 [System.Serializable]
 public class ItemInfo : MonoBehaviour
 {
-    //public static ItemInfo itemInfo;
     public int itemID; //아이템의 고유 ID값. 중복 불가
     public string itemName; //아이템의 이름. 중복 가능
     public string itemDescription; //아이템 설명
@@ -21,13 +20,12 @@ public class ItemInfo : MonoBehaviour
     // 장비 2차 분류
     public enum EquipType
     {
-        None, Weapon, Helmet, Armor, Boots, Gloves, Totem
+        None, Weapon, Helmet, Armor, Boots, Gloves, Totem, Totem2
     }
        
     public ItemType itemType;
     public EquipType equipType;
 
-    //public List<EquipStat> equipStat = new List<EquipStat>();
 
     public ItemInfo(int _itemID, string _itemName, string _itemDes, ItemType _itemType, int _AddHp = 0, int _itemCount = 1)
     {

@@ -129,20 +129,26 @@ public class PlayerDamage : MonoBehaviour
         //deathPanel.SetActive(false);
         Respawn();
     }
-    public void Respawn()   // 덜 구현되어 있는 상태
+    public void Respawn()
     {
+        // 스폰 포인트 오브젝트 탐색
         Transform SpawnPoint = GameObject.Find("SpawnManager").
             transform.GetChild(0).GetComponent<Transform>();
+        // 스폰 포인트에 리스폰
         transform.position = SpawnPoint.position;
+        // 체력은 꽉 찬 상태로 리스폰
         curHp = PlayerStat.instance.maxHP;
         HpBar.color = Color.green;
         hpUpdate();
+        // 플레이어 상태 = IDLE
         playerState.state = PlayerState.State.IDLE;
+        // 각종 컴포넌트 활성화(부활시 여우 상태로 부활)
         GetComponent<CharacterController>().enabled = true;
         GetComponent<ChangeForm>().curForm = ChangeForm.FormType.FOX;
         GetComponent<ChangeForm>().Staff.enabled = true;
-        isDie = false;
+        isDie = false;  // 사망상태 해제
 
+        // onEnable함수를 불러오기 위한 작업
         gameObject.SetActive(false);
         gameObject.SetActive(true);
     }
@@ -181,7 +187,7 @@ public class PlayerDamage : MonoBehaviour
         Effect_M_DamageAmount.GetComponent<TextMeshPro>().color = new Color(150f, 0f, 255f);
     }
 
-    void OnHit()
+    void OnHit()    // 피격 이벤트
     {
         animator.SetFloat(hashSpeed, 0f);
     }

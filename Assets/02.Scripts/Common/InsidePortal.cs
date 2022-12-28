@@ -10,8 +10,27 @@ public class InsidePortal : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
+            Debug.Log("Æ÷Å» ÀÔ¼º");
             Transform ParentTransform = other.transform;
             while (true)
+            {
+                if (ParentTransform.parent == null)
+                    break;
+                else
+                    ParentTransform = ParentTransform.parent;
+            }
+
+            ParentTransform.position = TranslatePosition.position;
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.tag == "Player")
+        {
+            Debug.Log("Æ÷Å» ÀÔ¼º");
+            Transform ParentTransform = hit.transform;
+            while(true)
             {
                 if (ParentTransform.parent == null)
                     break;
