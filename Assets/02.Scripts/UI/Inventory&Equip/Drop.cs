@@ -11,16 +11,18 @@ public class Drop : MonoBehaviour, IDropHandler
 
     // 장비창 슬롯 분류
     public enum EquipType {
-        GogglesSlot = 0,
-        HelmetSlot  = 1,
-        TotemSlot   = 2,
-        WeaponSlot  = 3,
-        ArmorSlot   = 4,
-        GlovesSlot  = 5,
-        ShieldSlot  = 6,
-        BootsSlot   = 7,
-        BackpackSlot= 8,
-        Totem2Slot = 3, };
+        Weapon, Helmet, Armor, Boots, Gloves, Totem, Totem2
+        //GogglesSlot = 0,
+        //HelmetSlot  = 1,
+        //TotemSlot   = 2,
+        //WeaponSlot  = 3,
+        //ArmorSlot   = 4,
+        //GlovesSlot  = 5,
+        //ShieldSlot  = 6,
+        //BootsSlot   = 7,
+        //BackpackSlot= 8,
+        //Totem2Slot = 3,
+        };
     public EquipType equipType;
 
     // 슬롯 분류(아이템 카테고리와 대응 -> ItemInfo.cs 참고)
@@ -84,7 +86,7 @@ public class Drop : MonoBehaviour, IDropHandler
                 switch (dragItemInfo.equipType)
                 {
                     case ItemInfo.EquipType.Helmet:
-                        if (this.equipType == EquipType.HelmetSlot)
+                        if (this.equipType == EquipType.Helmet)
                         {
                             if (transform.childCount == 0)
                             {
@@ -98,7 +100,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
                     case ItemInfo.EquipType.Totem:
-                        if (this.equipType == EquipType.TotemSlot)
+                        if (this.equipType == EquipType.Totem)
                         {
                             if (transform.childCount == 0)
                             {
@@ -113,7 +115,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
                     case ItemInfo.EquipType.Weapon:
-                        if (this.equipType == EquipType.WeaponSlot)
+                        if (this.equipType == EquipType.Weapon)
                         {
                             if (transform.childCount == 0)
                             {
@@ -127,7 +129,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
                     case ItemInfo.EquipType.Armor:
-                        if (this.equipType == EquipType.ArmorSlot)
+                        if (this.equipType == EquipType.Armor)
                         {
                             if (transform.childCount == 0)
                             {
@@ -141,7 +143,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
                     case ItemInfo.EquipType.Gloves:
-                        if (this.equipType == EquipType.GlovesSlot)
+                        if (this.equipType == EquipType.Gloves)
                         {
                             if (transform.childCount == 0)
                             {
@@ -155,7 +157,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
                     case ItemInfo.EquipType.Boots:
-                        if (this.equipType == EquipType.BootsSlot)
+                        if (this.equipType == EquipType.Boots)
                         {
                             if (transform.childCount == 0)
                             {
@@ -169,7 +171,7 @@ public class Drop : MonoBehaviour, IDropHandler
                         }
                         break;
                     case ItemInfo.EquipType.Totem2:
-                        if (this.equipType == EquipType.Totem2Slot)
+                        if (this.equipType == EquipType.Totem2)
                         {
                             if (transform.childCount == 0)
                             {

@@ -2879,7 +2879,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1922541872319572927}
         m_TargetAssemblyTypeName: QuestUIManager, Assembly-CSharp
         m_MethodName: PanelXButton
         m_Mode: 1
