@@ -95,9 +95,11 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
+            Debug.Log("IÅ° ´©¸§");
             activeInven = !activeInven;
             if (activeInven)
             {
+                
                 cursorLock.cursorLocked = false;
                 cursorLock.SetCursorState(cursorLock.cursorLocked);
                 invenGO.SetActive(true);
