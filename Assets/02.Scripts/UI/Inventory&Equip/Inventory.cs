@@ -130,7 +130,6 @@ public class Inventory : MonoBehaviour
     {
         clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN(ItemType).transform);
-        clone.tag = "Consume";
         hoverTip = clone.GetComponent<HoverTip>();
         slots = clone.GetComponent<InventorySlot>();
         itemInfo = clone.GetComponent<ItemInfo>();
@@ -171,7 +170,6 @@ public class Inventory : MonoBehaviour
     {
         clone = Instantiate(ItemSlot, Vector3.zero, Quaternion.identity);
         clone.transform.SetParent(ItemGetIN(ItemType).transform);
-        clone.tag = "Equip";
         hoverTip = clone.GetComponent<HoverTip>();
         slots = clone.GetComponent<InventorySlot>();
         itemInfo = clone.GetComponent<ItemInfo>();
