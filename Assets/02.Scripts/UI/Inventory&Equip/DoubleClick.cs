@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 
 public class DoubleClick : MonoBehaviour, IPointerClickHandler
 {
+    private HoverTipManager hoverTipManager;
+
     float interval = 0.25f;
     float doubleClickedTime = -1.0f;
     bool isDoubleClicked = false;
@@ -12,8 +14,11 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
     ItemInfo itemInfo;
     PlayerDamage playerDamage;
 
+    public GameObject[] equipmentslots; //장비창의 슬롯들
+
     void Start()
     {
+        hoverTipManager = FindObjectOfType<HoverTipManager>();
         itemInfo = this.GetComponent<ItemInfo>();
         playerDamage = FindObjectOfType<PlayerDamage>();
     }
@@ -37,11 +42,41 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
             {
                 playerDamage.RestoreHp(itemInfo.AddHp);
                 Inventory.instance.inventoryItemList.Remove(itemInfo);
+                hoverTipManager.tipWindow.gameObject.SetActive(false);
                 Destroy(this.gameObject);
                 isDoubleClicked = false;
             }
         }
+        //else if (itemInfo.itemType == ItemInfo.ItemType.Equip && isDoubleClicked)
+        //{
+        //    equipSlot();
+        //    Destroy(this.gameObject);
+        //    isDoubleClicked = false;
+        //}
     }
+    //public void equipSlot()
+    //{
+    //    for (int i = 0; i < equipmentslots.Length; i++)
+    //    {
+    //        switch (equipmentslots[i].GetComponent<Drop>().equipType)
+    //        {
+    //            case Drop.EquipType.WeaponSlot:
+    //                if (itemInfo.equipType == ItemInfo.EquipType.Weapon)
+    //                {
+    //                    GameObject clone = Instantiate(this.gameObject, Vector3.zero, Quaternion.identity);
+    //                    clone.transform.SetParent(equipmentslots[i].transform);
+    //                }
+    //                break;
+    //            case Drop.EquipType.HelmetSlot:
+    //                if (itemInfo.equipType == ItemInfo.EquipType.Helmet)
+    //                {
+    //                    GameObject clone = Instantiate(this.gameObject, Vector3.zero, Quaternion.identity);
+    //                    clone.transform.SetParent(equipmentslots[i].transform);
+    //                }
+    //                break;
+    //        }
+    //    }
+    //}
     public void OnPointerClick(PointerEventData eventData)
     {
         if ((Time.time - doubleClickedTime) < interval)
@@ -57,4 +92,5 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
             doubleClickedTime = Time.time;
         }
     }
+    
 }
