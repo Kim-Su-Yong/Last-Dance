@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
 
-        talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(0).gameObject;
+        talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(2).gameObject;
         canvasUI = GameObject.Find("Canvas_UI");
     }
     void Update()
