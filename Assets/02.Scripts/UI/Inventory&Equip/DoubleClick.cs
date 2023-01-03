@@ -14,6 +14,9 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
     ItemInfo itemInfo;
     PlayerDamage playerDamage;
 
+    public GameObject prefab_floating_text;
+    public Transform messageTr;
+
     public GameObject[] equipmentslots; //장비창의 슬롯들
 
     void Start()
@@ -26,8 +29,21 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
     {
         if (itemInfo.itemType == ItemInfo.ItemType.Consume && isDoubleClicked)
         {
+            if (playerDamage.curHp == PlayerStat.instance.maxHP)
+            {
+                messageTr = GameObject.Find("ItemPickupMessage").transform;
+                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone.GetComponent<FloatingText>().text.text = "포션을 사용할 수 없습니다.";
+                clone.transform.SetParent(messageTr.transform);
+                isDoubleClicked = false;
+                return;
+            }
             if (itemInfo.itemCount > 1)
             {
+                messageTr = GameObject.Find("ItemPickupMessage").transform;
+                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
+                clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
                 itemInfo.itemCount--;
                 itemInfo.GetComponent<HoverTip>().itemCount--;
@@ -40,6 +56,10 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
             }
             else if (itemInfo.itemCount == 1)
             {
+                messageTr = GameObject.Find("ItemPickupMessage").transform;
+                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
+                clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
                 Inventory.instance.inventoryItemList.Remove(itemInfo);
                 hoverTipManager.tipWindow.gameObject.SetActive(false);
