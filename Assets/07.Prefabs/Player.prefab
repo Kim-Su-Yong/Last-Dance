@@ -2594,6 +2594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nearObject: {fileID: 0}
+  playerState: {fileID: 0}
   g_manager: {fileID: 0}
   currentMapName: 
   currentSceneName: MainScene
