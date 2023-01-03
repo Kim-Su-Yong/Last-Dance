@@ -174,6 +174,9 @@ public class UIManager : MonoBehaviour
                 {
                     GameObject clone = Instantiate(selectedItem, Vector3.zero, Quaternion.identity);
                     clone.transform.SetParent(equipmentslots[i].transform);
+                    GameObject Textclone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                    Textclone.GetComponent<FloatingText>().text.text = itemInfo.GetComponent<HoverTip>().countToShow.ToString();
+                    Textclone.transform.SetParent(messageTr.transform);
                     PlayerStat.instance.atk += itemInfo.Atk;
                     PlayerStat.instance.def += itemInfo.Def;
                     PlayerStat.instance.speed += itemInfo.Speed;

@@ -29,6 +29,9 @@ public class Drop : MonoBehaviour, IDropHandler
     public enum SlotType { EquipmentSlot, ConsumeSlot, EtcSlot, EquipSlot };
     public SlotType slotType;
 
+    public GameObject prefab_floating_text;
+    public Transform messageTr;
+
     PlayerDamage playerDamage;
     void Start()
     {
@@ -94,6 +97,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.def += Drag.draggingItem.GetComponent<ItemInfo>().Def;
+                                    ShowText();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
@@ -108,6 +112,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.maxHP += Drag.draggingItem.GetComponent<ItemInfo>().AddHp;
+                                    ShowText();
                                     playerDamage.hpUpdate();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
@@ -123,6 +128,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.atk += Drag.draggingItem.GetComponent<ItemInfo>().Atk;
+                                    ShowText();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
@@ -137,6 +143,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.def += Drag.draggingItem.GetComponent<ItemInfo>().Def;
+                                    ShowText();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
@@ -151,6 +158,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.atk += Drag.draggingItem.GetComponent<ItemInfo>().Atk;
+                                    ShowText();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
@@ -165,6 +173,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.speed += Drag.draggingItem.GetComponent<ItemInfo>().Speed;
+                                    ShowText();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
                             }
@@ -179,6 +188,7 @@ public class Drop : MonoBehaviour, IDropHandler
                                 if (Input.GetMouseButtonUp(0))
                                 {
                                     PlayerStat.instance.maxHP += Drag.draggingItem.GetComponent<ItemInfo>().AddHp;
+                                    ShowText();
                                     playerDamage.hpUpdate();
                                     Inventory.instance.equipmentItemList.Add(Drag.draggingItem.GetComponent<ItemInfo>());
                                 }
@@ -188,5 +198,12 @@ public class Drop : MonoBehaviour, IDropHandler
                 }
                 break;
         }
+    }
+
+    private void ShowText()
+    {
+        GameObject Textclone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+        Textclone.GetComponent<FloatingText>().text.text = Drag.draggingItem.GetComponent<ItemInfo>().GetComponent<HoverTip>().countToShow.ToString();
+        Textclone.transform.SetParent(messageTr.transform);
     }
 }
