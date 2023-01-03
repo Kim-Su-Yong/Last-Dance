@@ -15,7 +15,7 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     public static GameObject draggingItem = null;
 
-    public static bool isEquip = false;
+    public bool isEquip = false;
 
     PlayerDamage playerDamage;
     void Start()

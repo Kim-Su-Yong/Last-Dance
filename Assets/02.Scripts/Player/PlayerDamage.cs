@@ -78,7 +78,10 @@ public class PlayerDamage : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             curHp -= 10;
+            animator.SetTrigger(hashHit);
+            animator.SetFloat(hashSpeed, 0f);
             hpUpdate();
+            playerState.state = PlayerState.State.HIT;
             if (curHp <= 0)
                 StartCoroutine(Die());
         }
@@ -91,9 +94,11 @@ public class PlayerDamage : MonoBehaviour
         // Move, Idle인 경우에만 피격 모션 발생하도록 수정 예쩡
         // 현재 캐릭터가 공격중이 아니라면 애니메이션 실행
         if(playerState.state != PlayerState.State.ATTACK)
+        {
             animator.SetTrigger(hashHit); // 피격 애니메이션 재생
-        animator.SetFloat(hashSpeed, 0f); // 피격 애니메이션 실행시 움직이지 않도록 멈춤
-
+            animator.SetFloat(hashSpeed, 0f); // 피격 애니메이션 실행시 움직이지 않도록 멈춤
+        }
+            
         // 에너미AI로부터 데미지 값을 받아옴(+ 랜덤하게 0~9사이 데미지 추가)
         int _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
@@ -108,20 +113,12 @@ public class PlayerDamage : MonoBehaviour
         
         // 피격 이펙트 생성(차후에 피격받은 지점을 구해 그곳에서 피격 이펙트 생성되도록 수정)
         GameObject hitEff = Instantiate(hitEffect, transform.position + new Vector3(0, 1.5f, 0), Quaternion.identity);
-        Destroy(hitEff, 1.5f);
-        
-        // 피격후 1초뒤 플레이어 상태->Idle 로 변경
-        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Hit") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
-        {
-            Debug.Log("Hit 종료");
-        }
-
-        /*
-        * 애니메이션 종료시 상태변화하게끔 수정해야함
-        */
-        yield return new WaitForSeconds(0.4f);  
-        playerState.state = PlayerState.State.IDLE;
+        //Destroy(hitEff, 1.5f);
+        yield return new WaitForSeconds(1.5f);
+        Destroy(hitEff);
+      
+        //yield return new WaitForSeconds(0.4f);  
+        //playerState.state = PlayerState.State.IDLE;
     }
 
     IEnumerator Die()
@@ -154,8 +151,7 @@ public class PlayerDamage : MonoBehaviour
         playerState.state = PlayerState.State.IDLE;
         // 각종 컴포넌트 활성화(부활시 여우 상태로 부활)
         GetComponent<CharacterController>().enabled = true;
-        changeForm.curForm = ChangeForm.FormType.FOX;
-        changeForm.Staff.enabled = true;
+        changeForm.RespawnToForm(); // UI 패널 여우로 변경
         isDie = false;  // 사망상태 해제
 
         // onEnable함수를 불러오기 위한 작업
@@ -213,6 +209,11 @@ public class PlayerDamage : MonoBehaviour
     void OnHit()    // 피격 이벤트
     {
         animator.SetFloat(hashSpeed, 0f);
+    }
+
+    void OnHitEnd()
+    {
+        playerState.state = PlayerState.State.IDLE;
     }
 
     // 체력 회복 함수(포션 사용, 힐 스킬 사용)

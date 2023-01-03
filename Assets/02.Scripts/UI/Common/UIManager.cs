@@ -28,6 +28,8 @@ public class UIManager : MonoBehaviour
     public GameObject invenGO; // 인벤토리 오브젝트
     public GameObject equipGO; // 장비창 오브젝트
     public GameObject shopGO;
+    public GameObject prefab_floating_text;
+    public Transform messageTr;
 
     public bool activeInven; //인벤토리가 켜지면 true
     public bool activeEquip; //장비창이 켜지면 true
@@ -162,7 +164,7 @@ public class UIManager : MonoBehaviour
 
     public void OnclickUse()
     {
-        if (EquipSlot.activeSelf == true)
+        if (EquipSlot.activeSelf == true) //장비창 슬롯이 활성화 되어있을 경우
         {
             for (int i = 0; i < equipmentslots.Length; i++)
             {
@@ -172,19 +174,34 @@ public class UIManager : MonoBehaviour
                 {
                     GameObject clone = Instantiate(selectedItem, Vector3.zero, Quaternion.identity);
                     clone.transform.SetParent(equipmentslots[i].transform);
+                    GameObject Textclone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                    Textclone.GetComponent<FloatingText>().text.text = itemInfo.GetComponent<HoverTip>().countToShow.ToString();
+                    Textclone.transform.SetParent(messageTr.transform);
                     PlayerStat.instance.atk += itemInfo.Atk;
                     PlayerStat.instance.def += itemInfo.Def;
                     PlayerStat.instance.speed += itemInfo.Speed;
                     PlayerStat.instance.maxHP += itemInfo.AddHp;
+                    playerDamage.hpUpdate();
                     Inventory.instance.equipmentItemList.Add(itemInfo);
                     Destroy(selectedItem.gameObject);
                 }
             }
         }
-        else if (ConsumeSlot.activeSelf == true)
+        else if (ConsumeSlot.activeSelf == true) //소비창 슬롯이 활성화 되어있을 경우
         {
+            if (playerDamage.curHp == PlayerStat.instance.maxHP)
+            {
+                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone.GetComponent<FloatingText>().text.text = "포션을 사용할 수 없습니다.";
+                clone.transform.SetParent(messageTr.transform);
+                return;
+            }
             if (itemInfo.itemCount > 1)
             {
+                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                //clone.GetComponent<FloatingText>().text.text = "체력을 " + itemInfo.AddHp.ToString() + " 만큼 회복합니다.";
+                clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
+                clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
                 itemInfo.itemCount--;
                 itemInfo.GetComponent<HoverTip>().itemCount--;
@@ -196,6 +213,9 @@ public class UIManager : MonoBehaviour
             }
             else if (itemInfo.itemCount == 1)
             {
+                GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
+                clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
                 Inventory.instance.inventoryItemList.Remove(itemInfo);
                 //selectedItem = null;

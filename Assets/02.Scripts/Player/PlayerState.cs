@@ -84,7 +84,7 @@ public class PlayerState : MonoBehaviour
                     playerAction.enabled = false;
                     break;
 
-                case State.HIT:     // 피격 중에도 모든 동작 불가(공격중에는 피격상태로 전환되지 않고 데미지만 받게 수정할 예정)
+                case State.HIT:     // 피격 중에 동작 불가(공격중에는 피격상태로 전환되지 않고 데미지만 받음)
                     playerCtrl.enabled = false;
                     shooter.enabled = false;
                     changeForm.enabled = false;

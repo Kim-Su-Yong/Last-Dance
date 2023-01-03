@@ -59,7 +59,7 @@ public class ChangeForm : MonoBehaviour
     }
 
     // 폼에 따른 스킬 Panel 활성화/비활성화
-    public void PanelOnOff(FormType curForm)
+    void PanelOnOff(FormType curForm)
     {
         switch(curForm)
         {
@@ -199,5 +199,13 @@ public class ChangeForm : MonoBehaviour
         coolImg.enabled = false;
         coolImg.fillAmount = 0f;
         canFormChange = true;       // 폼 교체 가능 상태로 변경
+    }
+
+    public void RespawnToForm()
+    {
+        curForm = FormType.FOX;
+        Staff.enabled = true;
+        PanelOnOff(curForm);
+        ChangeFormSprite();
     }
 }

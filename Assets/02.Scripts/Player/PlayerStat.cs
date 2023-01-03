@@ -98,11 +98,11 @@ public class PlayerStat : MonoBehaviour
     //}
     void Update()
     {
-        // 경험치 획득 테스트
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            GainExp(24);
-        }
+        //// 경험치 획득 테스트
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    GainExp(24);
+        //}
     }
 
     // 경험치 획득 함수(몹을 잡거나 퀘스트 클리어시 사용)
