@@ -178,6 +178,7 @@ public class UIManager : MonoBehaviour
                     PlayerStat.instance.def += itemInfo.Def;
                     PlayerStat.instance.speed += itemInfo.Speed;
                     PlayerStat.instance.maxHP += itemInfo.AddHp;
+                    playerDamage.hpUpdate();
                     Inventory.instance.equipmentItemList.Add(itemInfo);
                     Destroy(selectedItem.gameObject);
                 }
