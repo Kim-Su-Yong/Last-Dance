@@ -29,11 +29,11 @@ public class BezierMissile : MonoBehaviour
         // 도착 지점을 기준으로 랜덤 포인트 지정.
         m_points[2] = _endTr.position +
             (_newPointDistanceFromEndTr * Random.Range(-1.0f, 1.0f) * _endTr.right) + // X (좌, 우 전체)
-            (_newPointDistanceFromEndTr * Random.Range(-1.0f, 1.0f) * _endTr.up) + // Y (위, 아래 전체)
+            (_newPointDistanceFromEndTr * Random.Range(-1.0f, 1.0f) * _endTr.up + new Vector3(0, 1, 0)) + // Y (위, 아래 전체)
             (_newPointDistanceFromEndTr * Random.Range(0.8f, 1.0f) * _endTr.forward); // Z (앞 쪽만)
 
         // 도착 지점.
-        m_points[3] = _endTr.position;
+        m_points[3] = _endTr.position + new Vector3(0,1,0);
 
         transform.position = _startTr.position;
     }
@@ -90,7 +90,7 @@ public class BezierMissile : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        Destroy(this.gameObject, 0.35f); // 한쪽에 Trigger 체크하는 것과 Rigidbody 컴포넌트 추가 잊지 말기.
+        Destroy(this.gameObject); // 한쪽에 Trigger 체크하는 것과 Rigidbody 컴포넌트 추가 잊지 말기.
                                          // 그래야 다 발사되면 총알 사라짐
     }
 }

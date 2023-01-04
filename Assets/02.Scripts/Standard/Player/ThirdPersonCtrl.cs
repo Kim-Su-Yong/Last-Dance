@@ -105,6 +105,8 @@ public class ThirdPersonCtrl : MonoBehaviour
     const float _threshold = 0.01f;
     bool hasAnimator;
 
+    readonly string enemyTag = "ENEMY";
+
     private bool IsCurrentDeviceMouse
     {
         get
@@ -393,5 +395,5 @@ public class ThirdPersonCtrl : MonoBehaviour
         playerAttack.enabled = false;
         GetComponent<Shooter>().enabled = false;
         GetComponent<ChangeForm>().enabled = false;
-    }    
+    }   
 }

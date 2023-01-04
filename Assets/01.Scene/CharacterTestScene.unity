@@ -5613,6 +5613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &99618412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16698,6 +16699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &314610248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27627,6 +27629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &547229027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27825,6 +27828,10 @@ MonoBehaviour:
     loop: 0
   - name: switch3_sound
     clip: {fileID: 8300000, guid: 73eba3fcf5a6d1645af103fc0d7258b9, type: 3}
+    Volumn: 1
+    loop: 0
+  - name: Explosion_sound
+    clip: {fileID: 8300000, guid: 9f08ce903b0554b10ae60701fd7f913f, type: 3}
     Volumn: 1
     loop: 0
 --- !u!4 &548088338
@@ -50269,9 +50276,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5173392211884391777, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
+      propertyPath: m_Height
+      value: 1.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5173392211884391777, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
+      propertyPath: m_Center.y
+      value: 0.95
+      objectReference: {fileID: 0}
     - target: {fileID: 9084632996224683169, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
       propertyPath: M_EXP
-      value: 0
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 9084632996224683169, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
       propertyPath: M_MaxHP
@@ -50283,7 +50298,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9084632996224683170, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084632996224683173, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
+      propertyPath: m_Drag
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084632996224683173, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
+      propertyPath: m_Mass
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084632996224683173, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9084632996224719042, guid: 5a9144ceaca3a89478fa39a5f1a56a52, type: 3}
       propertyPath: m_RootOrder
@@ -59616,6 +59643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &1217114502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75155,6 +75183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &1531779069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83966,6 +83995,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &1673624915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91553,6 +91583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &1857094093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93568,6 +93599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &1903918118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95626,6 +95658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 0}
+  isEquip: 0
 --- !u!114 &1943189839
 MonoBehaviour:
   m_ObjectHideFlags: 0
