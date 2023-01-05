@@ -14,7 +14,7 @@ public class PlayerAction : MonoBehaviour
     GameObject scanObject;
     public SoundManager theSound;
     public string call_sound;
-    //private SaveNLoad theSaveNLoad;
+    private SaveNLoad theSaveNLoad;
 
     void Interaction()
     {    
@@ -40,12 +40,19 @@ public class PlayerAction : MonoBehaviour
     }
     void Start()
     {
-        //theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        theSaveNLoad = FindObjectOfType<SaveNLoad>();
     }
     void Update()
     {
         Interaction();
-   
+        if(Input.GetKeyDown(KeyCode.F9))
+        {
+            theSaveNLoad.CallSave();
+        }
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            theSaveNLoad.CallLoad();
+        }
     }
     private void OnTriggerStay(Collider other)
     {
