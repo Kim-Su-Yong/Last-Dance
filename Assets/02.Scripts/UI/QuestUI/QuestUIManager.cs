@@ -16,9 +16,9 @@ public class QuestUIManager : MonoBehaviour
     public bool questLogPanelActive = false;
 
     // PANELS
-    public GameObject NPCquestPanel;
-    public GameObject questPanel;
-    public GameObject questLogPanel;
+    public GameObject questPanel;       // Player
+    public GameObject questLogPanel;    // Player
+    public GameObject NPCquestPanel;    // NPC
 
     // QUEST OBJECT
     private QuestObject currentQuestObject;
@@ -30,6 +30,7 @@ public class QuestUIManager : MonoBehaviour
     // BUTTONS
     public GameObject qButton;          // key for Log Panel Activation
     public GameObject qLogButton;
+    public GameObject NPCqButton;       // NPC
     private List<GameObject> qButtons = new List<GameObject>();
 
     public GameObject objective_Remove;
@@ -37,10 +38,6 @@ public class QuestUIManager : MonoBehaviour
     public GameObject reward_Gold;
     public GameObject reward_Item;
     public GameObject reward_Exp;
-
-    //public GameObject acceptButton;
-    //public GameObject giveUpButton;
-    //public GameObject completeButton;
 
     // SPACER
     public Transform qButtonSpacer1;    // qButton for available
@@ -59,6 +56,7 @@ public class QuestUIManager : MonoBehaviour
     public Text questLogTitle;
     public Text questLogDescription;
     public Text questLogSummary;
+
 
     private void Awake()
     {
@@ -91,6 +89,45 @@ public class QuestUIManager : MonoBehaviour
             questPanelActive = !questPanelActive;   // switch
             questPanel.SetActive(questPanelActive);
             //ShowQuestLogPanel();
+        }
+    }
+
+    public void NPCPanelActivation()
+    {
+        NPCquestPanelActive = true;
+        NPCquestPanel.SetActive(NPCquestPanelActive);
+        foreach (Quest availableQuest in availableQuests)
+        {
+            GameObject questButton = Instantiate(qButton);
+
+            // SCRIPT
+            QButtonScript qBScript = questButton.GetComponent<QButtonScript>();
+            qBScript.questID = availableQuest.id;
+            qBScript.questTitle.text = availableQuest.title;    // .text = string
+            qBScript.questMarker.sprite = qBScript.marker_AVAILABLE;
+            qBScript.questMarker.color = Color.yellow;
+
+            questButton.transform.SetParent(qButtonSpacer1, false);
+            qButtons.Add(questButton);
+        }
+
+        foreach (Quest activeQuest in activeQuests)
+        {
+            GameObject questButton = Instantiate(qButton);
+
+            // SCRIPT
+            QButtonScript qBScript = questButton.GetComponent<QButtonScript>();
+            qBScript.questID = activeQuest.id;
+            qBScript.questTitle.text = activeQuest.title;    // .text = string
+            qBScript.questMarker.sprite = qBScript.marker_ACCEPTED;
+            qBScript.questMarker.color = Color.white;
+            if (activeQuest.progress == Quest.QuestProgress.COMPLETE)
+            {
+                qBScript.questMarker.color = Color.yellow;
+            }
+
+            questButton.transform.SetParent(qButtonSpacer2, false);
+            qButtons.Add(questButton);
         }
     }
 

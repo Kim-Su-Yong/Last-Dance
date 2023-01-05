@@ -53,7 +53,7 @@ public class QuestObject : MonoBehaviour
     void Update()
     {
         SetQuestMarker();
-        if (inTrigger && Input.GetKeyDown(KeyCode.Space))
+        if (inTrigger && Input.GetKeyDown(KeyCode.F))
         {
             // quest ui manager (question marker)
             QuestUIManager.uiManager.CheckQuest(this);
