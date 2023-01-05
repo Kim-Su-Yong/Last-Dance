@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -4425233058099134097}
   - component: {fileID: -3073117027061426157}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: Bezier Missle
   m_TagString: BULLET
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

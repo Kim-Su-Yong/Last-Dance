@@ -5,9 +5,8 @@ using UnityEngine;
 public class Shooter : MonoBehaviour
 {
     public Transform FirePos;
-    public GameObject m_bulletPrefab; // 미사일 프리팹.
+    [SerializeField] GameObject m_bulletPrefab; // 미사일 프리팹.
     public GameObject m_target; // 도착 지점.
-    Animator animator;
 
     [Header("미사일 기능 관련")]
     public float m_speed = 2; // 미사일 속도.
@@ -33,6 +32,12 @@ public class Shooter : MonoBehaviour
     ChangeForm Form;
     PlayerState playerState;
 
+    Animator animator;
+    AudioSource source;
+
+    [Header("사운드")]
+    public AudioClip bezierClip;
+
     readonly int hashAttack = Animator.StringToHash("Attack");
 
     private void OnEnable()
@@ -45,7 +50,10 @@ public class Shooter : MonoBehaviour
         Form = GetComponent<ChangeForm>();
         animator = GetComponent<Animator>();
         playerState = GetComponent<PlayerState>();
+
+        m_bulletPrefab = Resources.Load("Player/Bezier Missle") as GameObject;
     }
+
     void Update()
     {
         if(Form.curForm == ChangeForm.FormType.EAGLE && 
@@ -127,7 +135,7 @@ public class Shooter : MonoBehaviour
                 {
                     GameObject missile = Instantiate(m_bulletPrefab, FirePos.position, Quaternion.identity);
                     missile.GetComponent<BezierMissile>().Init(FirePos, m_target.transform, m_speed, m_distanceFromStart, m_distanceFromEnd);
-
+                    source.PlayOneShot(bezierClip);
                     _shotCount--;
                 }
             }

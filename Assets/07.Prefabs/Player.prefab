@@ -2487,7 +2487,7 @@ MonoBehaviour:
   FirePos: {fileID: 4126552369138137669}
   m_bulletPrefab: {fileID: 1869913131015966691, guid: b9c56db55b2461a4a894946c54c6cc42, type: 3}
   m_target: {fileID: 0}
-  m_speed: 2
+  m_speed: 5
   m_distanceFromStart: 6
   m_distanceFromEnd: 3
   m_shotCount: 12

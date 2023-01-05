@@ -14,8 +14,6 @@ public class MonsterDamage : MonoBehaviour
     private readonly string punchTag = "PUNCH";
     private readonly string roarTag = "ROAR";
 
-    private float bullet_Damage = 20f;
-
     // Scripts
     MonsterAI monsterAI;
 
@@ -58,7 +56,8 @@ public class MonsterDamage : MonoBehaviour
         }
         if (other.CompareTag(bulletTag))
         {
-            int _damage = (int)(bullet_Damage + Random.Range(0f, 9f));
+            //int _damage = (int)(bullet_Damage + Random.Range(0f, 9f));
+            int _damage = (int)(other.GetComponent<BezierMissile>().damage);
             monsterAI._beforeHP = monsterAI.M_HP;   // 데미지 입기 전 값
             monsterAI.M_HP -= _damage;              // 데미지 입은 후 값
             monsterAI.M_HP = Mathf.Clamp(monsterAI.M_HP, 0, monsterAI.M_MaxHP);
@@ -128,11 +127,6 @@ public class MonsterDamage : MonoBehaviour
         monsterAI.attackSpeed *= 0.8f;  // 몬스터의 공격속도 감소 
         yield return new WaitForSeconds(2f);
         monsterAI.attackSpeed = originAtkSpd;   // 원래 공격속도로 돌아옴
-    }
-    void FlyAttack()
-    {
-        monsterAI.M_HP -= 10f;
-        //capsuleCollider.enabled = false;
     }
 
     void ShowDamageEffect(int _damage)
