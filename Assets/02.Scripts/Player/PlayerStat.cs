@@ -41,9 +41,9 @@ public class PlayerStat : MonoBehaviour
         character_Lv = 1;
         currentEXP = 0;
 
-        if (isDebug)
-            initHP = 1000;
-        else
+        //if (isDebug)
+        //    initHP = 1000;
+        //else
             initHP = 100;
         maxHP = initHP;
 
