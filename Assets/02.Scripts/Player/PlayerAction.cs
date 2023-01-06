@@ -9,12 +9,10 @@ public class PlayerAction : MonoBehaviour
     public PlayerState playerState;
     public GameManager g_manager;
     public static PlayerAction instance;
-    public string currentMapName;
-    public string currentSceneName;
     GameObject scanObject;
     public SoundManager theSound;
     public string call_sound;
-    //private SaveNLoad theSaveNLoad;
+    private SaveNLoad theSaveNLoad;
 
     void Interaction()
     {    
@@ -28,7 +26,8 @@ public class PlayerAction : MonoBehaviour
                 playerState.state = PlayerState.State.TALK;
             else
                 playerState.state = PlayerState.State.IDLE;
-        }            
+        }
+
     }
     private void Awake()
     {
@@ -40,12 +39,19 @@ public class PlayerAction : MonoBehaviour
     }
     void Start()
     {
-        //theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        theSaveNLoad = FindObjectOfType<SaveNLoad>();
     }
     void Update()
     {
         Interaction();
-   
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            theSaveNLoad.CallSave();
+        }
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            theSaveNLoad.CallLoad();
+        }
     }
     private void OnTriggerStay(Collider other)
     {

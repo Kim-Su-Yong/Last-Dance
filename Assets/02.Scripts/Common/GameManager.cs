@@ -6,6 +6,7 @@ using Cinemachine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public static GameManager gameManager;
 
     public TalkManager talkManager;
     public int talkIndex;
@@ -19,7 +20,14 @@ public class GameManager : MonoBehaviour
     public CinemachineVirtualCamera npcCam;     // NPC를 확대해주는 Virtual 카메라
 
     public bool isAction;           // 현재 상호작용 중인지 확인
-
+    private void Awake()
+    {
+        if (gameManager == null)
+            gameManager = this;
+        else
+            Destroy(gameObject);
+        DontDestroyOnLoad(this.gameObject);
+    }
     void Start()
     {
         instance = this;
@@ -29,7 +37,6 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        
     }
     public void LoadStart()
     {
@@ -44,7 +51,6 @@ public class GameManager : MonoBehaviour
     {            
         ObjData objData = nearObject.GetComponent<ObjData>();
         Talk(objData.id);
-
     }
 
     void Talk(int id)

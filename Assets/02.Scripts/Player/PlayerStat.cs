@@ -128,7 +128,6 @@ public class PlayerStat : MonoBehaviour
             GetComponent<PlayerDamage>().hpUpdate();
             atk++;              // 공격력 증가
             def++;              // 방어력 증가
-
         }
     }
 

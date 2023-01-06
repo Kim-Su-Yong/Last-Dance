@@ -33,7 +33,6 @@ public class Inventory : MonoBehaviour
     public Transform messageTr;
 
     public GameObject clone;
-    public GameObject obj1;
 
     [Header("PlayerStat°ü·Ã")]
     public Text LvText;
@@ -50,7 +49,6 @@ public class Inventory : MonoBehaviour
         ConsumeSlots[0].transform.parent.gameObject.SetActive(false);
         ETCSlots[0].transform.parent.gameObject.SetActive(false);
         ItemSlot = Resources.Load<GameObject>("Item/item");
-        obj1 = transform.GetChild(1).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
     }
     void Start()
     {

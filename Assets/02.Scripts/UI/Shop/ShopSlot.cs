@@ -20,10 +20,6 @@ public class ShopSlot : MonoBehaviour
     }
     void Update()
     {
-        if(Input.GetMouseButtonDown(1))
-        {
-            Sell();
-        }
     }
     public void Buy()
     {
@@ -31,11 +27,5 @@ public class ShopSlot : MonoBehaviour
         soldOut = true;
         button1.interactable = false;
         button2.interactable = false;
-    }
-    public void Sell()
-    {
-        theInven.inventoryItemList.RemoveAt(0); //아이콘이 남아있음
-        theInven.obj1.transform.GetChild(0).gameObject.SetActive(false); //판매되는것처럼 보이는데 그 칸에 아이템이 안들어감
-        //Destroy(theInven.obj1.transform.GetChild(0).gameObject); //iteminfo까지 파괴시켜버림
     }
 }

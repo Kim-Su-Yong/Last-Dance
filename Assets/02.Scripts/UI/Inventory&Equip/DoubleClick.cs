@@ -67,6 +67,10 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
                 isDoubleClicked = false;
             }
         }
+        //if (itemInfo.itemType == ItemInfo.ItemType.Consume)
+        //{
+        //    StartCoroutine(Sell());
+        //}
         //else if (itemInfo.itemType == ItemInfo.ItemType.Equip && isDoubleClicked)
         //{
         //    equipSlot();
@@ -97,6 +101,31 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
     //        }
     //    }
     //}
+    IEnumerator Sell()
+    {
+        if (itemInfo.itemCount > 1)
+        {
+            Debug.Log("Sell1");
+            itemInfo.itemCount--;
+            itemInfo.GetComponent<HoverTip>().itemCount--;
+            itemInfo.GetComponent<HoverTip>().countToShow =
+                "¼ö·® : " + itemInfo.GetComponent<HoverTip>().itemCount.ToString() + "°³";
+            itemInfo.GetComponent<InventorySlot>().itemCount--;
+            itemInfo.GetComponent<InventorySlot>().itemCount_Text.text =
+                itemInfo.GetComponent<InventorySlot>().itemCount.ToString();
+            //isSell = true;
+        }
+        else if (itemInfo.itemCount == 1)
+        {
+            Debug.Log("Sell2");
+            Inventory.instance.inventoryItemList.Remove(itemInfo);
+            hoverTipManager.tipWindow.gameObject.SetActive(false);
+            Destroy(this.gameObject);
+            //isSell = true;
+        }
+        yield break;
+        //StopAllCoroutines();
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         if ((Time.time - doubleClickedTime) < interval)
