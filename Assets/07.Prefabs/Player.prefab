@@ -2495,6 +2495,7 @@ MonoBehaviour:
   m_shotCountEveryInterval: 1
   NextFire: 0.5
   Skill_1_CoolTime: 7
+  bezierClip: {fileID: 0}
 --- !u!114 &4126552369070853414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2567,6 +2568,7 @@ MonoBehaviour:
   isDie: 0
   hitEffect: {fileID: 7226583673155636401, guid: 036519260c71ad0488f217309599083b, type: 3}
   damageUIPrefab: {fileID: 0}
+  restoreEffect: {fileID: 1399491476850481373, guid: 7e691a0229efacd4cba2922df3888456, type: 3}
   hitSound: {fileID: 0}
   deathSound: {fileID: 0}
 --- !u!114 &4126552369070853413

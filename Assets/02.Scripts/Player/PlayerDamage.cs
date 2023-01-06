@@ -14,6 +14,7 @@ public class PlayerDamage : MonoBehaviour
     public bool isDie;                  // 사망 확인
     public GameObject hitEffect;        // 피격 이펙트
     public GameObject damageUIPrefab;   // 데미지 UI
+    public GameObject restoreEffect;
  
     // 컴포넌트
     Animator animator;
@@ -34,7 +35,7 @@ public class PlayerDamage : MonoBehaviour
     public AudioClip hitSound;
     public AudioClip deathSound;
 
-    //public GameObject deathPanel;
+    public GameObject deathPanel;
 
     private void Awake()
     {
@@ -138,7 +139,8 @@ public class PlayerDamage : MonoBehaviour
         source.PlayOneShot(deathSound);
 
         // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
-        yield return new WaitForSeconds(2f);    
+        yield return new WaitForSeconds(2f);
+
         //deathPanel.SetActive(true);
         yield return new WaitForSeconds(3f);
         //deathPanel.SetActive(false);
@@ -235,5 +237,11 @@ public class PlayerDamage : MonoBehaviour
         if (curHp > PlayerStat.instance.maxHP)
             curHp = PlayerStat.instance.maxHP;
         hpUpdate();
+    }
+
+    public void UsePotionEffect()
+    {
+        GameObject Effect = Instantiate(restoreEffect, transform.position, Quaternion.identity);
+        Destroy(Effect, 1f);
     }
 }
