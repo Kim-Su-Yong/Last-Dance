@@ -14,6 +14,7 @@ public class PlayerAttack : MonoBehaviour
     // 컴포넌트
     Animator animator;
     CharacterController controller;
+    AudioSource source; 
 
     // 변수
     public GameObject target;       // 자동으로 타겟팅할 목표(에너미)
@@ -55,6 +56,18 @@ public class PlayerAttack : MonoBehaviour
     public Image[] coolImg;         // 스킬 쿨타임 이미지들
     public Text[] coolTxt;          // 스킬 쿨타임 텍스트들
 
+    [Header("Sounds")]
+    public AudioClip fireBallClip;  // 여우 기본 공격 사운드
+    public AudioClip foxFireClip;   // 여우불 스킬 사운드
+    public AudioClip healClip;      // 여우 힐 스킬 사운드
+
+    public AudioClip punchClip;     // 호랑이 기본 공격 사운드
+    public AudioClip thirdPunchClip;// 호랑이 3번째 펀치 사운드    
+    public AudioClip roarClip;      // 호랑이 포효 스킬 사운드
+    
+    public AudioClip bezierClip;    // 독수리 기본 공격 사운드
+    public AudioClip buffClip;      // 독수리 버프 스킬 사운드
+
     // 최적화를 위한 변수
     readonly int hashAttack = Animator.StringToHash("Attack");
     readonly int hashComoboAttack = Animator.StringToHash("ComboAttack");
@@ -70,6 +83,7 @@ public class PlayerAttack : MonoBehaviour
         controller = GetComponent<CharacterController>();
 
         animator = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
 
         FireBall = Resources.Load("Player/Magic Fire Ball") as GameObject;
 
@@ -224,6 +238,7 @@ public class PlayerAttack : MonoBehaviour
             _fireBall.transform.position = FirePos.position;
             _fireBall.transform.rotation = FirePos.rotation;
             _fireBall.SetActive(true);
+            source.PlayOneShot(fireBallClip);
         }
     }
     void OnAttackStart(int count)   // 기본 공격 애니메이션 이벤트
@@ -236,6 +251,7 @@ public class PlayerAttack : MonoBehaviour
             if (count < 3) // 강공격이 아닌경우
             {
                 BoxCollider punch = punchCollider[0].GetComponent<BoxCollider>();
+                source.PlayOneShot(punchClip);
                 StartCoroutine(ColOff(punch));
             }
             else if (count == 3)
@@ -385,12 +401,14 @@ public class PlayerAttack : MonoBehaviour
         foreach (GameObject fire in FoxFires)   // 여우불 활성화(애니메이션과 타이밍을 맞게 하기 위한 이벤트)
         {
             fire.SetActive(true);
+            source.PlayOneShot(foxFireClip);
         }
     }
 
     void OnHeal()       // 힐 스킬 발동 이벤트
     {
         int newHP = (int)(healData.f_skillDamage * PlayerStat.instance.maxHP);    // 최대체력의 50%를 회복
+        source.PlayOneShot(healClip);
         GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity); // 이펙트 Instantiate 후 1.5초 후 제거
         Destroy(Effect, 1.5f);
         PlayerDamage playerDamage = GetComponent<PlayerDamage>();
@@ -399,7 +417,8 @@ public class PlayerAttack : MonoBehaviour
     void OnClaw()       // 호랑이 강펀치 스킬 이벤트
     {
         thirdEffect.Play(); // 이펙트 파티클 실행
-        BoxCollider claw = punchCollider[1].GetComponent<BoxCollider>();    
+        BoxCollider claw = punchCollider[1].GetComponent<BoxCollider>();
+        source.PlayOneShot(thirdPunchClip);
         StartCoroutine(ColOff(claw)); // 강펀치 콜라이더 비활성화 코루틴 실행
     }
     void OnRoar()       // 호랑이 포효 스킬 이벤트
@@ -407,6 +426,7 @@ public class PlayerAttack : MonoBehaviour
         // 이펙트 Instantiate 후 1초 후 제거
         GameObject Effect = Instantiate(roarData.skillEffect, roarTr.position, roarTr.rotation);
         Destroy(Effect, 1f);
+        source.PlayOneShot(roarClip);
 
         // 콜라이더 비활성화 코루틴 실행
         StartCoroutine(ColOff(roarCollider));
@@ -426,6 +446,7 @@ public class PlayerAttack : MonoBehaviour
         // 이펙트 Instantiate 후 1.5초 후 제거
         GameObject Effect = Instantiate(buffData.skillEffect, transform.position, Quaternion.identity);
         Destroy(Effect, 1.5f);
+        source.PlayOneShot(buffClip);
         // 공격력 증가 코루틴 실행
         StartCoroutine(AttackBuff());
     }  

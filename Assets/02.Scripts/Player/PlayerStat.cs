@@ -21,11 +21,17 @@ public class PlayerStat : MonoBehaviour
     public float critical;      // 크리티컬 확률-뺄 가능성 높음
 
     public GameObject LevelUpEffect;    // 레벨 업 시 이펙트
+
+    AudioSource source;
+    public AudioClip levelUpClip;
+
+    public bool isDebug;
     void Awake()
     {
         instance = this;
         // 저장된 데이터 불러오기
         //if(저장된 데이터가 없다면)
+        source = GetComponent<AudioSource>();
         InitCharacterData();
     }
 
@@ -35,7 +41,10 @@ public class PlayerStat : MonoBehaviour
         character_Lv = 1;
         currentEXP = 0;
 
-        initHP = 100;
+        //if (isDebug)
+        //    initHP = 1000;
+        //else
+            initHP = 100;
         maxHP = initHP;
 
         speed = 6f;
@@ -120,7 +129,8 @@ public class PlayerStat : MonoBehaviour
             // 레벨업 이펙트
             GameObject Effect = Instantiate(LevelUpEffect, transform.position, Quaternion.identity);
             Destroy(Effect, 2f);
-            
+            source.PlayOneShot(levelUpClip);
+
             // 스텟 증가
             maxHP += 10;        // 레벨업 시 최대 체력 증가
             // UI 변경사항 적용(체력바)

@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
     public void Action(GameObject nearObject)
     {            
         ObjData objData = nearObject.GetComponent<ObjData>();
+
         Talk(objData.id);
     }
 

@@ -14,6 +14,8 @@ public class FireBall : MonoBehaviour
     GameObject ExpEffect;
 
     public int damage;      // 파이어볼 데미지
+
+    public AudioClip expClip;
     
 
     void Awake()
@@ -96,6 +98,7 @@ public class FireBall : MonoBehaviour
         rb.isKinematic = true;
         GameObject explosion = Instantiate(ExpEffect, transform.position, Quaternion.identity);
         Destroy(explosion, 1f);
+        SoundManager.instance.Play("Explosion_sound");
         //Destroy(gameObject);
         gameObject.SetActive(false);
     }

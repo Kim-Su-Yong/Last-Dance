@@ -93,15 +93,13 @@ public class UIManager : MonoBehaviour
         coolImg.enabled = false;
         isCool = true;
     }
-    void ShowInven()
-    {
+    void ShowInven()    // 인벤토리창이 닫히는 경우는 2가지(x버튼 누르기, i키 누르기)
+    {                   // x버튼 누를경우 커서락이 변동되지 않는 버그 수정해야함
         if (Input.GetKeyDown(KeyCode.I))
         {
-            Debug.Log("I키 누름");
             activeInven = !activeInven;
             if (activeInven)
             {
-                
                 cursorLock.cursorLocked = false;
                 cursorLock.SetCursorState(cursorLock.cursorLocked);
                 invenGO.SetActive(true);
@@ -203,6 +201,7 @@ public class UIManager : MonoBehaviour
                 clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
                 clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
+                playerDamage.UsePotionEffect();
                 itemInfo.itemCount--;
                 itemInfo.GetComponent<HoverTip>().itemCount--;
                 itemInfo.GetComponent<HoverTip>().countToShow =
@@ -217,6 +216,7 @@ public class UIManager : MonoBehaviour
                 clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
                 clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
+                playerDamage.UsePotionEffect();
                 Inventory.instance.inventoryItemList.Remove(itemInfo);
                 //selectedItem = null;
                 Destroy(itemInfo.gameObject);

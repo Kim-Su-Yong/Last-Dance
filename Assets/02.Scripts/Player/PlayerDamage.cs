@@ -14,9 +14,11 @@ public class PlayerDamage : MonoBehaviour
     public bool isDie;                  // 사망 확인
     public GameObject hitEffect;        // 피격 이펙트
     public GameObject damageUIPrefab;   // 데미지 UI
+    public GameObject restoreEffect;
  
     // 컴포넌트
     Animator animator;
+    AudioSource source;
     // 스크립트
     ThirdPersonCtrl controller;
     PlayerAttack attack;
@@ -29,7 +31,11 @@ public class PlayerDamage : MonoBehaviour
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
 
-    //public GameObject deathPanel;
+    // 오디오 클립
+    public AudioClip hitSound;
+    public AudioClip deathSound;
+
+    public GameObject deathPanel;
 
     private void Awake()
     {
@@ -38,6 +44,7 @@ public class PlayerDamage : MonoBehaviour
         attack = GetComponent<PlayerAttack>();
         playerState = GetComponent<PlayerState>();
         changeForm = GetComponent<ChangeForm>();
+        source = GetComponent<AudioSource>();
 
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
@@ -104,6 +111,7 @@ public class PlayerDamage : MonoBehaviour
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
         // + 지은 : 다이나믹한 연출을 위해 데미지 0~9의 값이 랜덤 추가되는 것으로 변경했습니다!
+        source.PlayOneShot(hitSound);
 
         // 현재 체력값이 0 ~ 초기 체력(아마 최대체력으로 변경될 예정)사이의 값만 가지도록 조정
         curHp = Mathf.Clamp(curHp, 0, PlayerStat.instance.maxHP);
@@ -128,9 +136,11 @@ public class PlayerDamage : MonoBehaviour
        
         animator.SetTrigger(hashDie);     // 사망 애니메이션 실행
         GetComponent<CharacterController>().enabled = false;    // 충돌판정 제거를 위한 캐릭터 컨트롤러 비활성화
+        source.PlayOneShot(deathSound);
 
         // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
-        yield return new WaitForSeconds(2f);    
+        yield return new WaitForSeconds(2f);
+
         //deathPanel.SetActive(true);
         yield return new WaitForSeconds(3f);
         //deathPanel.SetActive(false);
@@ -227,5 +237,11 @@ public class PlayerDamage : MonoBehaviour
         if (curHp > PlayerStat.instance.maxHP)
             curHp = PlayerStat.instance.maxHP;
         hpUpdate();
+    }
+
+    public void UsePotionEffect()
+    {
+        GameObject Effect = Instantiate(restoreEffect, transform.position, Quaternion.identity);
+        Destroy(Effect, 1f);
     }
 }
