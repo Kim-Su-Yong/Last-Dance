@@ -5,18 +5,24 @@ using UnityEngine.SceneManagement;
 public class TitleManager : MonoBehaviour
 {
     private SoundManager theSound;
+    private SaveNLoad theSave;
+    private Menu themenu;
 
     public string click_sound;
     void Start()
     {
         theSound = FindObjectOfType<SoundManager>();
+        theSave = FindObjectOfType<SaveNLoad>();
+        themenu = FindObjectOfType<Menu>();
     }
-    public void NewGame()
+    public void SaveGame()
     {
-        //넣어야 하나?
+        theSound.Play(click_sound);
+        theSave.CallSave();
     }
     public void LoadGame()
     {
+        themenu.Close();
         theSound.Play(click_sound);
         SceneLoader.Instance.LoadScene("MainScene");
     }

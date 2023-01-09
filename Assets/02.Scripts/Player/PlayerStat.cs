@@ -26,6 +26,8 @@ public class PlayerStat : MonoBehaviour
     public AudioClip levelUpClip;
 
     public bool isDebug;
+
+    public int money = 4500;
     void Awake()
     {
         instance = this;
