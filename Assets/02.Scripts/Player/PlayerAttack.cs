@@ -122,6 +122,7 @@ public class PlayerAttack : MonoBehaviour
         {
             return;
         }
+        if (MouseHover.instance.isUIHover) return;  // UI에 마우스 호버시 실행하지 않음
 
         Attack();
     }

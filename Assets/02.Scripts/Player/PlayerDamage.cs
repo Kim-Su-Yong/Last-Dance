@@ -139,20 +139,22 @@ public class PlayerDamage : MonoBehaviour
         source.PlayOneShot(deathSound);
 
         // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
-        yield return new WaitForSeconds(2f);
+        //yield return new WaitForSeconds(2f);
+        //UIManager.instance.deathPanelShow();
 
         //deathPanel.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return null;//new WaitForSeconds(3f);
         //deathPanel.SetActive(false);
-        Respawn();
+        //Respawn();
     }
     public void Respawn()
     {
         // 스폰 포인트 오브젝트 탐색
         Transform SpawnPoint = GameObject.Find("SpawnManager").
-            transform.GetChild(0).GetComponent<Transform>();
+            transform.GetChild(3).GetComponent<Transform>();
         // 스폰 포인트에 리스폰
         transform.position = SpawnPoint.position;
+        transform.rotation = Quaternion.Euler(0,  -90, 0);
         // 체력은 꽉 찬 상태로 리스폰
         curHp = PlayerStat.instance.maxHP;
         HpBar.color = Color.green;
@@ -163,6 +165,13 @@ public class PlayerDamage : MonoBehaviour
         GetComponent<CharacterController>().enabled = true;
         changeForm.RespawnToForm(); // UI 패널 여우로 변경
         isDie = false;  // 사망상태 해제
+
+        StandardInput cursorLock = GetComponent<StandardInput>();
+        cursorLock.move = Vector2.zero;
+        cursorLock.look = Vector2.zero;
+        cursorLock.cursorLocked = true;
+        cursorLock.cursorInputForLook = true;
+        //UIManager.instance.deathPanel.SetActive(false);
 
         // onEnable함수를 불러오기 위한 작업
         gameObject.SetActive(false);
@@ -223,7 +232,8 @@ public class PlayerDamage : MonoBehaviour
 
     void OnHitEnd()
     {
-        playerState.state = PlayerState.State.IDLE;
+        if(!isDie)
+            playerState.state = PlayerState.State.IDLE;
     }
 
     // 체력 회복 함수(포션 사용, 힐 스킬 사용)
