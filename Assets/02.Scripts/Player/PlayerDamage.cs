@@ -30,6 +30,8 @@ public class PlayerDamage : MonoBehaviour
     readonly int hashDie = Animator.StringToHash("Die");
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
+    readonly string bossAttackTag = "BossAttack"; // 보스 공격 태그
+    readonly string greatSword = "GreatSword";
 
     // 오디오 클립
     public AudioClip hitSound;
@@ -64,7 +66,7 @@ public class PlayerDamage : MonoBehaviour
         curHp = PlayerStat.instance.maxHP;
     }
 
-    // 체력 업데이트 함수(체력값이 변경될 때 마다 호출해야함
+    // 체력 업데이트 함수(체력값이 변경될 때 마다 호출해야함)
     public void hpUpdate()
     {
         HpBar.fillAmount = (float)curHp / PlayerStat.instance.maxHP;                   // 체력바 이미지 수정
@@ -110,7 +112,6 @@ public class PlayerDamage : MonoBehaviour
         int _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
-        // + 지은 : 다이나믹한 연출을 위해 데미지 0~9의 값이 랜덤 추가되는 것으로 변경했습니다!
         source.PlayOneShot(hitSound);
 
         // 현재 체력값이 0 ~ 초기 체력(아마 최대체력으로 변경될 예정)사이의 값만 가지도록 조정
