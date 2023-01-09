@@ -245,18 +245,9 @@ public class Inventory : MonoBehaviour
                 Debug.Log("부모 찾음");
                 break;
             }
-            else if(ItemType[i].transform.childCount == 1 && !ItemType[i].transform.gameObject)
-            {
-                //낼 추가 예정
-            }
         }
         return emptyInven;
     }
-    //public void Sell()
-    //{
-    //    inventoryItemList.RemoveAt(0); //아이콘이 남아있음
-    //    obj1.transform.GetChild(0).gameObject.SetActive(false); //판매되는것처럼 보이는데 그 칸에 아이템이 안들어감
-    //}
     public List<ItemInfo> SaveItem()
     {
         return inventoryItemList;

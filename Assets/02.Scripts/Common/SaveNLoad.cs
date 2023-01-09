@@ -23,6 +23,8 @@ public class SaveNLoad : MonoBehaviour
         public int playerDEF; //캐릭터의 방어력
         public float playerSPD; //캐릭터의 이동속도
 
+        public int playerMoney; //캐릭터의 소지금
+
         public List<int> playerItemInventory; //플레이어 인벤토리
         public List<int> playerItemInventoryCount; //플레이어 인벤토리 아이템 수
     }
@@ -32,21 +34,30 @@ public class SaveNLoad : MonoBehaviour
     private DatabaseManager theDatabase;
     private Inventory theInven;
     private SoundManager theSound;
+    public static SaveNLoad Instance;
+    public SaveNLoad savenload;
 
-    Data data = new Data();
+    public Data data;
 
     private Vector3 vector;
 
     public string click_sound;
+    private void Awake()
+    {
+        if (savenload == null)
+            savenload = this;
+        else
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
     public void CallSave()
     {
-        thePlayer = GetComponent<PlayerAction>();
+        thePlayer = FindObjectOfType<PlayerAction>();
         theDatabase = FindObjectOfType<DatabaseManager>();
         playerDamage = FindObjectOfType<PlayerDamage>();
         thePlayerStat = FindObjectOfType<PlayerStat>();
         theInven = FindObjectOfType<Inventory>();
         theSound = FindObjectOfType<SoundManager>();
-
 
         data.playerX = thePlayer.transform.position.x; //현재 캐릭터의 X좌표값 저장
         data.playerY = thePlayer.transform.position.y; //현재 캐릭터의 Y좌표값 저장
@@ -59,6 +70,7 @@ public class SaveNLoad : MonoBehaviour
         data.playerATK = thePlayerStat.atk; //현재 캐릭터의 공격력 저장
         data.playerDEF = thePlayerStat.def; //현재 캐릭터의 방어력 저장
         data.playerSPD = thePlayerStat.speed; //현재 캐릭터의 이동속도 저장
+        data.playerMoney = thePlayerStat.money; //현재 캐릭터의 소지금 저장
 
         Debug.Log("기초 데이터 성공");
 
@@ -72,10 +84,10 @@ public class SaveNLoad : MonoBehaviour
             data.playerItemInventory.Add(itemList[i].itemID);
             data.playerItemInventoryCount.Add(itemList[i].itemCount);
         }
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.dataPath + "/SaveFile.dat");
-        bf.Serialize(file, data);
-        file.Close();
+        BinaryFormatter bf = new BinaryFormatter(); //직렬화 변수 생성
+        FileStream file = File.Create(Application.dataPath + "/SaveFile.dat"); //SaveFile.dat이라는 파일을 생성
+        bf.Serialize(file, data); //객체를 데이터로 변환
+        file.Close(); //파일 닫기
 
         //string fileName = "Save";
         //string path = Application.persistentDataPath + "/" + fileName + ".dat";
@@ -86,13 +98,12 @@ public class SaveNLoad : MonoBehaviour
     }
     public void CallLoad()
     {
-        string fileName = "Save";
-        string path = Application.persistentDataPath + "/" + fileName + ".dat";
-
-        FileStream file = new FileStream(path, FileMode.Open);
+        //string fileName = "Save";
+        //string path = Application.persistentDataPath + "/" + fileName + ".dat";
+        //FileStream file = new FileStream(path, FileMode.Open);
         BinaryFormatter bf = new BinaryFormatter();
         //Data data = bf.Deserialize(file) as Data;
-        //FileStream file = File.Open(Application.dataPath + "/SaveFile.dat", FileMode.Open);
+        FileStream file = File.Open(Application.dataPath + "/SaveFile.dat", FileMode.Open);
 
         if (file != null && file.Length > 0)
         {
@@ -113,7 +124,10 @@ public class SaveNLoad : MonoBehaviour
             thePlayerStat.currentEXP = data.playerCurrentEXP;
             thePlayerStat.atk = data.playerATK;
             thePlayerStat.def = data.playerDEF;
-            GetComponent<PlayerDamage>().hpUpdate();
+            FindObjectOfType<PlayerDamage>().hpUpdate();
+            thePlayerStat.money = data.playerMoney;
+
+            Debug.Log("로드 완료!");
 
             List<ItemInfo> itemList = new List<ItemInfo>();
 
@@ -129,16 +143,15 @@ public class SaveNLoad : MonoBehaviour
                     }
                 }
             }
-            for(int i = 0; i < data.playerItemInventoryCount.Count; i++)
+            for (int i = 0; i < data.playerItemInventoryCount.Count; i++)
             {
                 Debug.Log("로드");
                 itemList[i].itemCount = data.playerItemInventoryCount[i];
             }
-            theInven.LoadItem(itemList);      
+            theInven.LoadItem(itemList);
+
             //GameManager theGM = FindObjectOfType<GameManager>();
             //theGM.LoadStart();
-            theSound.Play(click_sound);
-            //SceneLoader.Instance.LoadScene("MainScene");
         }
         else
         {

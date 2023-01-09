@@ -58,7 +58,6 @@ public class Menu : MonoBehaviour
         screenMenu.gameObject.SetActive(false);
         soundMenu.gameObject.SetActive(false);
         Time.timeScale = 1f;
-
     }
     public void Sounds(bool isopen)
     {
