@@ -14,9 +14,11 @@ public class PlayerDamage : MonoBehaviour
     public bool isDie;                  // 사망 확인
     public GameObject hitEffect;        // 피격 이펙트
     public GameObject damageUIPrefab;   // 데미지 UI
+    public GameObject restoreEffect;
  
     // 컴포넌트
     Animator animator;
+    AudioSource source;
     // 스크립트
     ThirdPersonCtrl controller;
     PlayerAttack attack;
@@ -28,8 +30,14 @@ public class PlayerDamage : MonoBehaviour
     readonly int hashDie = Animator.StringToHash("Die");
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
+    readonly string bossAttackTag = "BossAttack"; // 보스 공격 태그
+    readonly string greatSword = "GreatSword";
 
-    //public GameObject deathPanel;
+    // 오디오 클립
+    public AudioClip hitSound;
+    public AudioClip deathSound;
+
+    public GameObject deathPanel;
 
     private void Awake()
     {
@@ -38,6 +46,7 @@ public class PlayerDamage : MonoBehaviour
         attack = GetComponent<PlayerAttack>();
         playerState = GetComponent<PlayerState>();
         changeForm = GetComponent<ChangeForm>();
+        source = GetComponent<AudioSource>();
 
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
@@ -57,7 +66,7 @@ public class PlayerDamage : MonoBehaviour
         curHp = PlayerStat.instance.maxHP;
     }
 
-    // 체력 업데이트 함수(체력값이 변경될 때 마다 호출해야함
+    // 체력 업데이트 함수(체력값이 변경될 때 마다 호출해야함)
     public void hpUpdate()
     {
         HpBar.fillAmount = (float)curHp / PlayerStat.instance.maxHP;                   // 체력바 이미지 수정
@@ -103,7 +112,7 @@ public class PlayerDamage : MonoBehaviour
         int _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
-        // + 지은 : 다이나믹한 연출을 위해 데미지 0~9의 값이 랜덤 추가되는 것으로 변경했습니다!
+        source.PlayOneShot(hitSound);
 
         // 현재 체력값이 0 ~ 초기 체력(아마 최대체력으로 변경될 예정)사이의 값만 가지도록 조정
         curHp = Mathf.Clamp(curHp, 0, PlayerStat.instance.maxHP);
@@ -128,21 +137,25 @@ public class PlayerDamage : MonoBehaviour
        
         animator.SetTrigger(hashDie);     // 사망 애니메이션 실행
         GetComponent<CharacterController>().enabled = false;    // 충돌판정 제거를 위한 캐릭터 컨트롤러 비활성화
+        source.PlayOneShot(deathSound);
 
         // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
-        yield return new WaitForSeconds(2f);    
+        //yield return new WaitForSeconds(2f);
+        //UIManager.instance.deathPanelShow();
+
         //deathPanel.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return null;//new WaitForSeconds(3f);
         //deathPanel.SetActive(false);
-        Respawn();
+        //Respawn();
     }
     public void Respawn()
     {
         // 스폰 포인트 오브젝트 탐색
         Transform SpawnPoint = GameObject.Find("SpawnManager").
-            transform.GetChild(0).GetComponent<Transform>();
+            transform.GetChild(3).GetComponent<Transform>();
         // 스폰 포인트에 리스폰
         transform.position = SpawnPoint.position;
+        transform.rotation = Quaternion.Euler(0,  -90, 0);
         // 체력은 꽉 찬 상태로 리스폰
         curHp = PlayerStat.instance.maxHP;
         HpBar.color = Color.green;
@@ -153,6 +166,13 @@ public class PlayerDamage : MonoBehaviour
         GetComponent<CharacterController>().enabled = true;
         changeForm.RespawnToForm(); // UI 패널 여우로 변경
         isDie = false;  // 사망상태 해제
+
+        StandardInput cursorLock = GetComponent<StandardInput>();
+        cursorLock.move = Vector2.zero;
+        cursorLock.look = Vector2.zero;
+        cursorLock.cursorLocked = true;
+        cursorLock.cursorInputForLook = true;
+        //UIManager.instance.deathPanel.SetActive(false);
 
         // onEnable함수를 불러오기 위한 작업
         gameObject.SetActive(false);
@@ -213,7 +233,8 @@ public class PlayerDamage : MonoBehaviour
 
     void OnHitEnd()
     {
-        playerState.state = PlayerState.State.IDLE;
+        if(!isDie)
+            playerState.state = PlayerState.State.IDLE;
     }
 
     // 체력 회복 함수(포션 사용, 힐 스킬 사용)
@@ -227,5 +248,11 @@ public class PlayerDamage : MonoBehaviour
         if (curHp > PlayerStat.instance.maxHP)
             curHp = PlayerStat.instance.maxHP;
         hpUpdate();
+    }
+
+    public void UsePotionEffect()
+    {
+        GameObject Effect = Instantiate(restoreEffect, transform.position, Quaternion.identity);
+        Destroy(Effect, 1f);
     }
 }

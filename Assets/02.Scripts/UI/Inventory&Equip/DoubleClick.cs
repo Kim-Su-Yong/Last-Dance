@@ -44,6 +44,7 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
                 GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
                 clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
                 clone.transform.SetParent(messageTr.transform);
+                playerDamage.UsePotionEffect();
                 playerDamage.RestoreHp(itemInfo.AddHp);
                 itemInfo.itemCount--;
                 itemInfo.GetComponent<HoverTip>().itemCount--;
@@ -60,6 +61,7 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
                 GameObject clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
                 clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
                 clone.transform.SetParent(messageTr.transform);
+                playerDamage.UsePotionEffect();
                 playerDamage.RestoreHp(itemInfo.AddHp);
                 Inventory.instance.inventoryItemList.Remove(itemInfo);
                 hoverTipManager.tipWindow.gameObject.SetActive(false);
@@ -67,6 +69,10 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
                 isDoubleClicked = false;
             }
         }
+        //if (itemInfo.itemType == ItemInfo.ItemType.Consume)
+        //{
+        //    StartCoroutine(Sell());
+        //}
         //else if (itemInfo.itemType == ItemInfo.ItemType.Equip && isDoubleClicked)
         //{
         //    equipSlot();
@@ -97,6 +103,31 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
     //        }
     //    }
     //}
+    IEnumerator Sell()
+    {
+        if (itemInfo.itemCount > 1)
+        {
+            Debug.Log("Sell1");
+            itemInfo.itemCount--;
+            itemInfo.GetComponent<HoverTip>().itemCount--;
+            itemInfo.GetComponent<HoverTip>().countToShow =
+                "수량 : " + itemInfo.GetComponent<HoverTip>().itemCount.ToString() + "개";
+            itemInfo.GetComponent<InventorySlot>().itemCount--;
+            itemInfo.GetComponent<InventorySlot>().itemCount_Text.text =
+                itemInfo.GetComponent<InventorySlot>().itemCount.ToString();
+            //isSell = true;
+        }
+        else if (itemInfo.itemCount == 1)
+        {
+            Debug.Log("Sell2");
+            Inventory.instance.inventoryItemList.Remove(itemInfo);
+            hoverTipManager.tipWindow.gameObject.SetActive(false);
+            Destroy(this.gameObject);
+            //isSell = true;
+        }
+        yield break;
+        //StopAllCoroutines();
+    }
     public void OnPointerClick(PointerEventData eventData)
     {
         if ((Time.time - doubleClickedTime) < interval)
@@ -104,7 +135,7 @@ public class DoubleClick : MonoBehaviour, IPointerClickHandler
             isDoubleClicked = true;
             doubleClickedTime = -1.0f;
 
-            Debug.Log("double click!");
+            //Debug.Log("double click!");
         }
         else
         {

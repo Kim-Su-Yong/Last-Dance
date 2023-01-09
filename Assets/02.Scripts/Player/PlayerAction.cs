@@ -9,12 +9,10 @@ public class PlayerAction : MonoBehaviour
     public PlayerState playerState;
     public GameManager g_manager;
     public static PlayerAction instance;
-    public string currentMapName;
-    public string currentSceneName;
     GameObject scanObject;
     public SoundManager theSound;
     public string call_sound;
-    //private SaveNLoad theSaveNLoad;
+    private SaveNLoad theSaveNLoad;
 
     void Interaction()
     {    
@@ -22,13 +20,16 @@ public class PlayerAction : MonoBehaviour
         {
             if (nearObject == null) return;             // 근처에 오브젝트가 없으면 종료
             theSound.Play(call_sound);                  // 호출 소리 재생
+            
+            QuestUIManager.uiManager.NPCPanelActivation();
 
-            g_manager.Action(nearObject);                         // 상호작용 실행
+            //g_manager.Action(nearObject);                         // 상호작용 실행
             if (g_manager.isAction)
                 playerState.state = PlayerState.State.TALK;
             else
                 playerState.state = PlayerState.State.IDLE;
-        }            
+        }
+
     }
     private void Awake()
     {
@@ -40,12 +41,19 @@ public class PlayerAction : MonoBehaviour
     }
     void Start()
     {
-        //theSaveNLoad = FindObjectOfType<SaveNLoad>();
+        theSaveNLoad = FindObjectOfType<SaveNLoad>();
     }
     void Update()
     {
         Interaction();
-   
+        if(Input.GetKeyDown(KeyCode.F9))
+        {
+            theSaveNLoad.CallSave();
+        }
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            theSaveNLoad.CallLoad();
+        }
     }
     private void OnTriggerStay(Collider other)
     {

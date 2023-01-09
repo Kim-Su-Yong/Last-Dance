@@ -16,7 +16,7 @@ public class ItemPickUp : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag(playerTag) && Input.GetKeyDown(KeyCode.K))
+        if (other.CompareTag(playerTag) && Input.GetKeyDown(KeyCode.Z))
         {
             Inventory.instance.GetAnItem(itemID, _count);
             Destroy(this.gameObject);

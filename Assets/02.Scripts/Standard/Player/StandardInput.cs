@@ -34,10 +34,14 @@ public class StandardInput : MonoBehaviour
 
     public void OnMove(InputValue value)
     {
+        if (!cursorLocked)
+            return;
         MoveInput(value.Get<Vector2>());
     }
     public void OnLook(InputValue value)
     {
+        if (!cursorLocked)
+            return;
         if (cursorInputForLook)
         {
             LookInput(value.Get<Vector2>());
@@ -45,6 +49,8 @@ public class StandardInput : MonoBehaviour
     }
     public void OnJump(InputValue value)
     {
+        if (!cursorLocked)
+            return;
         // 플레이어가 상호 작용시, 죽었을 시 입력을 받지 않음
         if (GetComponent<PlayerDamage>().isDie)
         {
@@ -56,16 +62,22 @@ public class StandardInput : MonoBehaviour
     }
     public void OnWalk(InputValue value)
     {
+        if (!cursorLocked)
+            return;
         WalkInput(value.isPressed);
     }
 
     public void MoveInput(Vector2 newMoveDirection)
     {
+        if (!cursorLocked)
+            return;
         move = newMoveDirection;
     }
 
     public void LookInput(Vector2 newLookDirection)
     {
+        if (!cursorLocked)
+            return;
         look = newLookDirection;
     }
 

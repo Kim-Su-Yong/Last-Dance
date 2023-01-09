@@ -4,38 +4,72 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ShopSlot : MonoBehaviour
 {
-    public bool soldOut;
-    public int itemID;
-    public int _count;
+    public bool potionSoldOut; //포션 판매가 됐는지 체크하는 변수
+    public bool weaponSoldOut;
+    public bool chestSoldOut;
+    public bool bootsSoldOut;
+    public int itemID;  //아이템ID로 해당 템 구매를 위한 변수
+    public int _count;  //아이템 갯수 변수
     private Button button;
     private Button button1;
     private Button button2;
-
-    public Inventory theInven;
-    private void Awake()
+    void Awake()
     {
         button = GetComponent<Button>();
-        button1 = button.transform.GetChild(1).GetComponentInChildren<Button>();
-        button2 = button.transform.GetChild(2).GetComponentInChildren<Button>();
+        button1 = button.transform.GetChild(1).GetComponentInChildren<Button>(); //구매하면 해당 버튼 상호작용이 false되면서 이미지가 회색으로 표시되기 위한 버튼변수
+        button2 = button.transform.GetChild(2).GetComponentInChildren<Button>(); //구매하면 해당 버튼 상호작용이 false되면서 구매버튼이 회색으로 표시되기 위한 버튼변수
     }
     void Update()
     {
-        if(Input.GetMouseButtonDown(1))
+        //BuyPotion();
+    }
+    public void BuyPotion() //포션 구매 함수
+    {
+        if(potionSoldOut)
         {
-            Sell();
+            button1.interactable = false;
+            button2.interactable = false;
+        }
+        if (PlayerStat.instance.money >= 500) //소지금이 500원이상일때 구매 가능하게 하는 조건문
+        {
+            Inventory.instance.GetAnItem(111, 1);
+            potionSoldOut = true;
+            PlayerStat.instance.money -= 500; //소지금에서 500원 감소
+            button1.interactable = false; //버튼 상호작용 false되면서 회색됨
+            button2.interactable = false;
         }
     }
-    public void Buy()
+    public void BuyWeapon() //무기 구매 함수
     {
-        Inventory.instance.GetAnItem(111, 1);
-        soldOut = true;
-        button1.interactable = false;
-        button2.interactable = false;
+        if (PlayerStat.instance.money >= 4000)
+        {
+            Inventory.instance.GetAnItem(211, 1);
+            weaponSoldOut = true;
+            PlayerStat.instance.money -= 4000;
+            button1.interactable = false;
+            button2.interactable = false;
+        }
     }
-    public void Sell()
+    public void BuyChest() //갑옷 구매 함수
     {
-        theInven.inventoryItemList.RemoveAt(0); //아이콘이 남아있음
-        theInven.obj1.transform.GetChild(0).gameObject.SetActive(false); //판매되는것처럼 보이는데 그 칸에 아이템이 안들어감
-        //Destroy(theInven.obj1.transform.GetChild(0).gameObject); //iteminfo까지 파괴시켜버림
+        if (PlayerStat.instance.money >= 3000)
+        {
+            Inventory.instance.GetAnItem(231, 1);
+            chestSoldOut = true;
+            PlayerStat.instance.money -= 3000;
+            button1.interactable = false;
+            button2.interactable = false;
+        }
+    }
+    public void BuyBoots() //신발 구매 함수
+    {
+        if (PlayerStat.instance.money >= 2000)
+        {
+            Inventory.instance.GetAnItem(241, 1);
+            bootsSoldOut = true;
+            PlayerStat.instance.money -= 2000;
+            button1.interactable = false;
+            button2.interactable = false;
+        }
     }
 }

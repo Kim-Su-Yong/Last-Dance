@@ -33,7 +33,6 @@ public class Inventory : MonoBehaviour
     public Transform messageTr;
 
     public GameObject clone;
-    public GameObject obj1;
 
     [Header("PlayerStat관련")]
     public Text LvText;
@@ -50,7 +49,6 @@ public class Inventory : MonoBehaviour
         ConsumeSlots[0].transform.parent.gameObject.SetActive(false);
         ETCSlots[0].transform.parent.gameObject.SetActive(false);
         ItemSlot = Resources.Load<GameObject>("Item/item");
-        obj1 = transform.GetChild(1).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
     }
     void Start()
     {
@@ -247,18 +245,9 @@ public class Inventory : MonoBehaviour
                 Debug.Log("부모 찾음");
                 break;
             }
-            else if(ItemType[i].transform.childCount == 1 && !ItemType[i].transform.gameObject)
-            {
-                //낼 추가 예정
-            }
         }
         return emptyInven;
     }
-    //public void Sell()
-    //{
-    //    inventoryItemList.RemoveAt(0); //아이콘이 남아있음
-    //    obj1.transform.GetChild(0).gameObject.SetActive(false); //판매되는것처럼 보이는데 그 칸에 아이템이 안들어감
-    //}
     public List<ItemInfo> SaveItem()
     {
         return inventoryItemList;

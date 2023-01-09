@@ -10,6 +10,8 @@ public class BezierMissile : MonoBehaviour
     private float m_timerCurrent = 0;
     private float m_speed;
 
+    public int damage;
+
     public void Init(Transform _startTr, Transform _endTr, float _speed, float _newPointDistanceFromStartTr, float _newPointDistanceFromEndTr)
     {
         m_speed = _speed;
@@ -29,11 +31,11 @@ public class BezierMissile : MonoBehaviour
         // 도착 지점을 기준으로 랜덤 포인트 지정.
         m_points[2] = _endTr.position +
             (_newPointDistanceFromEndTr * Random.Range(-1.0f, 1.0f) * _endTr.right) + // X (좌, 우 전체)
-            (_newPointDistanceFromEndTr * Random.Range(-1.0f, 1.0f) * _endTr.up) + // Y (위, 아래 전체)
+            (_newPointDistanceFromEndTr * Random.Range(-1.0f, 1.0f) * _endTr.up + new Vector3(0, 1, 0)) + // Y (위, 아래 전체)
             (_newPointDistanceFromEndTr * Random.Range(0.8f, 1.0f) * _endTr.forward); // Z (앞 쪽만)
 
         // 도착 지점.
-        m_points[3] = _endTr.position;
+        m_points[3] = _endTr.position + new Vector3(0,1,0);
 
         transform.position = _startTr.position;
     }
@@ -54,6 +56,13 @@ public class BezierMissile : MonoBehaviour
             CubicBezierCurve(m_points[0].y, m_points[1].y, m_points[2].y, m_points[3].y),
             CubicBezierCurve(m_points[0].z, m_points[1].z, m_points[2].z, m_points[3].z)
         );
+
+        // 총알이 타겟 위치에 도착했다면(적에게 맞지 않고)
+        if (transform.position == m_points[3])
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     /// <summary>
@@ -90,7 +99,13 @@ public class BezierMissile : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        Destroy(this.gameObject, 0.35f); // 한쪽에 Trigger 체크하는 것과 Rigidbody 컴포넌트 추가 잊지 말기.
+        if(collision.CompareTag("ENEMY"))
+            Destroy(this.gameObject); // 한쪽에 Trigger 체크하는 것과 Rigidbody 컴포넌트 추가 잊지 말기.
                                          // 그래야 다 발사되면 총알 사라짐
+    }
+
+    private void OnEnable()
+    {
+        damage = (int)(PlayerStat.instance.atk * 2) + 8;
     }
 }

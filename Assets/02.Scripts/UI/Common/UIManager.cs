@@ -20,10 +20,7 @@ public class UIManager : MonoBehaviour
     public bool isUse = false;
     private ItemInfo itemInfo;
     private PlayerDamage playerDamage;
-
-    public Image coolImg; //쿨타임 이미지
-    public Text cooltxt;  //쿨타임 시간 텍스트
-    public bool isCool;   //쿨타임인지 판단
+    PlayerState playerState;
 
     public GameObject invenGO; // 인벤토리 오브젝트
     public GameObject equipGO; // 장비창 오브젝트
@@ -35,17 +32,18 @@ public class UIManager : MonoBehaviour
     public bool activeEquip; //장비창이 켜지면 true
     public bool activeShop;
 
+    public GameObject deathPanel;
+
     void Start()
     {
         equipmentslots = GameObject.FindGameObjectsWithTag("Equipment");
         playerDamage = FindObjectOfType<PlayerDamage>();
+        playerState = FindObjectOfType<PlayerState>();
         cursorLock = FindObjectOfType<StandardInput>();
         equipGO.SetActive(false);
         invenGO.SetActive(false);
-        coolImg.fillAmount = 0f;
-        cooltxt.enabled = false;
-        coolImg.enabled = false;
-        isCool = true;
+
+        deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
     }
     void Update()
     {
@@ -62,58 +60,41 @@ public class UIManager : MonoBehaviour
         else
             UseButton.gameObject.SetActive(false);
 
-        if (Input.GetKeyDown(KeyCode.X) && isCool)
+        if(!(playerDamage.isDie))
         {
-            isCool = false;
-            cooltxt.enabled = true;
-            coolImg.enabled = true;
-            StartCoroutine(CoolTime(3f));
+            ShowInven();
+            ShowEquip();
+            ShowShop();
+            deathPanel.SetActive(false);
         }
-        ShowInven();
-        ShowEquip();
-        ShowShop();
+        
         if (isUse)
         {
             itemInfo = selectedItem.GetComponent<ItemInfo>();
             isUse = false;
         }
+
+        if (!activeEquip && !activeInven && !activeShop)
+            CursorLock(true);
+
+        StartCoroutine(deathPanelShow());
+        
     }
-    IEnumerator CoolTime(float cool)
-    {
-        float cTxt = cool;
-        while (cTxt > 0)
-        {
-            cTxt -= Time.deltaTime;
-            coolImg.fillAmount = cTxt / cool;
-            cooltxt.text = cTxt.ToString("0.0");
-            yield return new WaitForFixedUpdate();
-        }
-        coolImg.fillAmount = 0f;
-        cooltxt.enabled = false;
-        coolImg.enabled = false;
-        isCool = true;
-    }
-    void ShowInven()
-    {
+
+    void ShowInven()    // 인벤토리창이 닫히는 경우는 2가지(x버튼 누르기, i키 누르기)
+    {                   // x버튼 누를경우 커서락이 변동되지 않는 버그 수정해야함
         if (Input.GetKeyDown(KeyCode.I))
         {
-            Debug.Log("I키 누름");
-            activeInven = !activeInven;
-            if (activeInven)
+            //activeInven = !activeInven;
+            if (!activeInven)
             {
-                
-                cursorLock.cursorLocked = false;
-                cursorLock.SetCursorState(cursorLock.cursorLocked);
+                activeInven = true;
+                CursorLock(false);
                 invenGO.SetActive(true);
             }
             else
             {
-                if (!activeEquip)
-                {
-                    cursorLock.cursorLocked = true;
-                    cursorLock.SetCursorState(cursorLock.cursorLocked);
-                }
-                invenGO.SetActive(false);
+                CloseInven();
             }
         }
     }
@@ -121,21 +102,16 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && !activeShop) //상점이 열려있으면 장비창이 열리지 않도록
         {
-            activeEquip = !activeEquip;
-            if (activeEquip)
+            //activeEquip = !activeEquip;
+            if (!activeEquip)
             {
-                cursorLock.cursorLocked = false;
-                cursorLock.SetCursorState(cursorLock.cursorLocked);
+                activeEquip = true;
+                CursorLock(false);
                 equipGO.SetActive(true);
             }
             else
             {
-                if (!activeInven)
-                {
-                    cursorLock.cursorLocked = true;
-                    cursorLock.SetCursorState(cursorLock.cursorLocked);
-                }
-                equipGO.SetActive(false);
+                CloseEquip();
             }
         }
     }
@@ -143,24 +119,22 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G) && !activeEquip) //장비창이 열려있으면 상점이 열리지 않도록
         {
-            activeShop = !activeShop;
-            if (activeShop)
+            //activeShop = !activeShop;
+            if (!activeShop)
             {
+                activeShop = true;
+                activeInven = true;
+                CursorLock(false);                
                 shopGO.SetActive(true);
                 invenGO.SetActive(true);
             }
             else
             {
-                shopGO.SetActive(false);
-                invenGO.SetActive(false);
+                CloseShop();
             }
         }
     }
-    public void CloseShop()
-    {
-        shopGO.SetActive(false);
-        invenGO.SetActive(false);
-    }
+
 
     public void OnclickUse()
     {
@@ -203,6 +177,7 @@ public class UIManager : MonoBehaviour
                 clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
                 clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
+                playerDamage.UsePotionEffect();
                 itemInfo.itemCount--;
                 itemInfo.GetComponent<HoverTip>().itemCount--;
                 itemInfo.GetComponent<HoverTip>().countToShow =
@@ -217,6 +192,7 @@ public class UIManager : MonoBehaviour
                 clone.GetComponent<FloatingText>().text.text = "포션을 사용합니다.";
                 clone.transform.SetParent(messageTr.transform);
                 playerDamage.RestoreHp(itemInfo.AddHp);
+                playerDamage.UsePotionEffect();
                 Inventory.instance.inventoryItemList.Remove(itemInfo);
                 //selectedItem = null;
                 Destroy(itemInfo.gameObject);
@@ -225,4 +201,48 @@ public class UIManager : MonoBehaviour
 
 
     }
+
+    IEnumerator deathPanelShow()
+    {
+        if(playerDamage.isDie)
+        {
+            cursorLock.cursorLocked = false;
+            cursorLock.SetCursorState(cursorLock.cursorLocked);
+            deathPanel.SetActive(true);
+        }
+        yield return null;
+    }
+
+    void CursorLock(bool locked)
+    {
+        //Time.timeScale = locked ? 1 : 0;
+         
+        cursorLock.cursorLocked = locked;
+        cursorLock.cursorInputForLook = locked;
+        cursorLock.SetCursorState(cursorLock.cursorLocked);
+    }
+
+    public void CloseEquip()
+    {
+        activeEquip = false;
+        //CursorLock(true);
+        equipGO.SetActive(false);
+    }
+
+    public void CloseShop()
+    {
+        activeShop = false;
+        activeInven = false;
+        //CursorLock(true);
+        shopGO.SetActive(false);
+        invenGO.SetActive(false);
+    }
+
+    public void CloseInven()
+    {
+        activeInven = false;
+        //CursorLock(true);
+        invenGO.SetActive(false);
+    }
+    
 }

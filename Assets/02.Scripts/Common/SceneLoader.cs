@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     protected static SceneLoader instance;
+    private SaveNLoad theSave;
     public static SceneLoader Instance
     {
         get
@@ -49,6 +50,7 @@ public class SceneLoader : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(gameObject);
+        theSave = FindObjectOfType<SaveNLoad>();
     }
     public void LoadScene(string sceneName)
     {
@@ -105,6 +107,7 @@ public class SceneLoader : MonoBehaviour
         }
         if(!isFadeIn)
         {
+            theSave.CallLoad();
             gameObject.SetActive(false);
         }
     }

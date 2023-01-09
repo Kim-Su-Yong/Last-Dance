@@ -105,6 +105,8 @@ public class ThirdPersonCtrl : MonoBehaviour
     const float _threshold = 0.01f;
     bool hasAnimator;
 
+    readonly string enemyTag = "ENEMY";
+
     private bool IsCurrentDeviceMouse
     {
         get
@@ -179,6 +181,12 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     private void CameraRotation()
     {
+        if (input.cursorInputForLook == false)
+        {
+            //Quaternion originRotation = CinemachineCameraTarget.transform.rotation;
+            return;
+        }
+            
         // if there is an input and camera position is not fixed
         if (input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
@@ -200,8 +208,10 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     void Move()
     {
-        // 캐릭터의 상태가 공격중이거나 죽은 상태라면 이동하지 않는다.
-        if (playerState.state == PlayerState.State.ATTACK ||
+
+        if (input.cursorInputForLook == false)
+            // 캐릭터의 상태가 공격중이거나 죽은 상태라면 이동하지 않는다.
+            if (playerState.state == PlayerState.State.ATTACK ||
             playerState.state == PlayerState.State.DIE)
             return;
         if (bIsAction == true)
@@ -393,5 +403,5 @@ public class ThirdPersonCtrl : MonoBehaviour
         playerAttack.enabled = false;
         GetComponent<Shooter>().enabled = false;
         GetComponent<ChangeForm>().enabled = false;
-    }    
+    }   
 }
