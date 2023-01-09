@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &153458664
 RectTransform:
   m_ObjectHideFlags: 0
@@ -233,11 +233,7 @@ GameObject:
   - component: {fileID: 1475431891}
   - component: {fileID: 1475431889}
   - component: {fileID: 1475431893}
-  - component: {fileID: 768146790}
   - component: {fileID: 768146789}
-  - component: {fileID: 768146788}
-  - component: {fileID: 768146791}
-  - component: {fileID: 768146792}
   m_Layer: 0
   m_Name: Luna
   m_TagString: NPC
@@ -300,19 +296,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 1
---- !u!135 &768146790
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3855948662225289030}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!95 &768146789
 Animator:
   serializedVersion: 3
@@ -332,50 +315,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &768146788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3855948662225289030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7d80f54a6482e44a78af88e9eb88ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsTalk: 0
---- !u!114 &768146791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3855948662225289030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55e0204e43f86ad4bb931c69e6220c74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stocks: []
---- !u!114 &768146792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3855948662225289030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d005426ca045742b66eec41a9eb136, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  availableQuestIDs: 01000000
-  receivableQuestIDs: 01000000
-  questMarker: {fileID: 1427311481}
-  theImage: {fileID: 153458668}
-  questAvailableSprite: {fileID: 21300000, guid: 7e0df58c31b2c6e4591daf0bbf9b1194, type: 3}
-  questReceivableSprite: {fileID: 21300000, guid: 5a93c4f7a7cda1e468f57bd2a121852b, type: 3}
 --- !u!1001 &9157495506725789862
 PrefabInstance:
   m_ObjectHideFlags: 0
