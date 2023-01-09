@@ -42,13 +42,13 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(this.gameObject);
 
-        CheckForChanges(); // 보스 및 오브젝트에 관련된 확인사항들 체크
+        //CheckForChanges(); // 보스 및 오브젝트에 관련된 확인사항들 체크
     }
     void Start()
     {
         instance = this;
 
-        talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(2).gameObject;
+        talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(0).gameObject;
         canvasUI = GameObject.Find("Canvas_UI");
     }
     void Update()
@@ -128,7 +128,6 @@ public class GameManager : MonoBehaviour
         if (!Application.isPlaying) return;
         if (PlayerPrefs.GetInt("BetterColliders") == 1)
         {
-
             greatSword.betterColliders = true;
         }
         else

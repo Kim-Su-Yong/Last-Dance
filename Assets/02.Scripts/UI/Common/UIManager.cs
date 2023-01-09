@@ -22,10 +22,6 @@ public class UIManager : MonoBehaviour
     private PlayerDamage playerDamage;
     PlayerState playerState;
 
-    public Image coolImg; //쿨타임 이미지
-    public Text cooltxt;  //쿨타임 시간 텍스트
-    public bool isCool;   //쿨타임인지 판단
-
     public GameObject invenGO; // 인벤토리 오브젝트
     public GameObject equipGO; // 장비창 오브젝트
     public GameObject shopGO;
@@ -48,7 +44,6 @@ public class UIManager : MonoBehaviour
         invenGO.SetActive(false);
 
         deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
-        //deathPanel.SetActive(false);
     }
     void Update()
     {
@@ -86,21 +81,6 @@ public class UIManager : MonoBehaviour
         
     }
 
-    IEnumerator CoolTime(float cool)
-    {
-        float cTxt = cool;
-        while (cTxt > 0)
-        {
-            cTxt -= Time.deltaTime;
-            coolImg.fillAmount = cTxt / cool;
-            cooltxt.text = cTxt.ToString("0.0");
-            yield return new WaitForFixedUpdate();
-        }
-        coolImg.fillAmount = 0f;
-        cooltxt.enabled = false;
-        coolImg.enabled = false;
-        isCool = true;
-    }
     void ShowInven()    // 인벤토리창이 닫히는 경우는 2가지(x버튼 누르기, i키 누르기)
     {                   // x버튼 누를경우 커서락이 변동되지 않는 버그 수정해야함
         if (Input.GetKeyDown(KeyCode.I))
