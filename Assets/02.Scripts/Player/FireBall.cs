@@ -85,7 +85,7 @@ public class FireBall : MonoBehaviour
             StartCoroutine(Explosion(0f));
         }
 
-        if (other.gameObject.CompareTag("ENEMY"))
+        if (other.gameObject.CompareTag("ENEMY") || other.gameObject.CompareTag("Boss"))
         {
             StartCoroutine(Explosion(0f));
         }        

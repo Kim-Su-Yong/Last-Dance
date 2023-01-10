@@ -23,6 +23,8 @@ TagManager:
   - ITEM
   - ROAR
   - Equipment
+  - GreatSword
+  - Magic
   layers:
   - Default
   - TransparentFX
@@ -33,7 +35,7 @@ TagManager:
   - ENEMY
   - Player
   - GROUND
-  - 
+  - BOSS
   - 
   - 
   - 
