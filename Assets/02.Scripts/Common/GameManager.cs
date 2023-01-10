@@ -54,15 +54,6 @@ public class GameManager : MonoBehaviour
     void Update()
     {
     }
-    public void LoadStart()
-    {
-        StartCoroutine(LoadWaitCoroutine());
-    }
-    IEnumerator LoadWaitCoroutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-        thePlayer = FindObjectOfType<PlayerAction>();
-    }
     public void Action(GameObject nearObject)
     {            
         ObjData objData = nearObject.GetComponent<ObjData>();

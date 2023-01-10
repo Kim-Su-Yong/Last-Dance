@@ -32,7 +32,7 @@ public class ShopSlot : MonoBehaviour
         {
             Inventory.instance.GetAnItem(111, 1);
             potionSoldOut = true;
-            PlayerStat.instance.money -= 400; //소지금에서 500원 감소
+            PlayerStat.instance.ChangeMoney(-400); //소지금에서 400원 감소
             button1.interactable = false; //버튼 상호작용 false되면서 회색됨
             button2.interactable = false;
         }
@@ -48,7 +48,7 @@ public class ShopSlot : MonoBehaviour
         {
             Inventory.instance.GetAnItem(211, 1);
             weaponSoldOut = true;
-            PlayerStat.instance.money -= 4000;
+            PlayerStat.instance.ChangeMoney(-4000);
             button1.interactable = false;
             button2.interactable = false;
         }
@@ -59,7 +59,7 @@ public class ShopSlot : MonoBehaviour
         {
             Inventory.instance.GetAnItem(231, 1);
             chestSoldOut = true;
-            PlayerStat.instance.money -= 4000;
+            PlayerStat.instance.ChangeMoney(-4000);
             button1.interactable = false;
             button2.interactable = false;
         }
@@ -70,7 +70,7 @@ public class ShopSlot : MonoBehaviour
         {
             Inventory.instance.GetAnItem(241, 1);
             bootsSoldOut = true;
-            PlayerStat.instance.money -= 4000;
+            PlayerStat.instance.ChangeMoney(-4000);
             button1.interactable = false;
             button2.interactable = false;
         }

@@ -54,11 +54,7 @@ public class Menu : MonoBehaviour
         }
         else
         {
-            pauseImg.gameObject.SetActive(false);
-            screenMenu.gameObject.SetActive(false);
-            soundMenu.gameObject.SetActive(false);
-            Time.timeScale = 1f;
-            CursorLock(true);
+            Close();
         }
     }
     public void Close()
@@ -67,6 +63,7 @@ public class Menu : MonoBehaviour
         screenMenu.gameObject.SetActive(false);
         soundMenu.gameObject.SetActive(false);
         Time.timeScale = 1f;
+        CursorLock(true);
     }
     public void Sounds(bool isopen)
     {
