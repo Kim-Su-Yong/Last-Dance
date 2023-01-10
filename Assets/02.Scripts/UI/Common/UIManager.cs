@@ -38,6 +38,8 @@ public class UIManager : MonoBehaviour
     int money;
     public Text moneyText;
 
+    public SoundManager theSound;
+    public string call_sound;
     void Start()
     {
         equipmentslots = GameObject.FindGameObjectsWithTag("Equipment");
@@ -103,6 +105,7 @@ public class UIManager : MonoBehaviour
             //activeInven = !activeInven;
             if (!activeInven)
             {
+                theSound.Play(call_sound);
                 activeInven = true;
                 CursorLock(false);
                 invenGO.SetActive(true);
@@ -120,6 +123,7 @@ public class UIManager : MonoBehaviour
             //activeEquip = !activeEquip;
             if (!activeEquip)
             {
+                theSound.Play(call_sound);
                 activeEquip = true;
                 CursorLock(false);
                 equipGO.SetActive(true);
@@ -137,6 +141,7 @@ public class UIManager : MonoBehaviour
             //activeShop = !activeShop;
             if (!activeShop)
             {
+                theSound.Play(call_sound);
                 activeShop = true;
                 activeInven = true;
                 CursorLock(false);                
@@ -149,8 +154,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
-
     public void OnclickUse()
     {
         if (EquipSlot.activeSelf == true) //장비창 슬롯이 활성화 되어있을 경우
@@ -213,8 +216,6 @@ public class UIManager : MonoBehaviour
                 Destroy(itemInfo.gameObject);
             }
         }
-
-
     }
 
     IEnumerator deathPanelShow()
@@ -239,6 +240,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseEquip()
     {
+        theSound.Play(call_sound);
         activeEquip = false;
         //CursorLock(true);
         equipGO.SetActive(false);
@@ -246,6 +248,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseShop()
     {
+        theSound.Play(call_sound);
         activeShop = false;
         activeInven = false;
         //CursorLock(true);
@@ -255,6 +258,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseInven()
     {
+        theSound.Play(call_sound);
         activeInven = false;
         //CursorLock(true);
         invenGO.SetActive(false);
