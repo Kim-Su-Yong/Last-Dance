@@ -34,6 +34,10 @@ public class UIManager : MonoBehaviour
 
     public GameObject deathPanel;
 
+    [SerializeField]
+    int money;
+    public Text moneyText;
+
     void Start()
     {
         equipmentslots = GameObject.FindGameObjectsWithTag("Equipment");
@@ -44,6 +48,9 @@ public class UIManager : MonoBehaviour
         invenGO.SetActive(false);
 
         deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
+
+        money = PlayerStat.instance.money;
+        moneyText.text = money.ToString();
     }
     void Update()
     {
@@ -78,7 +85,15 @@ public class UIManager : MonoBehaviour
             CursorLock(true);
 
         StartCoroutine(deathPanelShow());
-        
+
+        //if(Input.GetKeyDown(KeyCode.K))
+        //{
+        //    ChangeMoney(100);
+        //}
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    ChangeMoney(-100);
+        //}
     }
 
     void ShowInven()    // 인벤토리창이 닫히는 경우는 2가지(x버튼 누르기, i키 누르기)
@@ -245,4 +260,11 @@ public class UIManager : MonoBehaviour
         invenGO.SetActive(false);
     }
     
+    public void ChangeMoney(int newMoney)
+    {
+        money += newMoney;
+        money = Mathf.Clamp(money, 0, 99999999);
+        moneyText.text = money.ToString();
+        PlayerStat.instance.money = money;
+    }
 }
