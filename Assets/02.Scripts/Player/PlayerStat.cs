@@ -22,6 +22,8 @@ public class PlayerStat : MonoBehaviour
     public Image ExpBar;                // 경험치 바 이미지
     public Text LvText;                 // 레벨 UI 텍스트(경험치 %로 표현)
 
+    public Text moneyText;
+
     AudioSource source;             
     public AudioClip levelUpClip;   // 레벨업 사운드
 
@@ -59,6 +61,7 @@ public class PlayerStat : MonoBehaviour
         critical = 25f;
 
         expUpdate();
+        moneyText.text = money.ToString();
     }
 
     void Update()
@@ -106,6 +109,13 @@ public class PlayerStat : MonoBehaviour
     {
         ExpBar.fillAmount = (float)currentEXP / needExp[character_Lv];
         LvText.text = "LV " + character_Lv.ToString() + "(EXP " + ((int)(ExpBar.fillAmount*100)).ToString() + "%)";
+    }
+
+    public void ChangeMoney(int newMoney)
+    {
+        money += newMoney;
+        money = Mathf.Clamp(money, 0, 99999999);
+        moneyText.text = money.ToString();
     }
 
 }

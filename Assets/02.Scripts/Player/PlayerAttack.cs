@@ -74,6 +74,8 @@ public class PlayerAttack : MonoBehaviour
     readonly int hashSpeed = Animator.StringToHash("Speed");
     readonly int hashSkillState = Animator.StringToHash("SkillState");
 
+    StandardInput input;
+
     void Awake()
     {
         playerCtrl = GetComponent<ThirdPersonCtrl>();
@@ -91,6 +93,8 @@ public class PlayerAttack : MonoBehaviour
         healData = Resources.Load("SkillData/Heal Data") as SkillData;
         roarData = Resources.Load("SkillData/Roar Data") as SkillData;
         buffData = Resources.Load("SkillData/Buff Data") as SkillData;
+
+        input = GetComponent<StandardInput>();
     }
 
     private void Start()
@@ -123,7 +127,7 @@ public class PlayerAttack : MonoBehaviour
             return;
         }
         if (MouseHover.instance.isUIHover) return;  // UI에 마우스 호버시 실행하지 않음
-
+        if (input.cursorLocked == false) return;
         Attack();
     }
 
