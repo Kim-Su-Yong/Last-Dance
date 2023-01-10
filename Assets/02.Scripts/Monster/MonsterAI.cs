@@ -112,7 +112,7 @@ public class MonsterAI : MonoBehaviour
         _audio = GetComponent<AudioSource>();
         moveAgent = GetComponent<MoveAgent>();
         monsterAttack = GetComponent<MonsterAttack>();
-        attackCollider = GetComponentInChildren<BoxCollider>();
+        attackCollider = transform.GetChild(3).GetComponentInChildren<BoxCollider>();
         rbody = GetComponent<Rigidbody>();
 
         // UI
