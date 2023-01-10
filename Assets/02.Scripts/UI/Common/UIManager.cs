@@ -32,7 +32,6 @@ public class UIManager : MonoBehaviour
     public bool activeEquip; //장비창이 켜지면 true
     public bool activeShop;
     public bool activeMenu;
-
     GameObject menu;
 
     public GameObject deathPanel;

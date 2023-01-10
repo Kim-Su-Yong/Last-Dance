@@ -25,7 +25,6 @@ public class TitleManager : MonoBehaviour
     }
     public void LoadGame()
     {
-        //themenu.Close();
         theSound.Play(click_sound);
         SceneLoader.Instance.LoadScene("MainScene");
     }

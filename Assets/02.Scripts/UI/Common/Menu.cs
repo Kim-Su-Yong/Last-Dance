@@ -19,7 +19,7 @@ public class Menu : MonoBehaviour
 
     StandardInput cursorLock;
     //PlayerAttack attack;
-
+    GameObject theUI;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
@@ -27,6 +27,7 @@ public class Menu : MonoBehaviour
         pauseMenu = pauseImg.transform.GetChild(0).GetComponent<RectTransform>();
         soundMenu = pauseImg.transform.GetChild(1).GetComponent<RectTransform>();
         screenMenu = pauseImg.transform.GetChild(2).GetComponent<RectTransform>();
+        theUI = GameObject.Find("Canvas_UI");
 
         cursorLock = player.GetComponent<StandardInput>();
         //attack = player.GetComponent<PlayerAttack>();
@@ -98,6 +99,7 @@ public class Menu : MonoBehaviour
         pauseImg.gameObject.SetActive(false);
         screenMenu.gameObject.SetActive(false);
         soundMenu.gameObject.SetActive(false);
+        theUI.gameObject.SetActive(false);
         Time.timeScale = 1f;
         SceneLoader.Instance.LoadScene("TitleScene");
     }

@@ -7,6 +7,7 @@ public class SceneLoader : MonoBehaviour
 {
     protected static SceneLoader instance;
     private SaveNLoad theSave;
+    GameObject theUI;
     public static SceneLoader Instance
     {
         get
@@ -51,6 +52,7 @@ public class SceneLoader : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
         theSave = FindObjectOfType<SaveNLoad>();
+        theUI = GameObject.Find("Canvas_UI");
     }
     public void LoadScene(string sceneName)
     {
@@ -109,6 +111,7 @@ public class SceneLoader : MonoBehaviour
         {
             theSave.CallLoad();
             gameObject.SetActive(false);
+            theUI.gameObject.SetActive(true);
         }
     }
 }
