@@ -14,12 +14,15 @@ public class BossScript : MonoBehaviour
     public Transform player;
 
     public AudioClip[] takeDamageSound;
+    public BossLifeBarScript bossLife;
 
     public GameObject bloodPrefab;
     public Transform bloodPos;
 
-    private float rotationSpeed = 6;
+    private int hit = 0;
+    private int currentHit = 0;
 
+    private float rotationSpeed = 6;
     private float lastDamageTakenTime = 0;
 
     void Start()
@@ -89,6 +92,67 @@ public class BossScript : MonoBehaviour
             GameObject blood = Instantiate(bloodPrefab, bloodPos.position, Quaternion.identity);
             blood.transform.LookAt(player.position);
             Destroy(blood, 0.2f);
+        }
+    }
+    public void HitByPlayer(int hit)
+    {
+        this.hit = hit;
+        if (hit == 0)
+            ClearCurrentHit();
+    }
+
+    public void ClearCurrentHit()
+    {
+        this.currentHit = 0;
+    }
+
+    public void HitManager()
+    {
+        if (currentHit == 0 && hit == 4)
+        {
+            bossLife.UpdateLife(-1.5f);
+            return;
+        }
+
+        currentHit++;
+
+        if (hit == 1) currentHit = 1;
+
+        if (currentHit == 1 && hit == 1)
+        {
+            bossLife.UpdateLife(-1);
+        }
+        else if (currentHit == 1 && hit == 4)
+        {
+            bossLife.UpdateLife(-1.75f);
+        }
+        else if (currentHit == 0 && hit == 4)
+        {
+            bossLife.UpdateLife(-1.5f);
+        }
+
+        if (currentHit == 2 && hit == 2)
+        {
+            bossLife.UpdateLife(-1.5f);
+        }
+        else if (currentHit == 2 && hit == 4)
+        {
+            bossLife.UpdateLife(-1.75f);
+        }
+
+        if (currentHit == 3 && hit == 3)
+        {
+            bossLife.UpdateLife(-1.75f);
+        }
+        else if (currentHit == 3 && hit == 4)
+        {
+
+            bossLife.UpdateLife(-2f);
+        }
+
+        if (currentHit == 4)
+        {
+            bossLife.UpdateLife(-2.5f);
         }
     }
 

@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(this.gameObject);
 
-        //CheckForChanges(); // 보스 및 오브젝트에 관련된 확인사항들 체크
+        CheckForChanges(); // 보스 및 오브젝트에 관련된 확인사항들 체크
     }
     void Start()
     {
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
         isObjectsOn = PlayerPrefs.GetInt("IsObjectsOn") == 1 ? true : false;
 
         CheckDesctructibleObjetcsState();
-        CheckSwordColliders();
+        //CheckSwordColliders();
     }
 
     public void CheckDesctructibleObjetcsState()

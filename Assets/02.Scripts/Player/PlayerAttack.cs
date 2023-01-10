@@ -52,6 +52,9 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField]
     LayerMask enemyLayer;           // 에너미 검출을 위한 레이어
 
+    [SerializeField]
+    LayerMask bossLayer;            // 보스 검출을 위한 레이어
+
     [Header("UI")]
     public Image[] coolImg;         // 스킬 쿨타임 이미지들
     public Text[] coolTxt;          // 스킬 쿨타임 텍스트들

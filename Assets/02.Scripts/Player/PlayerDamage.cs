@@ -30,6 +30,7 @@ public class PlayerDamage : MonoBehaviour
     readonly int hashDie = Animator.StringToHash("Die");
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
+
     readonly string bossAttackTag = "BossAttack"; // 보스 공격 태그
     readonly string greatSword = "GreatSword";
 

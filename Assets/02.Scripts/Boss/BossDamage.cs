@@ -11,7 +11,7 @@ public class BossDamage : MonoBehaviour
     private readonly string punchTag = "PUNCH";
     private readonly string roarTag = "ROAR";
 
-    BossLifeBarScript bossLife;
+    BossAI bossAI;
     BossScript boss;
     public float Offset = 15f;
 
@@ -22,7 +22,7 @@ public class BossDamage : MonoBehaviour
 
     void Awake()
     {
-        bossLife = GetComponent<BossLifeBarScript>();
+        bossAI = GetComponent<BossAI>();
         boss = GetComponent<BossScript>();
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
         damageParticlePrefab = Resources.Load<GameObject>("Effects/HitEffect_A");
@@ -30,74 +30,80 @@ public class BossDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (bossLife.isDie == true) return;
+        if (bossAI.isDie == true) return;
+
         if (other.CompareTag(fireBallTag)) // 파이어볼에 맞았다면
-        { 
-            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(0f, 3f));
-            bossLife.beforeHp = bossLife.maxLife;
-            bossLife.life -= _damage;
-            bossLife.life = Mathf.Clamp(bossLife.life, 0, bossLife.maxLife);
+        {
+            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(10f, 13f));
+            bossAI.beforeHp = bossAI.maxHp;
+            bossAI.curHp -= _damage;
+            bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossLife.bossAnim.SetTrigger("TakeDamage");
-            bossLife.isDamaged = true;
+            bossAI.animator.SetBool("TakeDamage", true);
+            bossAI.isDamaged = true;
+            bossAI.HpUpdate();
 
-            if (!bossLife.isDie)
+            if (!bossAI.isDie)
                 ShowDamageEffect(_damage);
         }
 
         if (other.CompareTag(bulletTag)) // 독수리 공격에 맞았을 때
         {
-            int _damage = (int)(other.GetComponent<BezierMissile>().damage);
-            bossLife.beforeHp = bossLife.maxLife;
-            bossLife.life -= _damage;
-            bossLife.life = Mathf.Clamp(bossLife.life, 0, bossLife.maxLife);
+            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(10f, 13f));
+            bossAI.beforeHp = bossAI.maxHp;
+            bossAI.curHp -= _damage;
+            bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossLife.bossAnim.SetTrigger("TakeDamage");
-            bossLife.isDamaged = true;
+            bossAI.animator.SetBool("TakeDamage", true);
+            bossAI.isDamaged = true;
+            bossAI.HpUpdate();
 
-            if (!bossLife.isDie)
+            if (!bossAI.isDie)
                 ShowDamageEffect(_damage);
         }
 
         if (other.CompareTag(foxFireTag)) // 여우불에 맞았을 때
         {
-            int _damage = (int)(other.GetComponent<FoxFire>().damage + Random.Range(0f, 5f));
-            bossLife.beforeHp = bossLife.maxLife;
-            bossLife.life -= _damage;
-            bossLife.life = Mathf.Clamp(bossLife.life, 0, bossLife.maxLife);
+            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(10f, 13f));
+            bossAI.beforeHp = bossAI.maxHp;
+            bossAI.curHp -= _damage;
+            bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossLife.bossAnim.SetTrigger("TakeDamage");
-            bossLife.isDamaged = true;
+            bossAI.animator.SetBool("TakeDamage", true);
+            bossAI.isDamaged = true;
+            bossAI.HpUpdate();
 
-            if (!bossLife.isDie)
+            if (!bossAI.isDie)
                 ShowDamageEffect(_damage);
         }
 
         if (other.CompareTag(punchTag)) // 호랑이 공격에 맞았을 때
         {
-            int _damage = (int)(other.GetComponent<PunchCollider>().damage + Random.Range(0f, 5f));
-            bossLife.beforeHp = bossLife.maxLife;
-            bossLife.life -= _damage;
-            bossLife.life = Mathf.Clamp(bossLife.life, 0, bossLife.maxLife);
+            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(10f, 13f));
+            bossAI.beforeHp = bossAI.maxHp;
+            bossAI.curHp -= _damage;
+            bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossLife.bossAnim.SetTrigger("TakeDamage");
-            bossLife.isDamaged = true;
+            bossAI.animator.SetBool("TakeDamage", true);
+            bossAI.isDamaged = true;
+            bossAI.HpUpdate();
 
-            if (!bossLife.isDie)
+            if (!bossAI.isDie)
                 ShowDamageEffect(_damage);
         }
 
         if (other.CompareTag(roarTag))
         {
-            int _damage = (int)(other.GetComponent<RoarCollider>().damage + Random.Range(0f, 3f));
-            bossLife.beforeHp = bossLife.maxLife;
-            bossLife.life -= _damage;
-            bossLife.life = Mathf.Clamp(bossLife.life, 0, bossLife.maxLife);
+            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(400f, 500f));
+            bossAI.beforeHp = bossAI.maxHp;
+            bossAI.curHp -= _damage;
+            bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossLife.bossAnim.SetTrigger("TakeDamage");
-            bossLife.isDamaged = true;
+            bossAI.animator.SetBool("TakeDamage", true);
+            bossAI.isDamaged = true;
+            bossAI.HpUpdate();
 
-            if (!bossLife.isDie)
+            if (!bossAI.isDie)
                 ShowDamageEffect(_damage);
         }
     }
