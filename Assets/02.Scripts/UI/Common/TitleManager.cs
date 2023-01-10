@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class TitleManager : MonoBehaviour
 {
+    [SerializeField]
     private SoundManager theSound;
+    [SerializeField]
     private SaveNLoad theSave;
+    [SerializeField]
     private Menu themenu;
 
     public string click_sound;
@@ -13,7 +16,7 @@ public class TitleManager : MonoBehaviour
     {
         theSound = FindObjectOfType<SoundManager>();
         theSave = FindObjectOfType<SaveNLoad>();
-        themenu = FindObjectOfType<Menu>();
+        //themenu = FindObjectOfType<Menu>();
     }
     public void SaveGame()
     {
@@ -22,7 +25,7 @@ public class TitleManager : MonoBehaviour
     }
     public void LoadGame()
     {
-        themenu.Close();
+        //themenu.Close();
         theSound.Play(click_sound);
         SceneLoader.Instance.LoadScene("MainScene");
     }
