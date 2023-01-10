@@ -31,13 +31,14 @@ public class UIManager : MonoBehaviour
     public bool activeInven; //인벤토리가 켜지면 true
     public bool activeEquip; //장비창이 켜지면 true
     public bool activeShop;
+    public bool activeMenu;
+
+    GameObject menu;
 
     public GameObject deathPanel;
 
-    [SerializeField]
-    int money;
-    public Text moneyText;
-
+    public SoundManager theSound;
+    public string call_sound;
     void Start()
     {
         equipmentslots = GameObject.FindGameObjectsWithTag("Equipment");
@@ -47,10 +48,9 @@ public class UIManager : MonoBehaviour
         equipGO.SetActive(false);
         invenGO.SetActive(false);
 
-        deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
+        menu = GameObject.Find("Canvas_Menu").transform.GetChild(0).gameObject;
 
-        money = PlayerStat.instance.money;
-        moneyText.text = money.ToString();
+        deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
     }
     void Update()
     {
@@ -81,7 +81,12 @@ public class UIManager : MonoBehaviour
             isUse = false;
         }
 
-        if (!activeEquip && !activeInven && !activeShop)
+        if (menu.activeSelf == true)
+            activeMenu = true;
+        else
+            activeMenu = false;
+
+        if (!activeEquip && !activeInven && !activeShop && !activeMenu)
             CursorLock(true);
 
         StartCoroutine(deathPanelShow());
@@ -103,6 +108,7 @@ public class UIManager : MonoBehaviour
             //activeInven = !activeInven;
             if (!activeInven)
             {
+                theSound.Play(call_sound);
                 activeInven = true;
                 CursorLock(false);
                 invenGO.SetActive(true);
@@ -120,6 +126,7 @@ public class UIManager : MonoBehaviour
             //activeEquip = !activeEquip;
             if (!activeEquip)
             {
+                theSound.Play(call_sound);
                 activeEquip = true;
                 CursorLock(false);
                 equipGO.SetActive(true);
@@ -137,6 +144,7 @@ public class UIManager : MonoBehaviour
             //activeShop = !activeShop;
             if (!activeShop)
             {
+                theSound.Play(call_sound);
                 activeShop = true;
                 activeInven = true;
                 CursorLock(false);                
@@ -149,8 +157,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
-
     public void OnclickUse()
     {
         if (EquipSlot.activeSelf == true) //장비창 슬롯이 활성화 되어있을 경우
@@ -213,8 +219,6 @@ public class UIManager : MonoBehaviour
                 Destroy(itemInfo.gameObject);
             }
         }
-
-
     }
 
     IEnumerator deathPanelShow()
@@ -239,6 +243,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseEquip()
     {
+        theSound.Play(call_sound);
         activeEquip = false;
         //CursorLock(true);
         equipGO.SetActive(false);
@@ -246,6 +251,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseShop()
     {
+        theSound.Play(call_sound);
         activeShop = false;
         activeInven = false;
         //CursorLock(true);
@@ -255,16 +261,9 @@ public class UIManager : MonoBehaviour
 
     public void CloseInven()
     {
+        theSound.Play(call_sound);
         activeInven = false;
         //CursorLock(true);
         invenGO.SetActive(false);
-    }
-    
-    public void ChangeMoney(int newMoney)
-    {
-        money += newMoney;
-        money = Mathf.Clamp(money, 0, 99999999);
-        moneyText.text = money.ToString();
-        PlayerStat.instance.money = money;
     }
 }

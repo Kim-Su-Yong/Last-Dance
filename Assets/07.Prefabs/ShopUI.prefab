@@ -646,10 +646,10 @@ RectTransform:
   m_Father: {fileID: 2359647239154133546}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 500, y: -572.5}
-  m_SizeDelta: {x: 300, y: 345}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2359647237301282343
 CanvasRenderer:
@@ -760,7 +760,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a6fbeef3602cb44938e5595090937f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldOut: 0
+  potionSoldOut: 0
+  weaponSoldOut: 0
+  chestSoldOut: 0
+  bootsSoldOut: 0
   itemID: 241
   _count: 1
 --- !u!1 &2359647237317023185
@@ -923,10 +926,10 @@ RectTransform:
   m_Father: {fileID: 2359647239154133546}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 175, y: -197.5}
-  m_SizeDelta: {x: 300, y: 345}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2359647237339556796
 CanvasRenderer:
@@ -1037,7 +1040,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a6fbeef3602cb44938e5595090937f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldOut: 0
+  potionSoldOut: 0
+  weaponSoldOut: 0
+  chestSoldOut: 0
+  bootsSoldOut: 0
   itemID: 111
   _count: 1
 --- !u!1 &2359647237394318774
@@ -1533,7 +1539,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 300
+  m_Text: 4000
 --- !u!1 &2359647237543902379
 GameObject:
   m_ObjectHideFlags: 0
@@ -2125,7 +2131,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 300
+  m_Text: 400
 --- !u!1 &2359647237783523981
 GameObject:
   m_ObjectHideFlags: 0
@@ -2164,10 +2170,10 @@ RectTransform:
   m_Father: {fileID: 2359647239154133546}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 500, y: -197.5}
-  m_SizeDelta: {x: 300, y: 345}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2359647237783523971
 CanvasRenderer:
@@ -2278,7 +2284,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a6fbeef3602cb44938e5595090937f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldOut: 0
+  potionSoldOut: 0
+  weaponSoldOut: 0
+  chestSoldOut: 0
+  bootsSoldOut: 0
   itemID: 211
   _count: 1
 --- !u!1 &2359647237792980686
@@ -2397,7 +2406,7 @@ MonoBehaviour:
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 2359647237792980685}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -2491,7 +2500,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 300
+  m_Text: 4000
 --- !u!1 &2359647237846727651
 GameObject:
   m_ObjectHideFlags: 0
@@ -2776,7 +2785,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2359647237992388873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4171,10 +4180,10 @@ RectTransform:
   m_Father: {fileID: 2359647239154133546}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 175, y: -572.5}
-  m_SizeDelta: {x: 300, y: 345}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2359647238785995103
 CanvasRenderer:
@@ -4285,7 +4294,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a6fbeef3602cb44938e5595090937f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldOut: 0
+  potionSoldOut: 0
+  weaponSoldOut: 0
+  chestSoldOut: 0
+  bootsSoldOut: 0
   itemID: 231
   _count: 1
 --- !u!1 &2359647238846286717
@@ -4673,7 +4685,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 300
+  m_Text: 4000
 --- !u!1 &2359647238940416283
 GameObject:
   m_ObjectHideFlags: 0

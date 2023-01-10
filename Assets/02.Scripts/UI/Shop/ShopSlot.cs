@@ -21,53 +21,56 @@ public class ShopSlot : MonoBehaviour
     }
     void Update()
     {
-        //BuyPotion();
+        if(potionSoldOut)
+        {
+            CantBuy();
+        }
     }
     public void BuyPotion() //포션 구매 함수
     {
-        if(potionSoldOut)
-        {
-            button1.interactable = false;
-            button2.interactable = false;
-        }
-        if (PlayerStat.instance.money >= 500) //소지금이 500원이상일때 구매 가능하게 하는 조건문
+        if (PlayerStat.instance.money >= 400 && !potionSoldOut) //소지금이 500원이상일때 구매 가능하게 하는 조건문
         {
             Inventory.instance.GetAnItem(111, 1);
             potionSoldOut = true;
-            PlayerStat.instance.money -= 500; //소지금에서 500원 감소
+            PlayerStat.instance.ChangeMoney(-400); //소지금에서 400원 감소
             button1.interactable = false; //버튼 상호작용 false되면서 회색됨
             button2.interactable = false;
         }
     }
+    private void CantBuy()
+    {
+        button1.interactable = false;
+        button2.interactable = false;
+    }
     public void BuyWeapon() //무기 구매 함수
     {
-        if (PlayerStat.instance.money >= 4000)
+        if (PlayerStat.instance.money >= 4000 && !weaponSoldOut)
         {
             Inventory.instance.GetAnItem(211, 1);
             weaponSoldOut = true;
-            PlayerStat.instance.money -= 4000;
+            PlayerStat.instance.ChangeMoney(-4000);
             button1.interactable = false;
             button2.interactable = false;
         }
     }
     public void BuyChest() //갑옷 구매 함수
     {
-        if (PlayerStat.instance.money >= 3000)
+        if (PlayerStat.instance.money >= 4000 && !chestSoldOut)
         {
             Inventory.instance.GetAnItem(231, 1);
             chestSoldOut = true;
-            PlayerStat.instance.money -= 3000;
+            PlayerStat.instance.ChangeMoney(-4000);
             button1.interactable = false;
             button2.interactable = false;
         }
     }
     public void BuyBoots() //신발 구매 함수
     {
-        if (PlayerStat.instance.money >= 2000)
+        if (PlayerStat.instance.money >= 4000 && !bootsSoldOut)
         {
             Inventory.instance.GetAnItem(241, 1);
             bootsSoldOut = true;
-            PlayerStat.instance.money -= 2000;
+            PlayerStat.instance.ChangeMoney(-4000);
             button1.interactable = false;
             button2.interactable = false;
         }

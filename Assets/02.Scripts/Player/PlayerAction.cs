@@ -21,9 +21,9 @@ public class PlayerAction : MonoBehaviour
             if (nearObject == null) return;             // 근처에 오브젝트가 없으면 종료
             theSound.Play(call_sound);                  // 호출 소리 재생
             
-            QuestUIManager.uiManager.NPCPanelActivation();
+            //QuestUIManager.uiManager.NPCPanelActivation();
 
-            //g_manager.Action(nearObject);                         // 상호작용 실행
+            g_manager.Action(nearObject);                         // 상호작용 실행
             if (g_manager.isAction)
                 playerState.state = PlayerState.State.TALK;
             else
@@ -46,11 +46,11 @@ public class PlayerAction : MonoBehaviour
     void Update()
     {
         Interaction();
-        if(Input.GetKeyDown(KeyCode.F9))
+        if(Input.GetKeyDown(KeyCode.F9)) //임시용 키(삭제예정)
         {
             theSaveNLoad.CallSave();
         }
-        if (Input.GetKeyDown(KeyCode.F10))
+        if (Input.GetKeyDown(KeyCode.F10)) //이하 동일
         {
             theSaveNLoad.CallLoad();
         }

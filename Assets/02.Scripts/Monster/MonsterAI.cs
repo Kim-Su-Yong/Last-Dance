@@ -48,9 +48,6 @@ public class MonsterAI : MonoBehaviour
     public float attackSpeed = 2f;  // Between
     private float nextAttackTime = 0;
 
-    // 해야 할 것 : 공격하지 않을 땐 콜라이더 enabled = false;로 변경
-    // Components
-    //[HideInInspector]
     public BoxCollider attackCollider;
 
     // Bool
@@ -115,7 +112,7 @@ public class MonsterAI : MonoBehaviour
         _audio = GetComponent<AudioSource>();
         moveAgent = GetComponent<MoveAgent>();
         monsterAttack = GetComponent<MonsterAttack>();
-        attackCollider = GetComponentInChildren<BoxCollider>();
+        attackCollider = transform.GetChild(3).GetComponentInChildren<BoxCollider>();
         rbody = GetComponent<Rigidbody>();
 
         // UI
@@ -320,13 +317,15 @@ public class MonsterAI : MonoBehaviour
                     animator.SetTrigger("Death");
                     isDie = true;
 
-                    
+                    //UIManager.instance.ChangeMoney(M_EXP);
                     GetComponent<Rigidbody>().isKinematic = true;
                     GetComponent<CapsuleCollider>().enabled = false;
                     //StopAllCoroutines();
 
                     // 몬스터 사망시 플레이어 경험치 증가
                     PlayerStat.instance.GainExp(M_EXP);
+                    PlayerStat.instance.ChangeMoney(M_EXP*10);
+                    
                     // 사망시 더이상 코루틴을 수행하지 않음
                     StopAllCoroutines();
 
