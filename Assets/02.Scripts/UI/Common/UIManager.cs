@@ -31,12 +31,11 @@ public class UIManager : MonoBehaviour
     public bool activeInven; //인벤토리가 켜지면 true
     public bool activeEquip; //장비창이 켜지면 true
     public bool activeShop;
+    public bool activeMenu;
+
+    GameObject menu;
 
     public GameObject deathPanel;
-
-    [SerializeField]
-    int money;
-    public Text moneyText;
 
     public SoundManager theSound;
     public string call_sound;
@@ -49,10 +48,9 @@ public class UIManager : MonoBehaviour
         equipGO.SetActive(false);
         invenGO.SetActive(false);
 
-        deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
+        menu = GameObject.Find("Canvas_Menu").transform.GetChild(0).gameObject;
 
-        money = PlayerStat.instance.money;
-        moneyText.text = money.ToString();
+        deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
     }
     void Update()
     {
@@ -83,7 +81,12 @@ public class UIManager : MonoBehaviour
             isUse = false;
         }
 
-        if (!activeEquip && !activeInven && !activeShop)
+        if (menu.activeSelf == true)
+            activeMenu = true;
+        else
+            activeMenu = false;
+
+        if (!activeEquip && !activeInven && !activeShop && !activeMenu)
             CursorLock(true);
 
         StartCoroutine(deathPanelShow());
@@ -262,13 +265,5 @@ public class UIManager : MonoBehaviour
         activeInven = false;
         //CursorLock(true);
         invenGO.SetActive(false);
-    }
-    
-    public void ChangeMoney(int newMoney)
-    {
-        money += newMoney;
-        money = Mathf.Clamp(money, 0, 99999999);
-        moneyText.text = money.ToString();
-        PlayerStat.instance.money = money;
     }
 }
