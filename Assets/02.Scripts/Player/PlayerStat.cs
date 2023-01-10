@@ -19,15 +19,15 @@ public class PlayerStat : MonoBehaviour
     public float critical;      // 크리티컬 확률-뺄 가능성 높음
 
     public GameObject LevelUpEffect;    // 레벨 업 시 이펙트
-    public Image ExpBar;
-    public Text LvText;
+    public Image ExpBar;                // 경험치 바 이미지
+    public Text LvText;                 // 레벨 UI 텍스트(경험치 %로 표현)
 
-    AudioSource source;
-    public AudioClip levelUpClip;
+    AudioSource source;             
+    public AudioClip levelUpClip;   // 레벨업 사운드
 
-    public bool isDebug;
+    public bool isDebug;        // 디버그 모드시 체력 증가 목적
 
-    public int money = 4500;
+    public int money = 4500;    // 소지금
     void Awake()
     {
         instance = this;
@@ -43,9 +43,9 @@ public class PlayerStat : MonoBehaviour
         character_Lv = 1;
         currentEXP = 0;
 
-        //if (isDebug)
-        //    initHP = 1000;
-        //else
+        if (isDebug)
+            initHP = 1000;
+        else
             initHP = 100;
         maxHP = initHP;
 
