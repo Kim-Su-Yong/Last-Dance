@@ -42,7 +42,7 @@ public class BossSoundsScript : MonoBehaviour
     public void PlayReachGreatSword()
     {
         CreateAndPlay(reachGreatSword, 2, 1, 20);
-        GameObject.Find("GameManager").GetComponent<GameManagerScript>().BeginMusic();
+        //GameObject.Find("GameManager").GetComponent<GameManagerScript>().BeginMusic();
     }
 
     public void PlayTakeDamage()

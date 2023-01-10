@@ -12,17 +12,17 @@ public class BossLifeBarScript : MonoBehaviour
 {
     private GameObject lifeBarParent;
 
-    public float maxLife = 40; // maximo de vida possivel
-    private float life = 0; // total de vida
-    private float filler = 30; // valor pelo qual a vida sera multiplicada
-    private float ghost = 0; // ghost da barra de vida
-    private int barHeight = 17; // altura da barra de vida
-    public Animator bossAnim; // animator do boss
+    public float maxLife = 1000f; // 최대 체력
+    public float life = 0f; // 현재 체력
+    private float filler = 30f; // 체력을 증가시키기 위한 변수
+    private float ghost = 0f; // 안 보이는 체력바
+    private int barHeight = 17; // 체력바의 높이
+    public Animator bossAnim; // 보스 애니메이터
 
     [Header("LifeBar")]
-    public Image lifeBar; // barra de vida verdadeira
-    public Image lifeGhost; // ghost da barra de vida
-    private Animator lifeBarAnim; // animator da barra de vida, para ela encher no comeco
+    public Image lifeBar; // 체력바
+    public Image lifeGhost; // 안 보이는 체력바
+    private Animator lifeBarAnim;
 
     private float lastTime;
     private float waitTime = 1.5f;
@@ -30,23 +30,21 @@ public class BossLifeBarScript : MonoBehaviour
     [HideInInspector]
     public bool fillBossLifeBar = false;
 
-    [Header("Win")]
-    public GameObject winnerScreen;
-    public GameObject bonfire;
-    public GameObject winEffect;
-    public AudioSource musicSource;
+    public GameManager gameManager;
 
-    public AchievementManager achievementManager;
-    public LifeBarScript playerLifeBarScript;
-    public GirlScript girlScript;
-    public GameManagerScript gameManager;
+    public bool isDie = false;
+    public bool isAttack = false;
+    public bool isDamaged = false;
+
+    public float beforeHp = 0f;
 
     private void Start()
     {
+        bossAnim = GetComponent<Animator>();
         lifeBarParent = this.transform.parent.gameObject;
         this.GetComponent<CanvasGroup>().alpha = 0;
-        life = maxLife; // inicia com a vida cheia mas ainda nao atualiza a exibicao na tela
-        lifeBarAnim = lifeBar.GetComponent<Animator>(); // animator da barra de vida, para ela encher no comeco
+        life = maxLife;
+        lifeBarAnim = lifeBar.GetComponent<Animator>();
     }
 
     private void Update()
@@ -59,101 +57,83 @@ public class BossLifeBarScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(life <= ((maxLife * 50) / 100) && !bossAnim.GetBool("Phase2")) // caso a vida chegou a 50% e ainda nao fez a transicao
+        if(life <= ((maxLife * 50) / 100) && !bossAnim.GetBool("Phase2")) // 체력이 50% 미만이면 2페이즈 시작
         {
             bossAnim.SetTrigger("BeginPhase2");
             bossAnim.SetBool("Phase2", true);
-            achievementManager.TriggerIamLearning(); // pede para achievementManager conferir I am Learning
         }
 
-        if (life > ghost && !lifeBarAnim.enabled) // caso a vida seja maior que o ghost, ambos passam a ter o mesmo tamanho. Barra de vida ja deve ter sido preenchida
+        if (life > ghost && !lifeBarAnim.enabled) // 만약 안 보이는 체력바보다 체력바가 훨씬 더 크다면
         {
             ghost = life;
             lifeGhost.rectTransform.sizeDelta = new Vector2(ghost * filler, barHeight);
         }
 
-        if ((Time.time > lastTime + waitTime) && ghost > life) // espera um pouco e diminui o ghost ate chegar na vida
+        if ((Time.time > lastTime + waitTime) && ghost > life)
         {
             ghost -= 0.1f;
             lifeGhost.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(ghost, life, 8 * Time.deltaTime) * filler, barHeight);
         }
 
-        if (this.GetComponent<CanvasGroup>().alpha == 1 && lifeBarAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1) // desabilita a animacao da barra de vida preenchendo quando ela ja estiver cheia
-            lifeBarAnim.enabled = false;
+        if (this.GetComponent<CanvasGroup>().alpha == 1 && lifeBarAnim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+             lifeBarAnim.enabled = false;
     }
 
     public void UpdateLife(float amount)
     {
-        if (IsDead()) return; // nao faz nada caso esteja morto
+        if (IsDead()) return; // 죽으면 반환하지 않음
 
-        if (amount < 0) // caso esteja decrementando a vida
+        if (amount < 0) // 체력이 내려간다면
         {
             lastTime = Time.time;
         }
 
-        life += amount; // realiza a mudanca na vida
+        life += amount; // 체력에 변화를 주기
 
-        if (life > maxLife) life = maxLife; // garante que ela nao seja maior que o permitido
-        if (life < 0) life = 0;// garante que ela nao seja menor que o permitido
+        if (life > maxLife) life = maxLife;
+        if (life < 0) life = 0;
 
-        if (life == 0 && !IsDead()) // mata o boss caso ainda nao tenha feito
+        if (life == 0 && !IsDead()) // 체력이 0 이 되었다면
         {
             Die();
         }
 
-        lifeBar.rectTransform.sizeDelta = new Vector2(life * filler, barHeight); // atualiza o tamanho da barra de vida
+        lifeBar.rectTransform.sizeDelta = new Vector2(life * filler, barHeight); // 체력바 크기를 계속 조절함
     }
 
-    public void FillBossLifeBar() // metodo chamado pelo script de som. Preenche a barra de vida
+    public void FillBossLifeBar()
     {
         this.GetComponent<CanvasGroup>().alpha = 1;
         lifeBar.gameObject.SetActive(true);
     }
 
-    private bool IsDead() // retorna se o boss esta morto
+    private bool IsDead()
     {
         return bossAnim.GetBool("Dead");
     }
 
-    private void Die() // mata o boss
+    private void Die()
     {
-        bossAnim.SetBool("Dead", true); // seta o boss como morto
-        bossAnim.SetFloat("Vertical", 0); // para o movimento do boss
-        bossAnim.SetFloat("Horizontal", 0); // para o movimento do boss
+        bossAnim.SetBool("Dead", true);
+        bossAnim.SetFloat("Vertical", 0);
+        bossAnim.SetFloat("Horizontal", 0);
         StartCoroutine(AfterWin());
-        GameManagerScript.isBossDead = true; // seta o boss como morto, usado para parar a musica
+        GameManagerScript.isBossDead = true;
     }
 
-    public float GetBossLifeAmount() // retorna a quantia de vida do boss
-    {
+    public float GetBossLifeAmount()
+    { 
         return life;
     }
 
     IEnumerator AfterWin()
     {
-        StartCoroutine(FadeMusic());
-        yield return new WaitForSeconds(1.5f); // espera um pouco ate o boss cair
+        yield return new WaitForSeconds(1.5f);
         Vector3 offset = new Vector3(0, 0, 1);
-        Instantiate(winEffect, bossAnim.gameObject.transform.position + offset, quaternion.identity); // efeito de onda de choque
-        winnerScreen.SetActive(true); // escrita de sucesso
-        bonfire.SetActive(true); // ativa o bonfire
-        bossAnim.gameObject.GetComponent<CapsuleCollider>().isTrigger = true; // desativa o collider do boss depois que ele morre
+        bossAnim.gameObject.GetComponent<CapsuleCollider>().isTrigger = true; 
         CapsuleCollider[] legs = bossAnim.gameObject.GetComponentsInChildren<CapsuleCollider>();
-        foreach (CapsuleCollider leg in legs) leg.isTrigger = true; // desativa o collider das pernas ao morrer
-        achievementManager.TriggerDefeatBoss(); // achievement de vitoria
-        if (playerLifeBarScript.GetNoDamageTaken()) achievementManager.TriggerNoDamageTaken(); // confere se venceu sem receber dano
-        if (playerLifeBarScript.GetEstusFlaskAmount() == 5) achievementManager.TriggerNoHeals(); // confere se venceu sem receber dano
-        girlScript.DisableEstusFlask(); // desativa o estus para o player poder ascender o bonfire
-        musicSource.volume = 0; // assegura que nao havera mais musica
-        this.gameObject.SetActive(false); // desativa a barra de vida
-    }
-
-    IEnumerator FadeMusic()
-    {
-        yield return new WaitForSeconds(0.25f);
-        musicSource.volume -= 0.225f;
-        if(musicSource.volume > 0)
-            StartCoroutine(FadeMusic());
+        foreach (CapsuleCollider leg in legs) leg.isTrigger = true; 
+        this.gameObject.SetActive(false); 
     }
 
 }

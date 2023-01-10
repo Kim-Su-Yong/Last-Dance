@@ -32,15 +32,16 @@ public class HomingProjectile : MonoBehaviour
     {
         distance = (player.transform.position - this.transform.position).sqrMagnitude;
 
-        rb.velocity = transform.forward * speed; // aplica velocidade ao projetil
+        rb.velocity = transform.forward * speed; // 발사체에 속력을 가한다
 
-        if(distance > 2 && chase) // caso ainda nao tenha passado pelo player
+        if(distance > 2 && chase) // 플레이어를 통과하지 못했다면
         {
             Quaternion targetRotation = Quaternion.LookRotation((player.position + offset) - transform.position);
             rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, turn));
-        } else
+        } 
+        else
         {
-            chase = false; // nao persegue mais o player, apenas segue em frente
+            chase = false; // 더 이상 플레이어를 추적하지 않음
         }
     }
 
@@ -48,16 +49,15 @@ public class HomingProjectile : MonoBehaviour
     {
         if (!TimeInterval()) return;
         lastTime = Time.time;
-        Instantiate(explosionPrefab, this.transform.position, Quaternion.identity); // explosao
-        GameObject pos = GameObject.FindGameObjectWithTag("SoundManager").gameObject; // posicao da explosao
-        //SoundManager.CreateAndPlay(explosionSound, pos, this.transform, 3, 1, 35); // som da explosao
+        Instantiate(explosionPrefab, this.transform.position, Quaternion.identity); // 폭발
+        GameObject pos = GameObject.FindGameObjectWithTag("SoundManager").gameObject; // 폭발 위치
 
-        if(other.gameObject.tag == "Player" && !player.GetComponent<Animator>().GetBool("Intangible")) // caso tenha atingido o player
+        if(other.gameObject.tag == "Player" && !player.GetComponent<Animator>().GetBool("Hit")) // 플레이어를 쳤을 때
         {
-            lifeBarScript.StartBleeding(); // comeca a diminuir a vida do player gradualmente
+            // lifeBarScript.StartBleeding();
         }
 
-        Destroy(this.gameObject, 0.1f); // destroi este objeto apos colidir com algo
+        Destroy(this.gameObject, 0.1f);
     }
 
     private bool TimeInterval()

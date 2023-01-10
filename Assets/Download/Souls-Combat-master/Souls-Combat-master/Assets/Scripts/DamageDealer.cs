@@ -4,52 +4,46 @@ using UnityEngine;
 
 public class DamageDealer : MonoBehaviour
 {
-    public bool damageOn; // dano esta ativo
-    public float damageAmount; // quantia de dano que ira causar no player
-    //public float increaseOnPhase2; // valor que sera adicionado ao dano na fase 2
-    public AudioClip[] impactSound; // som que fara ao impactar com alguma coisa
+    public bool damageOn; // 데미지를 주고 있는지 확인
+    public float damageAmount; // 데미지를 얼마나 줄 지 
+
+    public AudioClip[] impactSound; // 맞힌 곳 히트 사운드 출력
 
     private float lastSoundTime = 0;
 
-    public float GetDamage() // caso algun script queira saber o quanto de dano esse objeto causa
+    public float GetDamage() // 데미지를 얼마나 입혔는지 확인하는 함수
     {
         return damageAmount;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!damageOn) return; // retorna caso nao possa causar dano
-
-        if (/*other.gameObject.layer != 9 && */other.gameObject.layer != 11 && other.gameObject.layer != 13) return; // nao atinge o que nao for da layer Ground, Player ou Scenary
-
-        if (other.gameObject.name == "Player") // caso tenha colidido com o player
+        if (!damageOn) return; // 데미지 입힌게 아니라면 반환함
+        
+        if (other.gameObject.name == "Player") // 만약 게임 오브젝트 이름이 플레이어라면
         {
-            if (other.GetComponent<Animator>().GetBool("Intangible")) return; // nao faz dano e nem som caso o player nao possa ser acertado
-            other.transform.GetComponentInParent<GirlScript>().RegisterDamage(damageAmount); // infringe o dano no player
+            if (other.GetComponent<Animator>().GetBool("Hit")) return; // 플레이어가 맞고 있다면
+            // other.transform.GetComponentInParent<GirlScript>().RegisterDamage(damageAmount);
         }
 
-        if (SoundInterval() && impactSound.Length > 0) // caso ja deu o intervalo para poder gerar som novamente
+        if (SoundInterval() && impactSound.Length > 0)
         {
-            //SoundManager.CreateAndPlay(impactSound[Random.Range(0, impactSound.Length)], GameObject.FindGameObjectWithTag("SoundManager").gameObject, other.transform, 2); // toca o som de impacto
             lastSoundTime = Time.time;
         }
     }
 
     public void GreatSwordFiller(GameObject other)
     {
-        if (!damageOn) return; // retorna caso nao possa causar dano
+        if (!damageOn) return;
 
-        if (other.gameObject.layer != 11 && other.gameObject.layer != 13) return; // nao atinge o que nao for da layer Ground, Player ou Scenary
-
-        if (other.gameObject.name == "Girl") // caso tenha colidido com o player
+        if (other.gameObject.name == "Player")
         {
-            if (other.GetComponent<Animator>().GetBool("Intangible")) return; // nao faz dano e nem som caso o player nao possa ser acertado
-            other.transform.GetComponentInParent<GirlScript>().RegisterDamage(damageAmount); // infringe o dano no player
+            if (other.GetComponent<Animator>().GetBool("Hit")) return;
+            //other.transform.GetComponentInParent<GirlScript>().RegisterDamage(damageAmount);
         }
 
-        if (SoundInterval() && impactSound.Length > 0) // caso ja deu o intervalo para poder gerar som novamente
+        if (SoundInterval() && impactSound.Length > 0)
         {
-            //SoundManager.CreateAndPlay(impactSound[Random.Range(0, impactSound.Length)], GameObject.FindGameObjectWithTag("SoundManager").gameObject, other.transform, 2); // toca o som de impacto
             lastSoundTime = Time.time;
         }
     }
