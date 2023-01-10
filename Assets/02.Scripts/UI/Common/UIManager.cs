@@ -41,6 +41,8 @@ public class UIManager : MonoBehaviour
     public string call_sound;
     void Start()
     {
+        instance = this;
+
         equipmentslots = GameObject.FindGameObjectsWithTag("Equipment");
         playerDamage = FindObjectOfType<PlayerDamage>();
         playerState = FindObjectOfType<PlayerState>();
@@ -71,7 +73,7 @@ public class UIManager : MonoBehaviour
         {
             ShowInven();
             ShowEquip();
-            ShowShop();
+            //ShowShop();
             deathPanel.SetActive(false);
         }
         
@@ -155,6 +157,23 @@ public class UIManager : MonoBehaviour
             {
                 CloseShop();
             }
+        }
+    }
+
+    public void Shop()
+    {
+        if (!activeShop)
+        {
+            theSound.Play(call_sound);
+            activeShop = true;
+            activeInven = true;
+            CursorLock(false);
+            shopGO.SetActive(true);
+            invenGO.SetActive(true);
+        }
+        else
+        {
+            CloseShop();
         }
     }
     public void OnclickUse()

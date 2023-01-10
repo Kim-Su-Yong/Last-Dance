@@ -68,13 +68,15 @@ public class GameManager : MonoBehaviour
         if (talkData == null)    // 더이상 대화할 문장이 없다면 대화 종료
         {
             isAction = false;
-            followCam.gameObject.SetActive(true);          // 팔로우 카메라 활성화
+            followCam.gameObject.SetActive(true); // 팔로우 카메라 활성화
             npcCam.gameObject.SetActive(false);   // NPC 확대 카메라 비활성화
 
             talkImage.gameObject.SetActive(false);
             canvasUI.gameObject.SetActive(true);
 
             talkIndex = 0;
+
+            UIManager.instance.Shop();
             return;
         }
             
