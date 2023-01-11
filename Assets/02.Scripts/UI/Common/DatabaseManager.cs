@@ -18,12 +18,6 @@ public class DatabaseManager : MonoBehaviour
             instance = this;
         }
     }
-    public string[] var_name;
-    public float[] var;
-
-    public string[] switch_name;
-    public bool[] switches;
-
     public List<ItemInfo> itemList = new List<ItemInfo>();
     //public List<EquipStat> equipStat = new List<EquipStat>();
     void Start()
