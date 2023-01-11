@@ -20,6 +20,7 @@ public class Menu : MonoBehaviour
     StandardInput cursorLock;
     //PlayerAttack attack;
     GameObject theUI;
+    public string click_sound;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
@@ -46,7 +47,6 @@ public class Menu : MonoBehaviour
                 theSound.Play(call_sound);
                 Pause();
             }
-            
         }
     }
     public void Pause()
@@ -69,6 +69,7 @@ public class Menu : MonoBehaviour
     }
     public void Close()
     {
+        theSound.Play(click_sound);
         pauseImg.gameObject.SetActive(false);
         screenMenu.gameObject.SetActive(false);
         soundMenu.gameObject.SetActive(false);
@@ -77,6 +78,7 @@ public class Menu : MonoBehaviour
     }
     public void Sounds(bool isopen)
     {
+        theSound.Play(click_sound);
         if (isopen == true)
         {
             soundMenu.gameObject.SetActive(true);
@@ -90,6 +92,7 @@ public class Menu : MonoBehaviour
     }
     public void ScreenSetting(bool isopen)
     {
+        theSound.Play(click_sound);
         if (isopen == true)
         {
             screenMenu.gameObject.SetActive(true);
@@ -105,6 +108,7 @@ public class Menu : MonoBehaviour
     }
     public void GoToTitle()
     {
+        theSound.Play(click_sound);
         pauseImg.gameObject.SetActive(false);
         screenMenu.gameObject.SetActive(false);
         soundMenu.gameObject.SetActive(false);
@@ -114,6 +118,7 @@ public class Menu : MonoBehaviour
     }
     public void Exit()
     {
+        theSound.Play(click_sound);
         Application.Quit();
     }
 
