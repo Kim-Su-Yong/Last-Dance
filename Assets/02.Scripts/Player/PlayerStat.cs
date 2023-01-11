@@ -105,7 +105,7 @@ public class PlayerStat : MonoBehaviour
         def++;              // 방어력 증가
     }
 
-    void expUpdate()
+    public void expUpdate()
     {
         ExpBar.fillAmount = (float)currentEXP / needExp[character_Lv];
         LvText.text = "LV " + character_Lv.ToString() + "(EXP " + ((int)(ExpBar.fillAmount*100)).ToString() + "%)";

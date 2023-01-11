@@ -36,6 +36,7 @@ public class SaveNLoad : MonoBehaviour
     private SoundManager theSound;
     public static SaveNLoad Instance;
     public SaveNLoad savenload;
+    //GameObject theUI;
 
     public Data data;
 
@@ -49,6 +50,8 @@ public class SaveNLoad : MonoBehaviour
         else
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
+
+        //theUI = GameObject.Find("Canvas_UI");
     }
     public void CallSave()
     {
@@ -122,6 +125,7 @@ public class SaveNLoad : MonoBehaviour
             thePlayerStat.maxHP = data.playerHP; //데이터에 있는 최대 HP를 플레이어 최대 HP에 넣어줌
             playerDamage.curHp = data.playerCurrentHP; //데이터에 있는 현재 HP를 플레이어 현재 HP에 넣어줌
             thePlayerStat.currentEXP = data.playerCurrentEXP; //데이터에 있는 경험치를 플레이어 경험치에 넣어줌
+            thePlayerStat.expUpdate(); //exp업데이트
             thePlayerStat.atk = data.playerATK; //데이터에 있는 공격력을 플레이어 공격력에 넣어줌
             thePlayerStat.def = data.playerDEF; //데이터에 있는 방어력을 플레이어 방어력에 넣어줌
             FindObjectOfType<PlayerDamage>().hpUpdate(); //데이터에 있는 HP로 변경되었으니 그에 따른 UI도 업데이트
