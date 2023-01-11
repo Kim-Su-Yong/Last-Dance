@@ -3425,7 +3425,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Screern
+  m_Text: "\uD654\uBA74"
 --- !u!1 &5479163277060253835
 GameObject:
   m_ObjectHideFlags: 0
@@ -4759,7 +4759,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6388545661415721701
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6056,7 +6056,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Sound
+  m_Text: "\uC0AC\uC6B4\uB4DC"
 --- !u!1 &8820721056254572494
 GameObject:
   m_ObjectHideFlags: 0
