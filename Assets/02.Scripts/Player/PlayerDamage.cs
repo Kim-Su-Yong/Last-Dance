@@ -49,6 +49,8 @@ public class PlayerDamage : MonoBehaviour
         changeForm = GetComponent<ChangeForm>();
         source = GetComponent<AudioSource>();
 
+        hitSound = Resources.Load<AudioClip>("Sound/Player/PlayerHit");
+        deathSound = Resources.Load<AudioClip>("Sound/Player/PlayerDie");
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
 
@@ -113,7 +115,7 @@ public class PlayerDamage : MonoBehaviour
         int _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
-        source.PlayOneShot(hitSound);
+        source.PlayOneShot(hitSound, 1.5f);
 
         // 현재 체력값이 0 ~ 초기 체력(아마 최대체력으로 변경될 예정)사이의 값만 가지도록 조정
         curHp = Mathf.Clamp(curHp, 0, PlayerStat.instance.maxHP);
@@ -138,16 +140,9 @@ public class PlayerDamage : MonoBehaviour
        
         animator.SetTrigger(hashDie);     // 사망 애니메이션 실행
         GetComponent<CharacterController>().enabled = false;    // 충돌판정 제거를 위한 캐릭터 컨트롤러 비활성화
-        source.PlayOneShot(deathSound);
+        source.PlayOneShot(deathSound, 1.8f);
 
-        // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
-        //yield return new WaitForSeconds(2f);
-        //UIManager.instance.deathPanelShow();
-
-        //deathPanel.SetActive(true);
-        yield return null;//new WaitForSeconds(3f);
-        //deathPanel.SetActive(false);
-        //Respawn();
+        yield return null;
     }
     public void Respawn()
     {
@@ -182,17 +177,7 @@ public class PlayerDamage : MonoBehaviour
 
     private void OnEnable()
     {
-        //// 체력은 꽉 찬 상태로 리스폰
-        //curHp = PlayerStat.instance.maxHP;
-        //HpBar.color = Color.green;
-        //hpUpdate();
-        //// 플레이어 상태 = IDLE
-        //playerState.state = PlayerState.State.IDLE;
-        
-        //GetComponent<CharacterController>().enabled = true;
-        //changeForm.curForm = ChangeForm.FormType.FOX;
-        
-        //GetComponent<ChangeForm>().Staff.enabled = true;
+
     }
 
     private void OnTriggerEnter(Collider other)

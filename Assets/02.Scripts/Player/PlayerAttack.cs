@@ -22,7 +22,9 @@ public class PlayerAttack : MonoBehaviour
     [Header("공격 및 스킬")]
     // 여우 공격
     public GameObject[] FoxFires;   // 공전하는 여우불 배열 
+    [HideInInspector]
     public SkillData fireData;      // 여우불 스킬 데이터
+    [HideInInspector]
     public SkillData healData;      // 힐 스킬 데이터
 
     // 오브젝트 풀링
@@ -37,11 +39,13 @@ public class PlayerAttack : MonoBehaviour
     public ParticleSystem thirdEffect;  // 호랑이 세번째 공격 이펙트
     public TrailRenderer rHandTrail;    // 호랑이 세번째 공격 이펙트2
 
+    [HideInInspector]
     public SkillData roarData;      // 포효 스킬 데이터
     public SphereCollider roarCollider; // 포효 충돌 콜라이더
     public Transform roarTr;        // 포효 이펙트 위치
 
     // 독수리 스킬
+    [HideInInspector]
     public SkillData buffData;      // 독수리 스킬 데이터
 
     [Header("제어 변수")]
@@ -60,16 +64,13 @@ public class PlayerAttack : MonoBehaviour
     public Text[] coolTxt;          // 스킬 쿨타임 텍스트들
 
     [Header("Sounds")]
-    public AudioClip fireBallClip;  // 여우 기본 공격 사운드
-    public AudioClip foxFireClip;   // 여우불 스킬 사운드
-    public AudioClip healClip;      // 여우 힐 스킬 사운드
-
-    public AudioClip punchClip;     // 호랑이 기본 공격 사운드
-    public AudioClip thirdPunchClip;// 호랑이 3번째 펀치 사운드    
-    public AudioClip roarClip;      // 호랑이 포효 스킬 사운드
-    
-    public AudioClip bezierClip;    // 독수리 기본 공격 사운드
-    public AudioClip buffClip;      // 독수리 버프 스킬 사운드
+    AudioClip fireBallClip;  // 여우 기본 공격 사운드
+    AudioClip foxFireClip;   // 여우불 스킬 사운드
+    AudioClip healClip;      // 여우 힐 스킬 사운드
+    AudioClip punchClip;     // 호랑이 기본 공격 사운드
+    AudioClip thirdPunchClip;// 호랑이 3번째 펀치 사운드    
+    AudioClip roarClip;      // 호랑이 포효 스킬 사운드
+    AudioClip buffClip;      // 독수리 버프 스킬 사운드
 
     // 최적화를 위한 변수
     readonly int hashAttack = Animator.StringToHash("Attack");
@@ -89,6 +90,14 @@ public class PlayerAttack : MonoBehaviour
 
         animator = GetComponent<Animator>();
         source = GetComponent<AudioSource>();
+
+        fireBallClip = Resources.Load("Sound/Player/PlayerBasicAttack") as AudioClip;
+        foxFireClip = Resources.Load("Sound/Player/PlayerFoxFireAttack") as AudioClip;
+        healClip = Resources.Load("Sound/Player/PlayerHeal") as AudioClip;
+        punchClip = Resources.Load("Sound/Player/PlayerFist01") as AudioClip;
+        thirdPunchClip = Resources.Load("Sound/Player/PlayerFist02") as AudioClip;
+        roarClip = Resources.Load("Sound/Player/PlayerRoar") as AudioClip;
+        buffClip = Resources.Load("Sound/Player/PlayerBuff") as AudioClip;
 
         FireBall = Resources.Load("Player/Magic Fire Ball") as GameObject;
 
@@ -183,16 +192,6 @@ public class PlayerAttack : MonoBehaviour
             Vector3 dir = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
             transform.LookAt(dir); // 적을 바라보긴 하지만 부자연스러움
         }
-
-        //if(target != null)
-        //{
-        //    Vector3 lookDir = (target.transform.position - transform.position).normalized;
-
-        //    Quaternion from = transform.rotation;
-        //    Quaternion to = Quaternion.LookRotation(lookDir);
-
-        //    transform.rotation = Quaternion.Lerp(from, to, Time.deltaTime*5f);
-        //}
     }
 
     #region FireBall 오브젝트 풀링
@@ -227,11 +226,6 @@ public class PlayerAttack : MonoBehaviour
         animator.SetTrigger(hashAttack);
     }
 
-    //private void TigerBaseAttack(bool isPunching)
-    //{
-    //    animator.SetBool(hashCombo, isPunching);
-    //}
-
     void TigerBaseAttack()
     {
         animator.SetTrigger(hashComoboAttack);
@@ -246,7 +240,6 @@ public class PlayerAttack : MonoBehaviour
             _fireBall.transform.position = FirePos.position;
             _fireBall.transform.rotation = FirePos.rotation;
             _fireBall.SetActive(true);
-            source.PlayOneShot(fireBallClip);
         }
     }
     void OnAttackStart(int count)   // 기본 공격 애니메이션 이벤트
@@ -265,6 +258,10 @@ public class PlayerAttack : MonoBehaviour
             else if (count == 3)
                 rHandTrail.enabled = true;  // 라인 렌더러 활성화
             Invoke("TrailOff", 2f);         // 2초후 라인 렌더러 비활성화
+        }
+        else
+        {
+            source.PlayOneShot(fireBallClip);
         }
 
         moveStop();                         // 공격중에 이동하지 않도록 하는 함수
@@ -285,7 +282,6 @@ public class PlayerAttack : MonoBehaviour
     void OnAttackEnd(int count)             // 기본 공격 종료 함수
     {
         bIsAttack = false;
-        //if (!animator.GetBool("Combo"))
         playerState.state = PlayerState.State.IDLE; // 공격 상태가 끝나면 IDLE로 돌아옴
     }
     #endregion
@@ -294,12 +290,13 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator FoxSkill_1()
     {
         if (canSkills[0])           // 여우불 스킬이 사용 가능한 상태라면
-        {
+        {     
+            animator.SetInteger(hashSkillState, 1);   // 애니메이션 실행
             canSkills[0] = false;   // 여우불 스킬 사용 불가능 상태
             // 쿨타임 표시 활성화
-            coolImg[0].enabled = true;      
+            coolImg[0].enabled = true;
             coolTxt[0].enabled = true;
-            animator.SetInteger(hashSkillState, 1);   // 애니메이션 실행
+            source.PlayOneShot(foxFireClip);
             // 이펙트 생성 후 1초후 제거
             GameObject Effect = Instantiate(fireData.skillEffect, transform.position, Quaternion.identity);
             Destroy(Effect, 1f);
@@ -409,14 +406,14 @@ public class PlayerAttack : MonoBehaviour
         foreach (GameObject fire in FoxFires)   // 여우불 활성화(애니메이션과 타이밍을 맞게 하기 위한 이벤트)
         {
             fire.SetActive(true);
-            source.PlayOneShot(foxFireClip);
+            
         }
     }
 
     void OnHeal()       // 힐 스킬 발동 이벤트
     {
         int newHP = (int)(healData.f_skillDamage * PlayerStat.instance.maxHP);    // 최대체력의 50%를 회복
-        source.PlayOneShot(healClip);
+        source.PlayOneShot(healClip, 1.5f);
         GameObject Effect = Instantiate(healData.skillEffect, transform.position, Quaternion.identity); // 이펙트 Instantiate 후 1.5초 후 제거
         Destroy(Effect, 1.5f);
         PlayerDamage playerDamage = GetComponent<PlayerDamage>();
@@ -439,15 +436,6 @@ public class PlayerAttack : MonoBehaviour
         // 콜라이더 비활성화 코루틴 실행
         StartCoroutine(ColOff(roarCollider));
     }
-
-    //IEnumerator DownSpeed(GameObject target)    // 테스트함수(최적화시 제거할 예정)
-    //{
-    //    // 실제 에너미 데이터로 속도 감소 시켜야함
-    //    // *수정 할 예정*
-    //    target.GetComponent<EnemyDamage>().testSpeed -= 2f;
-    //    yield return new WaitForSeconds(2f);
-    //    target.GetComponent<EnemyDamage>().testSpeed += 2f;
-    //}
 
     void OnBuff()   // 독수리 버프 스킬 이벤트
     {

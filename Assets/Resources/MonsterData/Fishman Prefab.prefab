@@ -2295,7 +2295,6 @@ GameObject:
   - component: {fileID: 5937480634921844053}
   - component: {fileID: 4366146198113187586}
   - component: {fileID: 631359628}
-  - component: {fileID: 5234438579437411355}
   m_Layer: 6
   m_Name: Fishman Prefab
   m_TagString: ENEMY
@@ -2589,19 +2588,6 @@ MonoBehaviour:
   EquipItems: []
   ETCItems: []
   isDrop: 0
---- !u!65 &5234438579437411355
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 168176582182411417}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.8, y: 1.4, z: 1}
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &168176582182411419
 GameObject:
   m_ObjectHideFlags: 0
