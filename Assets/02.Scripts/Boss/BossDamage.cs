@@ -57,7 +57,6 @@ public class BossDamage : MonoBehaviour
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossAI.animator.SetBool("TakeDamage", true);
             bossAI.isDamaged = true;
             bossAI.HpUpdate();
 
@@ -72,7 +71,6 @@ public class BossDamage : MonoBehaviour
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossAI.animator.SetBool("TakeDamage", true);
             bossAI.isDamaged = true;
             bossAI.HpUpdate();
 
@@ -87,7 +85,6 @@ public class BossDamage : MonoBehaviour
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossAI.animator.SetBool("TakeDamage", true);
             bossAI.isDamaged = true;
             bossAI.HpUpdate();
 
@@ -117,7 +114,6 @@ public class BossDamage : MonoBehaviour
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
 
-            bossAI.animator.SetBool("TakeDamage", true);
             bossAI.isDamaged = true;
             bossAI.HpUpdate();
 
