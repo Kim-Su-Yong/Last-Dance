@@ -32,9 +32,8 @@ public class TitleManager : MonoBehaviour
     {
         theSound.Play(click_sound);
         themenu.gameObject.SetActive(false);
-        thetitle.gameObject.SetActive(false);
+        //thetitle.gameObject.SetActive(false);
         SceneLoader.Instance.LoadScene("MainScene");
-
     }
     public void ExitGame()
     {

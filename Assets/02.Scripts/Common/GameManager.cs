@@ -36,9 +36,9 @@ public class GameManager : MonoBehaviour
 
     public bool playerIsDead;
 
-    //private ShopSlotPotion thePotion;
+    public ShopSlotPotion thePotion;
     //public SaveNLoad saveN;
-    public ShopSlot theShop;
+    //public ShopSlot theShop;
     private void Awake()
     {
         if (gameManager == null)
@@ -57,8 +57,8 @@ public class GameManager : MonoBehaviour
         talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(0).gameObject;
         canvasUI = GameObject.Find("Canvas_UI");
         //saveN = FindObjectOfType<SaveNLoad>();
-        //thePotion = saveN.thePotion.GetComponent<ShopSlotPotion>();
-        theShop = FindObjectOfType<ShopSlot>();
+        thePotion = GetComponent<ShopSlotPotion>();
+        //theShop = FindObjectOfType<ShopSlot>();
     }
     void Update()
     {
@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
             talkIndex = 0;
 
             UIManager.instance.Shop();
-            theShop.cantbuy();
+            thePotion.cantbuy();
             return;
         }
             

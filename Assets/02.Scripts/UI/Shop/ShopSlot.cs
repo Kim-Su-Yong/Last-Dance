@@ -14,12 +14,5 @@ public class ShopSlot : MonoBehaviour
         button1 = button.transform.GetChild(1).GetComponent<Button>(); //구매하면 해당 버튼 상호작용이 false되면서 이미지가 회색으로 표시되기 위한 버튼변수
         button2 = button.transform.GetChild(2).GetComponent<Button>(); //구매하면 해당 버튼 상호작용이 false되면서 구매버튼이 회색으로 표시되기 위한 버튼변수
     }
-    public void cantbuy()
-    {
-        if (thePotion.potionSoldOut)
-        {
-            button1.interactable = false;
-            button2.interactable = false;
-        }
-    }
+
 }
