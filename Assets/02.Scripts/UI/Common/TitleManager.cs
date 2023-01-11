@@ -4,19 +4,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class TitleManager : MonoBehaviour
 {
-    [SerializeField]
     private SoundManager theSound;
-    [SerializeField]
     private SaveNLoad theSave;
     [SerializeField]
-    private Menu themenu;
+    private GameObject themenu;
 
     public string click_sound;
     void Start()
     {
         theSound = FindObjectOfType<SoundManager>();
         theSave = FindObjectOfType<SaveNLoad>();
-        //themenu = FindObjectOfType<Menu>();
+        themenu = GameObject.Find("Canvas_Menu").transform.GetChild(0).gameObject;
     }
     public void SaveGame()
     {
@@ -26,6 +24,7 @@ public class TitleManager : MonoBehaviour
     public void LoadGame()
     {
         theSound.Play(click_sound);
+        themenu.gameObject.SetActive(false);
         SceneLoader.Instance.LoadScene("MainScene");
     }
     public void ExitGame()
