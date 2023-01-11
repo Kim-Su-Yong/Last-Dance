@@ -380,4 +380,9 @@ public class MonsterAI : MonoBehaviour
     {
         yield return new WaitForSeconds(3.5f);
     }
+    private void OnEnable()
+    {
+        Hp_Bar.fillAmount = 1f;
+        Hp_Text.text = ((int)M_HP).ToString() + " / " + ((int)M_MaxHP).ToString();
+    }
 }

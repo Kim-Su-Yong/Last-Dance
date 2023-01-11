@@ -113,6 +113,7 @@ public class UIManager : MonoBehaviour
                 activeInven = true;
                 CursorLock(false);
                 invenGO.SetActive(true);
+                playerState.state = PlayerState.State.TALK;
             }
             else
             {
@@ -131,6 +132,7 @@ public class UIManager : MonoBehaviour
                 activeEquip = true;
                 CursorLock(false);
                 equipGO.SetActive(true);
+                playerState.state = PlayerState.State.TALK;
             }
             else
             {
@@ -151,6 +153,7 @@ public class UIManager : MonoBehaviour
                 CursorLock(false);                
                 shopGO.SetActive(true);
                 invenGO.SetActive(true);
+                //playerState.state = PlayerState.State.TALK;
             }
             else
             {
@@ -265,6 +268,7 @@ public class UIManager : MonoBehaviour
         activeEquip = false;
         //CursorLock(true);
         equipGO.SetActive(false);
+        playerState.state = PlayerState.State.IDLE;
     }
 
     public void CloseShop()
@@ -286,6 +290,7 @@ public class UIManager : MonoBehaviour
         activeInven = false;
         //CursorLock(true);
         invenGO.SetActive(false);
+        playerState.state = PlayerState.State.IDLE;
     }
 
     public void CloseUI()
