@@ -24,6 +24,7 @@ public class EndingCredit : MonoBehaviour
             endingCredit.SetActive(true);
             Invoke("ToTitleScene", 14f);
             player.GetComponent<PlayerState>().state = PlayerState.State.TALK;
+            UIManager.instance.isEnd = true;
         }
     }
 

@@ -38,6 +38,8 @@ public class UIManager : MonoBehaviour
 
     public SoundManager theSound;
     public string call_sound;
+
+    public bool isEnd;
     void Start()
     {
         instance = this;
@@ -104,7 +106,7 @@ public class UIManager : MonoBehaviour
 
     void ShowInven()    // 인벤토리창이 닫히는 경우는 2가지(x버튼 누르기, i키 누르기)
     {                   // x버튼 누를경우 커서락이 변동되지 않는 버그 수정해야함
-        if (Input.GetKeyDown(KeyCode.I) && !activeMenu)
+        if (Input.GetKeyDown(KeyCode.I) && !activeMenu && !isEnd)
         {
             //activeInven = !activeInven;
             if (!activeInven)
@@ -123,7 +125,7 @@ public class UIManager : MonoBehaviour
     }
     void ShowEquip()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !activeShop && !activeMenu) //상점이 열려있으면 장비창이 열리지 않도록
+        if (Input.GetKeyDown(KeyCode.E) && !activeShop && !activeMenu && !isEnd) //상점이 열려있으면 장비창이 열리지 않도록
         {
             //activeEquip = !activeEquip;
             if (!activeEquip)
