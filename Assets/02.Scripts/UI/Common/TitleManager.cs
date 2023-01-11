@@ -8,6 +8,7 @@ public class TitleManager : MonoBehaviour
     private SaveNLoad theSave;
     [SerializeField]
     private GameObject themenu;
+    private GameObject thetitle;
 
     public string click_sound;
     void Start()
@@ -15,6 +16,12 @@ public class TitleManager : MonoBehaviour
         theSound = FindObjectOfType<SoundManager>();
         theSave = FindObjectOfType<SaveNLoad>();
         themenu = GameObject.Find("Canvas_Menu").transform.GetChild(0).gameObject;
+        thetitle = GameObject.Find("Canvas_Title").transform.GetChild(0).gameObject;
+    }
+    private void OnEnable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        thetitle.gameObject.SetActive(true);
     }
     public void SaveGame()
     {
@@ -25,7 +32,9 @@ public class TitleManager : MonoBehaviour
     {
         theSound.Play(click_sound);
         themenu.gameObject.SetActive(false);
+        thetitle.gameObject.SetActive(false);
         SceneLoader.Instance.LoadScene("MainScene");
+
     }
     public void ExitGame()
     {
