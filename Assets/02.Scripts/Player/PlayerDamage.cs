@@ -114,9 +114,9 @@ public class PlayerDamage : MonoBehaviour
         int _damage = 0;
         
         if(Enemy.CompareTag("ENEMY"))
-            _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
+            _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f)) -PlayerStat.instance.def;
         else if(Enemy.CompareTag(greatSword) || Enemy.CompareTag("Magic"))
-            _damage = 50;
+            _damage = 50 - PlayerStat.instance.def;
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
         source.PlayOneShot(hitSound, 1.5f);
