@@ -107,7 +107,7 @@ public class BossAttacks : MonoBehaviour
         int rand = 0; // 랜덤값을 부여해서
         do
         {
-            if (!anim.GetBool("Phase2")) rand = Random.Range(0, 7);
+            if (!anim.GetBool("Phase2")) rand = Random.Range(0, 4);
             if (anim.GetBool("Phase2")) rand = Random.Range(0, 8); // 2페이즈 일 경우 공격 패턴 1개 추가
         } 
         while (rand == lastAttack); // do while 문으로 랜덤한 공격 시전
@@ -121,16 +121,19 @@ public class BossAttacks : MonoBehaviour
         switch (rand)
         {
             case 0:
-                anim.SetTrigger("SuperSpinner"); // 2페이즈 전용 공격기
+                //anim.SetTrigger("SuperSpinner"); // 2페이즈 전용 공격기
+                anim.SetTrigger("Combo1"); // 다른 연타 공격
                 break;
             case 1:
-                anim.SetTrigger("Dash");
+                //anim.SetTrigger("Dash");
+                anim.SetTrigger("Combo"); // 연타 공격
                 break;
             case 2:
-                anim.SetTrigger("DoubleDash");
+                //anim.SetTrigger("DoubleDash");
                 break;
             case 3:
-                anim.SetTrigger("Casting"); // 지면 강타
+                //anim.SetTrigger("Casting"); // 지면 강타
+                anim.SetTrigger("ForwardAttack");
                 break;
             case 4:
                 anim.SetTrigger("Spell"); // 파이어볼
@@ -158,7 +161,7 @@ public class BossAttacks : MonoBehaviour
         int rand = 0;
         do
         {
-            if (!anim.GetBool("Phase2")) rand = Random.Range(0, 10);
+            if (!anim.GetBool("Phase2")) rand = Random.Range(1, 5);
             if (anim.GetBool("Phase2")) rand = Random.Range(0, 13);
         } 
         while (rand == lastAttack); // 마찬가지로 랜덤값 부여
