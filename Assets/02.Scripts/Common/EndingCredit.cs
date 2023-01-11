@@ -8,10 +8,12 @@ public class EndingCredit : MonoBehaviour
     public GameObject endingCredit;
     public BossAI bossAI;
     public MouseHover mouseHover;
+    GameObject player;
 
     void Start()
     {
         bossAI = GameObject.Find("Boss").GetComponent<BossAI>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
@@ -20,7 +22,8 @@ public class EndingCredit : MonoBehaviour
         else if (bossAI.isDie == true)
         {
             endingCredit.SetActive(true);
-            Invoke("ToTitleScene", 15f);
+            Invoke("ToTitleScene", 14f);
+            player.GetComponent<PlayerState>().state = PlayerState.State.TALK;
         }
     }
 
