@@ -28,10 +28,7 @@ public class ShopSlotPotion : MonoBehaviour
     }
     public void cantbuy()
     {
-        if (potionSoldOut)
-        {
-            button1.interactable = false;
-            button2.interactable = false;
-        }
+        button1.interactable = false;
+        button2.interactable = false;
     }
 }

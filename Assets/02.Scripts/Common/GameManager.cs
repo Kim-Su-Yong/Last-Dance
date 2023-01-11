@@ -35,10 +35,6 @@ public class GameManager : MonoBehaviour
     public GreatSwordScript greatSword;
 
     public bool playerIsDead;
-
-    public ShopSlotPotion thePotion;
-    //public SaveNLoad saveN;
-    //public ShopSlot theShop;
     private void Awake()
     {
         if (gameManager == null)
@@ -56,12 +52,6 @@ public class GameManager : MonoBehaviour
 
         talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(0).gameObject;
         canvasUI = GameObject.Find("Canvas_UI");
-        //saveN = FindObjectOfType<SaveNLoad>();
-        thePotion = GetComponent<ShopSlotPotion>();
-        //theShop = FindObjectOfType<ShopSlot>();
-    }
-    void Update()
-    {
     }
     public void Action(GameObject nearObject)
     {            
@@ -69,7 +59,6 @@ public class GameManager : MonoBehaviour
 
         Talk(objData.id);
     }
-
     public void ActionEnd()
     {
         followCam.gameObject.SetActive(true); // 팔로우 카메라 활성화
@@ -85,7 +74,6 @@ public class GameManager : MonoBehaviour
         npcCam.gameObject.SetActive(true);   // NPC 확대 카메라 활성화
         UIManager.instance.Shop();
     }
-
     void Talk(int id)
     {
         string talkData = talkManager.GetTalk(id, talkIndex);
@@ -102,7 +90,6 @@ public class GameManager : MonoBehaviour
             talkIndex = 0;
 
             UIManager.instance.Shop();
-            thePotion.cantbuy();
             return;
         }
             

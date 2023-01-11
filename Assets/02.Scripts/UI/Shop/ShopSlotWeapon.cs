@@ -16,16 +16,9 @@ public class ShopSlotWeapon : MonoBehaviour
         button1 = button.transform.GetChild(1).GetComponentInChildren<Button>(); //구매하면 해당 버튼 상호작용이 false되면서 이미지가 회색으로 표시되기 위한 버튼변수
         button2 = button.transform.GetChild(2).GetComponentInChildren<Button>(); //구매하면 해당 버튼 상호작용이 false되면서 구매버튼이 회색으로 표시되기 위한 버튼변수
     }
-    void Start()
-    {
-        if(weaponSoldOut)
-        {
-            cantbuy();
-        }
-    }
     public void BuyWeapon() //무기 구매 함수
     {
-        if (PlayerStat.instance.money >= 4000 && !weaponSoldOut)
+        if (PlayerStat.instance.money >= 4000)
         {
             Inventory.instance.GetAnItem(211, 1);
             weaponSoldOut = true;

@@ -48,19 +48,6 @@ public class PlayerAction : MonoBehaviour
     {
         theSaveNLoad = FindObjectOfType<SaveNLoad>();
     }
-    void Update()
-    {
-        Interaction();            
-
-        if (Input.GetKeyDown(KeyCode.F9)) //임시용 키(삭제예정)
-        {
-            theSaveNLoad.CallSave();
-        }
-        if (Input.GetKeyDown(KeyCode.F10)) //이하 동일
-        {
-            theSaveNLoad.CallLoad();
-        }
-    }
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("NPC"))

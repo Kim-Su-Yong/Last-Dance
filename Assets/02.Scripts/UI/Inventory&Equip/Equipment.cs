@@ -9,7 +9,7 @@ public class Equipment : MonoBehaviour
     private PlayerStat thePlayerStat;
     private OkOrCancel theOOC;
     private Inventory theInven;
-    private Equipment theEquip;
+    public static Equipment instance;
 
     public string key_sound;
     public string enter_sound;
@@ -43,7 +43,7 @@ public class Equipment : MonoBehaviour
         thePlayerStat = FindObjectOfType<PlayerStat>();
         theOOC = FindObjectOfType<OkOrCancel>();
         theInven = FindObjectOfType<Inventory>();
-        theEquip = FindObjectOfType<Equipment>();
+        //theEquip = FindObjectOfType<Equipment>();
     }
     public void EquipItem(ItemInfo _item)
     {

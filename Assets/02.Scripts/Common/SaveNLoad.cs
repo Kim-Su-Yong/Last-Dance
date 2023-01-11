@@ -24,7 +24,6 @@ public class SaveNLoad : MonoBehaviour
         public float playerSPD; //캐릭터의 이동속도
 
         public int playerMoney; //캐릭터의 소지금
-        public bool potionSold;
 
         public List<int> playerItemInventory; //플레이어 인벤토리
         public List<int> playerItemInventoryCount; //플레이어 인벤토리 아이템 수
@@ -37,8 +36,6 @@ public class SaveNLoad : MonoBehaviour
     private SoundManager theSound;
     public static SaveNLoad Instance;
     private SaveNLoad savenload;
-    public ShopSlotPotion thePotion;
-    public GameObject theShop;
 
     public Data data;
 
@@ -52,8 +49,6 @@ public class SaveNLoad : MonoBehaviour
         else
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
-
-        //theUI = GameObject.Find("Canvas_UI");
     }
     public void CallSave()
     {
@@ -63,8 +58,6 @@ public class SaveNLoad : MonoBehaviour
         thePlayerStat = FindObjectOfType<PlayerStat>();
         theInven = FindObjectOfType<Inventory>();
         theSound = FindObjectOfType<SoundManager>();
-        theShop = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
-        thePotion = theShop.GetComponent<ShopSlotPotion>();
 
         data.playerX = thePlayer.transform.position.x; //현재 캐릭터의 X좌표값 저장
         data.playerY = thePlayer.transform.position.y; //현재 캐릭터의 Y좌표값 저장
@@ -78,7 +71,6 @@ public class SaveNLoad : MonoBehaviour
         data.playerDEF = thePlayerStat.def; //현재 캐릭터의 방어력 저장
         data.playerSPD = thePlayerStat.speed; //현재 캐릭터의 이동속도 저장
         data.playerMoney = thePlayerStat.money; //현재 캐릭터의 소지금 저장
-        data.potionSold = thePotion.potionSoldOut;
 
         Debug.Log("기초 데이터 성공");
 
@@ -86,6 +78,8 @@ public class SaveNLoad : MonoBehaviour
         data.playerItemInventoryCount.Clear();
 
         List<ItemInfo> itemList = theInven.SaveItem(); //inventoryItemList
+        List<ItemInfo> equipList = theInven.SaveEquip();
+
         for (int i = 0; i < itemList.Count; i++)
         {
             Debug.Log("인벤토리의 아이템 저장 완료 : " + itemList[i].itemID);
@@ -96,21 +90,10 @@ public class SaveNLoad : MonoBehaviour
         FileStream file = File.Create(Application.dataPath + "/SaveFile.dat"); //SaveFile.dat이라는 파일을 생성
         bf.Serialize(file, data); //객체를 데이터로 변환
         file.Close(); //파일 닫기
-
-        //string fileName = "Save";
-        //string path = Application.persistentDataPath + "/" + fileName + ".dat";
-        //FileStream filestream = new FileStream(path, FileMode.Create);
-        //BinaryFormatter formatter = new BinaryFormatter();
-        //formatter.Serialize(filestream, data);
-        //filestream.Close();
     }
     public void CallLoad()
     {
-        //string fileName = "Save";
-        //string path = Application.persistentDataPath + "/" + fileName + ".dat";
-        //FileStream file = new FileStream(path, FileMode.Open);
         BinaryFormatter bf = new BinaryFormatter();
-        //Data data = bf.Deserialize(file) as Data;
         FileStream file = File.Open(Application.dataPath + "/SaveFile.dat", FileMode.Open); //SaveFile.dat이라는 파일 열기
 
         if (file != null && file.Length > 0)
@@ -122,8 +105,6 @@ public class SaveNLoad : MonoBehaviour
             thePlayerStat = FindObjectOfType<PlayerStat>();
             playerDamage = FindObjectOfType<PlayerDamage>();
             theInven = FindObjectOfType<Inventory>();
-            theShop = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
-            thePotion = theShop.GetComponent<ShopSlotPotion>();
 
             vector.Set(data.playerX, data.playerY, data.playerZ); //데이터에 저장된 플레이어의 x,y,z 값으로 설정
             thePlayer.transform.position = vector;
@@ -138,11 +119,11 @@ public class SaveNLoad : MonoBehaviour
             FindObjectOfType<PlayerDamage>().hpUpdate(); //데이터에 있는 HP로 변경되었으니 그에 따른 UI도 업데이트
             thePlayerStat.money = data.playerMoney; //데이터에 있는 소지금을 플레이어 소지금에 넣어줌
             thePlayerStat.moneyText.text = thePlayerStat.money.ToString();
-            thePotion.potionSoldOut = data.potionSold;
 
             Debug.Log("로드 완료!");
 
             List<ItemInfo> itemList = new List<ItemInfo>();
+            List<ItemInfo> equipList = new List<ItemInfo>();
 
             for (int i = 0; i < data.playerItemInventory.Count; i++)
             {
@@ -161,8 +142,11 @@ public class SaveNLoad : MonoBehaviour
                 Debug.Log("로드");
                 itemList[i].itemCount = data.playerItemInventoryCount[i];
             }
-            //getanitem 여기에 넣어볼것
-            //theInven.LoadItem(itemList);
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                Inventory.instance.GetAnItem(itemList[i].itemID, itemList[i].itemCount);
+                Inventory.instance.clone1.SetActive(false);
+            }
         }
         else
         {
