@@ -34,7 +34,6 @@ public class SceneLoader : MonoBehaviour
     private CanvasGroup sceneLoaderCanvasGroup;
     [SerializeField]
     private Image progressBar;
-
     private string loadSceneName;
 
     public static SceneLoader Create()
@@ -108,6 +107,7 @@ public class SceneLoader : MonoBehaviour
         if(!isFadeIn)
         {
             theSave.CallLoad();
+            Time.timeScale = 1f;
             gameObject.SetActive(false);
         }
     }

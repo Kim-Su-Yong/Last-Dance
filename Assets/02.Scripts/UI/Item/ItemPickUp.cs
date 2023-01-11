@@ -11,16 +11,14 @@ public class ItemPickUp : MonoBehaviour
 
     public GameObject prefab_floating_text;
     
-
     private readonly string playerTag = "Player";
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag(playerTag) && Input.GetKeyDown(KeyCode.Z))
+        if (other.CompareTag(playerTag) && Input.GetKeyDown(KeyCode.F))
         {
             Inventory.instance.GetAnItem(itemID, _count);
             Destroy(this.gameObject);
         }
-
     }
 }

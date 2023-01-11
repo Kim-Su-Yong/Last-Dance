@@ -17,6 +17,10 @@ public class Menu : MonoBehaviour
     public RectTransform soundMenu;
     public RectTransform screenMenu;
 
+    StandardInput cursorLock;
+    //PlayerAttack attack;
+    GameObject theUI;
+    public string click_sound;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").gameObject;
@@ -24,13 +28,26 @@ public class Menu : MonoBehaviour
         pauseMenu = pauseImg.transform.GetChild(0).GetComponent<RectTransform>();
         soundMenu = pauseImg.transform.GetChild(1).GetComponent<RectTransform>();
         screenMenu = pauseImg.transform.GetChild(2).GetComponent<RectTransform>();
+        theUI = GameObject.Find("Canvas_UI");
+
+        cursorLock = player.GetComponent<StandardInput>();
+        //attack = player.GetComponent<PlayerAttack>();
     }
     void Update()
     {
+        if (UIManager.instance.isEnd) return;
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            theSound.Play(call_sound);
-            Pause();
+            if (UIManager.instance.activeShop || UIManager.instance.activeInven || UIManager.instance.activeEquip)
+            {
+                UIManager.instance.CloseUI();
+                return;
+            }
+            else
+            {
+                theSound.Play(call_sound);
+                Pause();
+            }
         }
     }
     public void Pause()
@@ -43,24 +60,26 @@ public class Menu : MonoBehaviour
                 pauseMenu.gameObject.SetActive(true);
             }
             Time.timeScale = 0f; // 게임 정지
+            CursorLock(false);
+            
         }
         else
         {
-            pauseImg.gameObject.SetActive(false);
-            screenMenu.gameObject.SetActive(false);
-            soundMenu.gameObject.SetActive(false);
-            Time.timeScale = 1f;
+            Close();
         }
     }
     public void Close()
     {
+        theSound.Play(click_sound);
         pauseImg.gameObject.SetActive(false);
         screenMenu.gameObject.SetActive(false);
         soundMenu.gameObject.SetActive(false);
         Time.timeScale = 1f;
+        CursorLock(true);
     }
     public void Sounds(bool isopen)
     {
+        theSound.Play(click_sound);
         if (isopen == true)
         {
             soundMenu.gameObject.SetActive(true);
@@ -74,6 +93,7 @@ public class Menu : MonoBehaviour
     }
     public void ScreenSetting(bool isopen)
     {
+        theSound.Play(click_sound);
         if (isopen == true)
         {
             screenMenu.gameObject.SetActive(true);
@@ -89,14 +109,24 @@ public class Menu : MonoBehaviour
     }
     public void GoToTitle()
     {
+        theSound.Play(click_sound);
         pauseImg.gameObject.SetActive(false);
         screenMenu.gameObject.SetActive(false);
         soundMenu.gameObject.SetActive(false);
+        theUI.gameObject.SetActive(false);
         Time.timeScale = 1f;
         SceneLoader.Instance.LoadScene("TitleScene");
     }
     public void Exit()
     {
+        theSound.Play(click_sound);
         Application.Quit();
+    }
+
+    void CursorLock(bool locked)
+    {
+        cursorLock.cursorLocked = locked;
+        cursorLock.cursorInputForLook = locked;
+        cursorLock.SetCursorState(cursorLock.cursorLocked);
     }
 }

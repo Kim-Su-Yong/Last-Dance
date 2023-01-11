@@ -35,7 +35,7 @@ public class SaveNLoad : MonoBehaviour
     private Inventory theInven;
     private SoundManager theSound;
     public static SaveNLoad Instance;
-    public SaveNLoad savenload;
+    private SaveNLoad savenload;
 
     public Data data;
 
@@ -78,6 +78,8 @@ public class SaveNLoad : MonoBehaviour
         data.playerItemInventoryCount.Clear();
 
         List<ItemInfo> itemList = theInven.SaveItem(); //inventoryItemList
+        List<ItemInfo> equipList = theInven.SaveEquip();
+
         for (int i = 0; i < itemList.Count; i++)
         {
             Debug.Log("인벤토리의 아이템 저장 완료 : " + itemList[i].itemID);
@@ -88,26 +90,15 @@ public class SaveNLoad : MonoBehaviour
         FileStream file = File.Create(Application.dataPath + "/SaveFile.dat"); //SaveFile.dat이라는 파일을 생성
         bf.Serialize(file, data); //객체를 데이터로 변환
         file.Close(); //파일 닫기
-
-        //string fileName = "Save";
-        //string path = Application.persistentDataPath + "/" + fileName + ".dat";
-        //FileStream filestream = new FileStream(path, FileMode.Create);
-        //BinaryFormatter formatter = new BinaryFormatter();
-        //formatter.Serialize(filestream, data);
-        //filestream.Close();
     }
     public void CallLoad()
     {
-        //string fileName = "Save";
-        //string path = Application.persistentDataPath + "/" + fileName + ".dat";
-        //FileStream file = new FileStream(path, FileMode.Open);
         BinaryFormatter bf = new BinaryFormatter();
-        //Data data = bf.Deserialize(file) as Data;
-        FileStream file = File.Open(Application.dataPath + "/SaveFile.dat", FileMode.Open);
+        FileStream file = File.Open(Application.dataPath + "/SaveFile.dat", FileMode.Open); //SaveFile.dat이라는 파일 열기
 
         if (file != null && file.Length > 0)
         {
-            data = (Data)bf.Deserialize(file);
+            data = (Data)bf.Deserialize(file); //데이터를 객체로 변환
 
             theDatabase = FindObjectOfType<DatabaseManager>();
             thePlayer = FindObjectOfType<PlayerAction>();
@@ -115,21 +106,24 @@ public class SaveNLoad : MonoBehaviour
             playerDamage = FindObjectOfType<PlayerDamage>();
             theInven = FindObjectOfType<Inventory>();
 
-            vector.Set(data.playerX, data.playerY, data.playerZ);
+            vector.Set(data.playerX, data.playerY, data.playerZ); //데이터에 저장된 플레이어의 x,y,z 값으로 설정
             thePlayer.transform.position = vector;
 
-            thePlayerStat.character_Lv = data.playerLv;
-            thePlayerStat.maxHP = data.playerHP;
-            playerDamage.curHp = data.playerCurrentHP;
-            thePlayerStat.currentEXP = data.playerCurrentEXP;
-            thePlayerStat.atk = data.playerATK;
-            thePlayerStat.def = data.playerDEF;
-            FindObjectOfType<PlayerDamage>().hpUpdate();
-            thePlayerStat.money = data.playerMoney;
+            thePlayerStat.character_Lv = data.playerLv; //데이터에 있는 레벨값을 플레이어 레벨에 넣어줌
+            thePlayerStat.maxHP = data.playerHP; //데이터에 있는 최대 HP를 플레이어 최대 HP에 넣어줌
+            playerDamage.curHp = data.playerCurrentHP; //데이터에 있는 현재 HP를 플레이어 현재 HP에 넣어줌
+            thePlayerStat.currentEXP = data.playerCurrentEXP; //데이터에 있는 경험치를 플레이어 경험치에 넣어줌
+            thePlayerStat.expUpdate(); //exp업데이트
+            thePlayerStat.atk = data.playerATK; //데이터에 있는 공격력을 플레이어 공격력에 넣어줌
+            thePlayerStat.def = data.playerDEF; //데이터에 있는 방어력을 플레이어 방어력에 넣어줌
+            FindObjectOfType<PlayerDamage>().hpUpdate(); //데이터에 있는 HP로 변경되었으니 그에 따른 UI도 업데이트
+            thePlayerStat.money = data.playerMoney; //데이터에 있는 소지금을 플레이어 소지금에 넣어줌
+            thePlayerStat.moneyText.text = thePlayerStat.money.ToString();
 
             Debug.Log("로드 완료!");
 
             List<ItemInfo> itemList = new List<ItemInfo>();
+            List<ItemInfo> equipList = new List<ItemInfo>();
 
             for (int i = 0; i < data.playerItemInventory.Count; i++)
             {
@@ -148,10 +142,11 @@ public class SaveNLoad : MonoBehaviour
                 Debug.Log("로드");
                 itemList[i].itemCount = data.playerItemInventoryCount[i];
             }
-            theInven.LoadItem(itemList);
-
-            //GameManager theGM = FindObjectOfType<GameManager>();
-            //theGM.LoadStart();
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                Inventory.instance.GetAnItem(itemList[i].itemID, itemList[i].itemCount);
+                Inventory.instance.clone1.SetActive(false);
+            }
         }
         else
         {

@@ -31,17 +31,27 @@ public class UIManager : MonoBehaviour
     public bool activeInven; //인벤토리가 켜지면 true
     public bool activeEquip; //장비창이 켜지면 true
     public bool activeShop;
+    public bool activeMenu;
+    GameObject menu;
 
     public GameObject deathPanel;
 
+    public SoundManager theSound;
+    public string call_sound;
+
+    public bool isEnd;
     void Start()
     {
+        instance = this;
+
         equipmentslots = GameObject.FindGameObjectsWithTag("Equipment");
         playerDamage = FindObjectOfType<PlayerDamage>();
         playerState = FindObjectOfType<PlayerState>();
         cursorLock = FindObjectOfType<StandardInput>();
         equipGO.SetActive(false);
         invenGO.SetActive(false);
+
+        menu = GameObject.Find("Canvas_Menu").transform.GetChild(0).gameObject;
 
         deathPanel = GameObject.Find("Canvas_UI").transform.GetChild(5).gameObject;
     }
@@ -64,7 +74,7 @@ public class UIManager : MonoBehaviour
         {
             ShowInven();
             ShowEquip();
-            ShowShop();
+            //ShowShop();
             deathPanel.SetActive(false);
         }
         
@@ -74,23 +84,38 @@ public class UIManager : MonoBehaviour
             isUse = false;
         }
 
-        if (!activeEquip && !activeInven && !activeShop)
+        if (menu.activeSelf == true)
+            activeMenu = true;
+        else
+            activeMenu = false;
+
+        if (!activeEquip && !activeInven && !activeShop && !activeMenu)
             CursorLock(true);
 
         StartCoroutine(deathPanelShow());
-        
+
+        //if(Input.GetKeyDown(KeyCode.K))
+        //{
+        //    ChangeMoney(100);
+        //}
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    ChangeMoney(-100);
+        //}
     }
 
     void ShowInven()    // 인벤토리창이 닫히는 경우는 2가지(x버튼 누르기, i키 누르기)
     {                   // x버튼 누를경우 커서락이 변동되지 않는 버그 수정해야함
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I) && !activeMenu && !isEnd)
         {
             //activeInven = !activeInven;
             if (!activeInven)
             {
+                theSound.Play(call_sound);
                 activeInven = true;
                 CursorLock(false);
                 invenGO.SetActive(true);
+                playerState.state = PlayerState.State.TALK;
             }
             else
             {
@@ -100,14 +125,16 @@ public class UIManager : MonoBehaviour
     }
     void ShowEquip()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !activeShop) //상점이 열려있으면 장비창이 열리지 않도록
+        if (Input.GetKeyDown(KeyCode.E) && !activeShop && !activeMenu && !isEnd) //상점이 열려있으면 장비창이 열리지 않도록
         {
             //activeEquip = !activeEquip;
             if (!activeEquip)
             {
+                theSound.Play(call_sound);
                 activeEquip = true;
                 CursorLock(false);
                 equipGO.SetActive(true);
+                playerState.state = PlayerState.State.TALK;
             }
             else
             {
@@ -117,16 +144,18 @@ public class UIManager : MonoBehaviour
     }
     void ShowShop()
     {
-        if (Input.GetKeyDown(KeyCode.G) && !activeEquip) //장비창이 열려있으면 상점이 열리지 않도록
+        if (Input.GetKeyDown(KeyCode.G) && !activeEquip && !activeMenu) //장비창이 열려있으면 상점이 열리지 않도록
         {
             //activeShop = !activeShop;
             if (!activeShop)
             {
+                theSound.Play(call_sound);
                 activeShop = true;
                 activeInven = true;
                 CursorLock(false);                
                 shopGO.SetActive(true);
                 invenGO.SetActive(true);
+                //playerState.state = PlayerState.State.TALK;
             }
             else
             {
@@ -135,7 +164,22 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
+    public void Shop()
+    {
+        if (!activeShop)
+        {
+            theSound.Play(call_sound);
+            activeShop = true;
+            activeInven = true;
+            CursorLock(false);
+            shopGO.SetActive(true);
+            invenGO.SetActive(true);
+        }
+        else
+        {
+            CloseShop();
+        }
+    }
     public void OnclickUse()
     {
         if (EquipSlot.activeSelf == true) //장비창 슬롯이 활성화 되어있을 경우
@@ -198,8 +242,6 @@ public class UIManager : MonoBehaviour
                 Destroy(itemInfo.gameObject);
             }
         }
-
-
     }
 
     IEnumerator deathPanelShow()
@@ -224,25 +266,39 @@ public class UIManager : MonoBehaviour
 
     public void CloseEquip()
     {
+        theSound.Play(call_sound);
         activeEquip = false;
         //CursorLock(true);
         equipGO.SetActive(false);
+        playerState.state = PlayerState.State.IDLE;
     }
 
     public void CloseShop()
     {
+        theSound.Play(call_sound);
         activeShop = false;
         activeInven = false;
         //CursorLock(true);
         shopGO.SetActive(false);
         invenGO.SetActive(false);
+        GameManager.instance.isAction = false;
+        GameManager.instance.ActionEnd();
+        playerState.state = PlayerState.State.IDLE;
     }
 
     public void CloseInven()
     {
+        theSound.Play(call_sound);
         activeInven = false;
         //CursorLock(true);
         invenGO.SetActive(false);
+        playerState.state = PlayerState.State.IDLE;
     }
-    
+
+    public void CloseUI()
+    {
+        CloseShop();
+        CloseEquip();
+        CloseInven();
+    }
 }

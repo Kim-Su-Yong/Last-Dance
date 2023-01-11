@@ -98,6 +98,7 @@ public class ThirdPersonCtrl : MonoBehaviour
 
     PlayerInput playerInput;
     Animator animator;
+    AudioSource source;
     CharacterController controller;
     StandardInput input;
     private GameObject mainCamera;
@@ -106,6 +107,8 @@ public class ThirdPersonCtrl : MonoBehaviour
     bool hasAnimator;
 
     readonly string enemyTag = "ENEMY";
+
+    AudioClip jumpClip;
 
     private bool IsCurrentDeviceMouse
     {
@@ -121,6 +124,7 @@ public class ThirdPersonCtrl : MonoBehaviour
         {
             mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
+        
     }
 
     private void Start()
@@ -133,7 +137,10 @@ public class ThirdPersonCtrl : MonoBehaviour
         playerAttack = GetComponent<PlayerAttack>();
         playerDamage = GetComponent<PlayerDamage>();
         playerState = GetComponent<PlayerState>();
-        
+        source = GetComponent<AudioSource>();
+
+        jumpClip = Resources.Load<AudioClip>("Sound/Player/PlayerJump");
+
 
         AssignAnimationIDs();
 
@@ -401,6 +408,7 @@ public class ThirdPersonCtrl : MonoBehaviour
     {
         playerState.state = PlayerState.State.JUMP;
         playerAttack.enabled = false;
+        source.PlayOneShot(jumpClip);
         GetComponent<Shooter>().enabled = false;
         GetComponent<ChangeForm>().enabled = false;
     }   

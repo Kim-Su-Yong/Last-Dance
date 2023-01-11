@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [System.Serializable]
 public class ItemInfo : MonoBehaviour
 {
@@ -25,7 +24,6 @@ public class ItemInfo : MonoBehaviour
        
     public ItemType itemType;
     public EquipType equipType;
-
 
     public ItemInfo(int _itemID, string _itemName, string _itemDes, ItemType _itemType, int _AddHp = 0, int _itemCount = 1)
     {
@@ -65,9 +63,4 @@ public class ItemInfo : MonoBehaviour
     //    Potion      = 9,
     //    etc         = 11
     //};
-    public bool Use()
-    {
-        bool isUsed = false;
-        return isUsed;
-    }
 }

@@ -43,7 +43,7 @@ public class ItemDrop : MonoBehaviour
     public void itemDrop()
     {
         //Choose(new float[3] { 0f, 15f, 0f });
-        Choose(new float[3] { 35f, 15f, 50f });
+        Choose(new float[3] { 60f, 40f, 0f });
         float Choose(float[] probs)
         {
             float total = 0;

@@ -12,7 +12,9 @@ public class GameManager : MonoBehaviour
     public TalkManager talkManager;
     public int talkIndex;
 
-    private PlayerAction thePlayer;
+    private PlayerState thePlayer;
+    public SoundManager theSound;
+    public string call_sound;
     public GameObject talkImage;
     public Text talkText;
     public GameObject canvasUI;
@@ -33,7 +35,6 @@ public class GameManager : MonoBehaviour
     public GreatSwordScript greatSword;
 
     public bool playerIsDead;
-
     private void Awake()
     {
         if (gameManager == null)
@@ -42,26 +43,15 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         DontDestroyOnLoad(this.gameObject);
 
-        //CheckForChanges(); // 보스 및 오브젝트에 관련된 확인사항들 체크
+        CheckForChanges(); // 보스 및 오브젝트에 관련된 확인사항들 체크
     }
     void Start()
     {
         instance = this;
+        thePlayer = FindObjectOfType<PlayerState>();
 
         talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(0).gameObject;
         canvasUI = GameObject.Find("Canvas_UI");
-    }
-    void Update()
-    {
-    }
-    public void LoadStart()
-    {
-        StartCoroutine(LoadWaitCoroutine());
-    }
-    IEnumerator LoadWaitCoroutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-        thePlayer = FindObjectOfType<PlayerAction>();
     }
     public void Action(GameObject nearObject)
     {            
@@ -69,7 +59,21 @@ public class GameManager : MonoBehaviour
 
         Talk(objData.id);
     }
-
+    public void ActionEnd()
+    {
+        followCam.gameObject.SetActive(true); // 팔로우 카메라 활성화
+        npcCam.gameObject.SetActive(false);   // NPC 확대 카메라 비활성화
+    }
+    public void OpenShop()
+    {
+        if (isAction) return;
+        thePlayer.state = PlayerState.State.TALK;
+        theSound.Play(call_sound);
+        isAction = true;
+        followCam.gameObject.SetActive(false); // 팔로우 카메라 비활성화
+        npcCam.gameObject.SetActive(true);   // NPC 확대 카메라 활성화
+        UIManager.instance.Shop();
+    }
     void Talk(int id)
     {
         string talkData = talkManager.GetTalk(id, talkIndex);
@@ -77,13 +81,15 @@ public class GameManager : MonoBehaviour
         if (talkData == null)    // 더이상 대화할 문장이 없다면 대화 종료
         {
             isAction = false;
-            followCam.gameObject.SetActive(true);          // 팔로우 카메라 활성화
+            followCam.gameObject.SetActive(true); // 팔로우 카메라 활성화
             npcCam.gameObject.SetActive(false);   // NPC 확대 카메라 비활성화
 
             talkImage.gameObject.SetActive(false);
             canvasUI.gameObject.SetActive(true);
 
             talkIndex = 0;
+
+            UIManager.instance.Shop();
             return;
         }
             
@@ -105,7 +111,7 @@ public class GameManager : MonoBehaviour
         isObjectsOn = PlayerPrefs.GetInt("IsObjectsOn") == 1 ? true : false;
 
         CheckDesctructibleObjetcsState();
-        CheckSwordColliders();
+        //CheckSwordColliders();
     }
 
     public void CheckDesctructibleObjetcsState()

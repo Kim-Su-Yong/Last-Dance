@@ -12,6 +12,7 @@ public class FindNearEnemyTest : MonoBehaviour
     [SerializeField]
     Collider[] enemys;              // 에너미 검출 콜라이더
     LayerMask enemyLayer;           // 에너미 검출 레이어
+    LayerMask bossLayer;            // 보스 검출 레이어
     public GameObject nearEnemy;    // 가장 가까이에 있는 에너미
     float shortDist;                // 가장 가까운 거리 구하는 변수
 
@@ -30,6 +31,7 @@ public class FindNearEnemyTest : MonoBehaviour
         playerAttack = GetComponent<PlayerAttack>();
         changeForm = GetComponent<ChangeForm>();
         enemyLayer = LayerMask.NameToLayer("ENEMY");
+        bossLayer = LayerMask.NameToLayer("BOSS");
     }
 
     private void OnEnable()

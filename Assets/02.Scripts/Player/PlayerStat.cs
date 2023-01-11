@@ -19,20 +19,23 @@ public class PlayerStat : MonoBehaviour
     public float critical;      // 크리티컬 확률-뺄 가능성 높음
 
     public GameObject LevelUpEffect;    // 레벨 업 시 이펙트
-    public Image ExpBar;
-    public Text LvText;
+    public Image ExpBar;                // 경험치 바 이미지
+    public Text LvText;                 // 레벨 UI 텍스트(경험치 %로 표현)
 
-    AudioSource source;
-    public AudioClip levelUpClip;
+    public Text moneyText;
 
-    public bool isDebug;
+    AudioSource source;             
+    public AudioClip levelUpClip;   // 레벨업 사운드
 
-    public int money = 4500;
+    public bool isDebug;        // 디버그 모드시 체력 증가 목적
+
+    public int money = 4500;    // 소지금
     void Awake()
     {
         instance = this;
         // 저장된 데이터 불러오기
         //if(저장된 데이터가 없다면)
+        levelUpClip = Resources.Load<AudioClip>("Sound/Player/PlayerLvUp");
         source = GetComponent<AudioSource>();
         InitCharacterData();
     }
@@ -43,13 +46,13 @@ public class PlayerStat : MonoBehaviour
         character_Lv = 1;
         currentEXP = 0;
 
-        //if (isDebug)
-        //    initHP = 1000;
-        //else
+        if (isDebug)
+            initHP = 1000;
+        else
             initHP = 100;
         maxHP = initHP;
 
-        speed = 6f;
+        speed = 10f;
         //currentHP = maxHP;
 
         // 기본 장비에 따라 영향을 받을 예정(기본 장비 없는 경우 수정)
@@ -59,6 +62,7 @@ public class PlayerStat : MonoBehaviour
         critical = 25f;
 
         expUpdate();
+        moneyText.text = money.ToString();
     }
 
     void Update()
@@ -102,10 +106,17 @@ public class PlayerStat : MonoBehaviour
         def++;              // 방어력 증가
     }
 
-    void expUpdate()
+    public void expUpdate()
     {
         ExpBar.fillAmount = (float)currentEXP / needExp[character_Lv];
         LvText.text = "LV " + character_Lv.ToString() + "(EXP " + ((int)(ExpBar.fillAmount*100)).ToString() + "%)";
+    }
+
+    public void ChangeMoney(int newMoney)
+    {
+        money += newMoney;
+        money = Mathf.Clamp(money, 0, 99999999);
+        moneyText.text = money.ToString();
     }
 
 }

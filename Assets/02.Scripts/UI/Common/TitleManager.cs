@@ -6,14 +6,28 @@ public class TitleManager : MonoBehaviour
 {
     private SoundManager theSound;
     private SaveNLoad theSave;
-    private Menu themenu;
+    private GameObject themenu;
+    private GameObject thetitle;
 
     public string click_sound;
     void Start()
     {
         theSound = FindObjectOfType<SoundManager>();
         theSave = FindObjectOfType<SaveNLoad>();
-        themenu = FindObjectOfType<Menu>();
+        themenu = GameObject.Find("Canvas_Menu").transform.GetChild(0).gameObject;
+        thetitle = GameObject.Find("Canvas_Title").transform.GetChild(0).gameObject;
+    }
+    private void OnEnable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        //thetitle.gameObject.SetActive(true);
+    }
+    public void StartGame()
+    {
+        theSound.Play(click_sound);
+        themenu.gameObject.SetActive(false);
+        thetitle.gameObject.SetActive(false);
+        SceneLoader.Instance.LoadScene("MainScene");
     }
     public void SaveGame()
     {
@@ -22,8 +36,8 @@ public class TitleManager : MonoBehaviour
     }
     public void LoadGame()
     {
-        themenu.Close();
         theSound.Play(click_sound);
+        themenu.gameObject.SetActive(false);
         SceneLoader.Instance.LoadScene("MainScene");
     }
     public void ExitGame()

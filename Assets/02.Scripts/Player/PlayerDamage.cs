@@ -8,6 +8,7 @@ public class PlayerDamage : MonoBehaviour
     [Header("UI")]
     public Image HpBar;                 // 체력바
     public Text HpText;                 // 체력 텍스트
+    public GameObject deathPanel;
 
     [Header("Data")]
     public int curHp;                   // 현재 체력
@@ -30,14 +31,13 @@ public class PlayerDamage : MonoBehaviour
     readonly int hashDie = Animator.StringToHash("Die");
     readonly int hashHit = Animator.StringToHash("Hit");
     readonly int hashSpeed = Animator.StringToHash("Speed");
+
     readonly string bossAttackTag = "BossAttack"; // 보스 공격 태그
     readonly string greatSword = "GreatSword";
 
-    // 오디오 클립
-    public AudioClip hitSound;
-    public AudioClip deathSound;
-
-    public GameObject deathPanel;
+    // 사운드
+    AudioClip hitSound;
+    AudioClip deathSound;    
 
     private void Awake()
     {
@@ -48,6 +48,8 @@ public class PlayerDamage : MonoBehaviour
         changeForm = GetComponent<ChangeForm>();
         source = GetComponent<AudioSource>();
 
+        hitSound = Resources.Load<AudioClip>("Sound/Player/PlayerHit");
+        deathSound = Resources.Load<AudioClip>("Sound/Player/PlayerDie");
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
     }
 
@@ -83,17 +85,17 @@ public class PlayerDamage : MonoBehaviour
 
     void Update()
     {
-        // 체력 감소 테스트 및 회복을 위한 테스트용 함수
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            curHp -= 10;
-            animator.SetTrigger(hashHit);
-            animator.SetFloat(hashSpeed, 0f);
-            hpUpdate();
-            playerState.state = PlayerState.State.HIT;
-            if (curHp <= 0)
-                StartCoroutine(Die());
-        }
+        //// 체력 감소 테스트 및 회복을 위한 테스트용 함수
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    curHp -= 10;
+        //    animator.SetTrigger(hashHit);
+        //    animator.SetFloat(hashSpeed, 0f);
+        //    hpUpdate();
+        //    playerState.state = PlayerState.State.HIT;
+        //    if (curHp <= 0)
+        //        StartCoroutine(Die());
+        //}
             
     }
 
@@ -107,12 +109,19 @@ public class PlayerDamage : MonoBehaviour
             animator.SetTrigger(hashHit); // 피격 애니메이션 재생
             animator.SetFloat(hashSpeed, 0f); // 피격 애니메이션 실행시 움직이지 않도록 멈춤
         }
-            
+
         // 에너미AI로부터 데미지 값을 받아옴(+ 랜덤하게 0~9사이 데미지 추가)
-        int _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
+        int _damage = 0;
+        
+        if(Enemy.CompareTag("ENEMY"))
+            _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f)) -PlayerStat.instance.def;
+        else if(Enemy.CompareTag(greatSword) || Enemy.CompareTag("Magic"))
+            _damage = 50 - PlayerStat.instance.def;
+        _damage = Mathf.Clamp(_damage, 0, 9999);
+
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
-        source.PlayOneShot(hitSound);
+        source.PlayOneShot(hitSound, 1.5f);
 
         // 현재 체력값이 0 ~ 초기 체력(아마 최대체력으로 변경될 예정)사이의 값만 가지도록 조정
         curHp = Mathf.Clamp(curHp, 0, PlayerStat.instance.maxHP);
@@ -137,16 +146,9 @@ public class PlayerDamage : MonoBehaviour
        
         animator.SetTrigger(hashDie);     // 사망 애니메이션 실행
         GetComponent<CharacterController>().enabled = false;    // 충돌판정 제거를 위한 캐릭터 컨트롤러 비활성화
-        source.PlayOneShot(deathSound);
+        source.PlayOneShot(deathSound, 1.8f);
 
-        // 사망시 UI 추가해야함(재시작 버튼, 사망했다며 알리는 UI등)
-        //yield return new WaitForSeconds(2f);
-        //UIManager.instance.deathPanelShow();
-
-        //deathPanel.SetActive(true);
-        yield return null;//new WaitForSeconds(3f);
-        //deathPanel.SetActive(false);
-        //Respawn();
+        yield return null;
     }
     public void Respawn()
     {
@@ -181,23 +183,13 @@ public class PlayerDamage : MonoBehaviour
 
     private void OnEnable()
     {
-        //// 체력은 꽉 찬 상태로 리스폰
-        //curHp = PlayerStat.instance.maxHP;
-        //HpBar.color = Color.green;
-        //hpUpdate();
-        //// 플레이어 상태 = IDLE
-        //playerState.state = PlayerState.State.IDLE;
-        
-        //GetComponent<CharacterController>().enabled = true;
-        //changeForm.curForm = ChangeForm.FormType.FOX;
-        
-        //GetComponent<ChangeForm>().Staff.enabled = true;
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         // 몬스터에게 공격을 맞았다면
-        if(other.CompareTag(M_AttackTag))
+        if(other.CompareTag(M_AttackTag) || other.CompareTag(greatSword))
         {
             // 죽었거나 피격 상태 라면 실행하지 않음
             if (isDie ||
@@ -205,7 +197,20 @@ public class PlayerDamage : MonoBehaviour
             playerState.state == PlayerState.State.HIT)
                 return;
             // 에너미 정보를 넘김(데미지 값만큼 체력이 달아야하기 때문)
-            GameObject EnemyInfo = other.GetComponentInParent<MonsterAI>().gameObject;
+            GameObject EnemyInfo = null;
+            if (other.CompareTag(M_AttackTag))
+            {
+                EnemyInfo = other.GetComponentInParent<MonsterAI>().gameObject;
+            }
+            if (other.CompareTag(greatSword))
+            {
+                EnemyInfo = other.gameObject;
+            }
+            if (other.CompareTag("Magic"))
+            {
+                EnemyInfo = other.gameObject;
+            }
+
             StartCoroutine(Hit(EnemyInfo));
             // 체력이 0이하가 되면 Die코루틴 실행
             if (curHp <= 0)

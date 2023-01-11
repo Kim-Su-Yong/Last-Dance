@@ -33,6 +33,7 @@ public class Inventory : MonoBehaviour
     public Transform messageTr;
 
     public GameObject clone;
+    public GameObject clone1;
 
     [Header("PlayerStat°ü·Ã")]
     public Text LvText;
@@ -72,9 +73,9 @@ public class Inventory : MonoBehaviour
         {
             if (itemID == theData.itemList[i].itemID)
             {
-                clone = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
-                clone.GetComponent<FloatingText>().text.text = theData.itemList[i].itemName + " " + _count + "°³ È¹µæ +";
-                clone.transform.SetParent(this.transform);
+                clone1 = Instantiate(prefab_floating_text, messageTr.position, Quaternion.Euler(Vector3.zero));
+                clone1.GetComponent<FloatingText>().text.text = theData.itemList[i].itemName + " " + _count + "°³ È¹µæ +";
+                clone1.transform.SetParent(this.transform);
 
                 ItemNumber = itemID;
                 ItemCount = _count;
@@ -252,8 +253,8 @@ public class Inventory : MonoBehaviour
     {
         return inventoryItemList;
     }
-    public void LoadItem(List<ItemInfo> _itemList)
+    public List<ItemInfo> SaveEquip()
     {
-        inventoryItemList = _itemList;
+        return equipmentItemList;
     }
 }

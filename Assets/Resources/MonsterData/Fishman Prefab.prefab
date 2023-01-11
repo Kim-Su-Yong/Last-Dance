@@ -2406,6 +2406,7 @@ MonoBehaviour:
   monsterType: 1
   M_HP: 0
   M_MaxHP: 20
+  M_EXP: 0
   state: 0
   playerTr: {fileID: 0}
   monsterTr: {fileID: 0}
@@ -2583,11 +2584,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee176a9f101cd2744a3fd2c8da38701f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Items:
-  - {fileID: 6097204399379491887, guid: bd18d9528e1259245b86917cf3707ef0, type: 3}
-  - {fileID: 6827120426276617714, guid: 62dd85c7b3482c347b1eb800650858ec, type: 3}
-  - {fileID: 2900779868923895340, guid: 35354c9a64b5cb946b57f14e48b7b109, type: 3}
-  - {fileID: 7667264368315830657, guid: cab5cfa41e0a71d4389d2a4cf4ce7906, type: 3}
+  ConsumeItems: []
+  EquipItems: []
+  ETCItems: []
   isDrop: 0
 --- !u!1 &168176582182411419
 GameObject:

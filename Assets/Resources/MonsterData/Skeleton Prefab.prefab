@@ -14556,7 +14556,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee176a9f101cd2744a3fd2c8da38701f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Items: []
+  ConsumeItems: []
+  EquipItems: []
+  ETCItems: []
   isDrop: 0
 --- !u!1 &9084632996224683174
 GameObject:
