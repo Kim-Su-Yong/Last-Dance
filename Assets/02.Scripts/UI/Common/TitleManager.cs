@@ -6,7 +6,6 @@ public class TitleManager : MonoBehaviour
 {
     private SoundManager theSound;
     private SaveNLoad theSave;
-    [SerializeField]
     private GameObject themenu;
     private GameObject thetitle;
 
@@ -21,7 +20,7 @@ public class TitleManager : MonoBehaviour
     private void OnEnable()
     {
         Cursor.lockState = CursorLockMode.None;
-        thetitle.gameObject.SetActive(true);
+        //thetitle.gameObject.SetActive(true);
     }
     public void SaveGame()
     {
@@ -32,7 +31,7 @@ public class TitleManager : MonoBehaviour
     {
         theSound.Play(click_sound);
         themenu.gameObject.SetActive(false);
-        //thetitle.gameObject.SetActive(false);
+        thetitle.gameObject.SetActive(false);
         SceneLoader.Instance.LoadScene("MainScene");
     }
     public void ExitGame()

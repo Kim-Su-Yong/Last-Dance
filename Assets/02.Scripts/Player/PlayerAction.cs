@@ -40,6 +40,10 @@ public class PlayerAction : MonoBehaviour
     {
         playerState = GetComponent<PlayerState>();
     }
+    private void Update()
+    {
+        Interaction();
+    }
     private void OnEnable()
     {
         //StartCoroutine(FindNearObject());

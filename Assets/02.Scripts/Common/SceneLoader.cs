@@ -34,7 +34,6 @@ public class SceneLoader : MonoBehaviour
     private CanvasGroup sceneLoaderCanvasGroup;
     [SerializeField]
     private Image progressBar;
-
     private string loadSceneName;
 
     public static SceneLoader Create()
