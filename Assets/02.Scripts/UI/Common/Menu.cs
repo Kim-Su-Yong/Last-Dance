@@ -36,8 +36,17 @@ public class Menu : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            theSound.Play(call_sound);
-            Pause();
+            if (UIManager.instance.activeShop || UIManager.instance.activeInven || UIManager.instance.activeEquip)
+            {
+                UIManager.instance.CloseUI();
+                return;
+            }
+            else
+            {
+                theSound.Play(call_sound);
+                Pause();
+            }
+            
         }
     }
     public void Pause()

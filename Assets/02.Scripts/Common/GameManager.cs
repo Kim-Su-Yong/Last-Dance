@@ -12,7 +12,9 @@ public class GameManager : MonoBehaviour
     public TalkManager talkManager;
     public int talkIndex;
 
-    private PlayerAction thePlayer;
+    private PlayerState thePlayer;
+    public SoundManager theSound;
+    public string call_sound;
     public GameObject talkImage;
     public Text talkText;
     public GameObject canvasUI;
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         instance = this;
+        thePlayer = FindObjectOfType<PlayerState>();
 
         talkImage = GameObject.Find("Canvas_Conversation").transform.GetChild(0).gameObject;
         canvasUI = GameObject.Find("Canvas_UI");
@@ -59,6 +62,22 @@ public class GameManager : MonoBehaviour
         ObjData objData = nearObject.GetComponent<ObjData>();
 
         Talk(objData.id);
+    }
+
+    public void ActionEnd()
+    {
+        followCam.gameObject.SetActive(true); // 팔로우 카메라 활성화
+        npcCam.gameObject.SetActive(false);   // NPC 확대 카메라 비활성화
+    }
+    public void OpenShop()
+    {
+        if (isAction) return;
+        thePlayer.state = PlayerState.State.TALK;
+        theSound.Play(call_sound);
+        isAction = true;
+        followCam.gameObject.SetActive(false); // 팔로우 카메라 비활성화
+        npcCam.gameObject.SetActive(true);   // NPC 확대 카메라 활성화
+        UIManager.instance.Shop();
     }
 
     void Talk(int id)

@@ -104,7 +104,7 @@ public class UIManager : MonoBehaviour
 
     void ShowInven()    // 인벤토리창이 닫히는 경우는 2가지(x버튼 누르기, i키 누르기)
     {                   // x버튼 누를경우 커서락이 변동되지 않는 버그 수정해야함
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I) && !activeMenu)
         {
             //activeInven = !activeInven;
             if (!activeInven)
@@ -122,7 +122,7 @@ public class UIManager : MonoBehaviour
     }
     void ShowEquip()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !activeShop) //상점이 열려있으면 장비창이 열리지 않도록
+        if (Input.GetKeyDown(KeyCode.E) && !activeShop && !activeMenu) //상점이 열려있으면 장비창이 열리지 않도록
         {
             //activeEquip = !activeEquip;
             if (!activeEquip)
@@ -140,7 +140,7 @@ public class UIManager : MonoBehaviour
     }
     void ShowShop()
     {
-        if (Input.GetKeyDown(KeyCode.G) && !activeEquip) //장비창이 열려있으면 상점이 열리지 않도록
+        if (Input.GetKeyDown(KeyCode.G) && !activeEquip && !activeMenu) //장비창이 열려있으면 상점이 열리지 않도록
         {
             //activeShop = !activeShop;
             if (!activeShop)
@@ -275,6 +275,9 @@ public class UIManager : MonoBehaviour
         //CursorLock(true);
         shopGO.SetActive(false);
         invenGO.SetActive(false);
+        GameManager.instance.isAction = false;
+        GameManager.instance.ActionEnd();
+        playerState.state = PlayerState.State.IDLE;
     }
 
     public void CloseInven()
@@ -283,5 +286,12 @@ public class UIManager : MonoBehaviour
         activeInven = false;
         //CursorLock(true);
         invenGO.SetActive(false);
+    }
+
+    public void CloseUI()
+    {
+        CloseShop();
+        CloseEquip();
+        CloseInven();
     }
 }

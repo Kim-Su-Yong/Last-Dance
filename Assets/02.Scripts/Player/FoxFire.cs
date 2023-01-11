@@ -46,38 +46,6 @@ public class FoxFire : MonoBehaviour
         damage = (int)(foxFireData.f_skillDamage + PlayerStat.instance.atk * 3);
     }
 
-    //void Update()
-    //{
-    //    SeachEnemy();
-    //    // 표적이 있다면 앞으로 발사
-    //    if (target != null)
-    //    {
-    //        if (currentSpeed <= speed)
-    //            currentSpeed += speed * Time.deltaTime;
-
-    //        transform.position += transform.forward * currentSpeed * Time.deltaTime;
-
-    //        Vector3 dir = (target.position - transform.position).normalized;
-
-    //        // 선형 보간을 통해 자연스럽게 적을 추적하며 날아감
-    //        transform.forward = Vector3.Lerp(transform.forward, dir, 0.25f);
-    //    }
-    //}
-
-    //// 범위 내에 적들 찾는 함수
-    //void SeachEnemy()
-    //{
-    //    // 구체 20반경의 범위 안에 적이 검출 된 경우 랜덤으로 적에게 날아감
-    //    Collider[] cols = Physics.OverlapSphere(transform.position, 20f, layerMask);
-
-    //    if (cols.Length > 0)
-    //    {
-    //        target = cols[Random.Range(0, cols.Length)].transform;
-    //        if (!(target.CompareTag("ENEMY")))
-    //            target = null;
-    //    }
-    //}
-
     IEnumerator Delay()
     {
         //// 0.3초후에 적을 추적
@@ -92,7 +60,7 @@ public class FoxFire : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 적에게 닿으면 Explosion코루틴 함수 실행
-        if (other.gameObject.CompareTag("ENEMY"))
+        if (other.CompareTag("ENEMY") || other.CompareTag("Boss"))
         {
             StartCoroutine(Explosion(0f));
         }

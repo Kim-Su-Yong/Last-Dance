@@ -16,6 +16,7 @@ public class GreatSwordScript : MonoBehaviour
     private DamageDealer damageDealer;
     [HideInInspector]
     public bool betterColliders;
+    public float damage = 20;
 
     private void Start()
     {

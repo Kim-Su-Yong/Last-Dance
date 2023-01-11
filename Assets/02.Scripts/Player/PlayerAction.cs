@@ -15,19 +15,24 @@ public class PlayerAction : MonoBehaviour
     private SaveNLoad theSaveNLoad;
 
     void Interaction()
-    {    
+    {
+        if (Time.timeScale == 0)
+            return;
         if (Input.GetKeyDown(KeyCode.F))                // f키를 누르면 상호작용 발생
         {
             if (nearObject == null) return;             // 근처에 오브젝트가 없으면 종료
-            theSound.Play(call_sound);                  // 호출 소리 재생
-            
-            //QuestUIManager.uiManager.NPCPanelActivation();
+                                                        //theSound.Play(call_sound);                  // 호출 소리 재생
 
-            g_manager.Action(nearObject);                         // 상호작용 실행
+            //QuestUIManager.uiManager.NPCPanelActivation();
             if (g_manager.isAction)
                 playerState.state = PlayerState.State.TALK;
-            else
-                playerState.state = PlayerState.State.IDLE;
+            //else
+            //{
+            //    playerState.state = PlayerState.State.IDLE;
+            //    GameManager.instance.ActionEnd();
+            //}
+            //g_manager.Action(nearObject);                         // 상호작용 실행
+            g_manager.OpenShop();
         }
 
     }
@@ -45,8 +50,9 @@ public class PlayerAction : MonoBehaviour
     }
     void Update()
     {
-        Interaction();
-        if(Input.GetKeyDown(KeyCode.F9)) //임시용 키(삭제예정)
+        Interaction();            
+
+        if (Input.GetKeyDown(KeyCode.F9)) //임시용 키(삭제예정)
         {
             theSaveNLoad.CallSave();
         }

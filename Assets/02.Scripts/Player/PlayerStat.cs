@@ -35,6 +35,7 @@ public class PlayerStat : MonoBehaviour
         instance = this;
         // 저장된 데이터 불러오기
         //if(저장된 데이터가 없다면)
+        levelUpClip = Resources.Load<AudioClip>("Sound/Player/PlayerLvUp");
         source = GetComponent<AudioSource>();
         InitCharacterData();
     }
@@ -51,7 +52,7 @@ public class PlayerStat : MonoBehaviour
             initHP = 100;
         maxHP = initHP;
 
-        speed = 6f;
+        speed = 20f;
         //currentHP = maxHP;
 
         // 기본 장비에 따라 영향을 받을 예정(기본 장비 없는 경우 수정)

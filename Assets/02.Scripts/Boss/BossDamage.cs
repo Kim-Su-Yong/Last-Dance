@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class BossDamage : MonoBehaviour
 {
@@ -20,12 +21,29 @@ public class BossDamage : MonoBehaviour
     private GameObject damageUIPrefab;
     private GameObject damageParticlePrefab;
 
+    public GameObject BossHpPanel;
+    public Image BossHpBar;
+
+
     void Awake()
     {
         bossAI = GetComponent<BossAI>();
         boss = GetComponent<BossScript>();
         damageUIPrefab = Resources.Load<GameObject>("Effects/DamagePopUp");
         damageParticlePrefab = Resources.Load<GameObject>("Effects/HitEffect_A");
+    }
+
+    private void Start()
+    {
+        BossHpBar = BossHpPanel.transform.GetChild(0).GetComponent<Image>();
+        BossHpBar.fillAmount = 1f;
+        //BossHpPanel.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (bossAI.isDie)
+            BossHpBar.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -49,7 +67,7 @@ public class BossDamage : MonoBehaviour
 
         if (other.CompareTag(bulletTag)) // 독수리 공격에 맞았을 때
         {
-            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(10f, 13f));
+            int _damage = (int)(other.GetComponent<BezierMissile>().damage + Random.Range(10f, 13f));
             bossAI.beforeHp = bossAI.maxHp;
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
@@ -64,7 +82,7 @@ public class BossDamage : MonoBehaviour
 
         if (other.CompareTag(foxFireTag)) // 여우불에 맞았을 때
         {
-            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(10f, 13f));
+            int _damage = (int)(other.GetComponent<FoxFire>().damage + Random.Range(10f, 13f));
             bossAI.beforeHp = bossAI.maxHp;
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
@@ -79,7 +97,7 @@ public class BossDamage : MonoBehaviour
 
         if (other.CompareTag(punchTag)) // 호랑이 공격에 맞았을 때
         {
-            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(10f, 13f));
+            int _damage = (int)(other.GetComponent<PunchCollider>().damage + Random.Range(10f, 13f));
             bossAI.beforeHp = bossAI.maxHp;
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
@@ -94,7 +112,7 @@ public class BossDamage : MonoBehaviour
 
         if (other.CompareTag(roarTag))
         {
-            int _damage = (int)(other.GetComponent<FireBall>().damage + Random.Range(400f, 500f));
+            int _damage = (int)(other.GetComponent<RoarCollider>().damage + Random.Range(10f, 13f));
             bossAI.beforeHp = bossAI.maxHp;
             bossAI.curHp -= _damage;
             bossAI.curHp = Mathf.Clamp(bossAI.curHp, 0, bossAI.maxHp);
@@ -106,6 +124,7 @@ public class BossDamage : MonoBehaviour
             if (!bossAI.isDie)
                 ShowDamageEffect(_damage);
         }
+        hpUpdate();
     }
 
     void ShowDamageEffect(int _damage)
@@ -118,5 +137,10 @@ public class BossDamage : MonoBehaviour
                                            Quaternion.identity,
                                            transform);
         Effect_M_DamageAmount.GetComponent<TextMeshPro>().text = _damage.ToString();
+    }
+
+    void hpUpdate()
+    {
+        BossHpBar.fillAmount = (float)bossAI.curHp / bossAI.maxHp;
     }
 }

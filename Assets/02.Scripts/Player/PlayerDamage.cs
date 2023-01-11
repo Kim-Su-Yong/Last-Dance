@@ -8,6 +8,7 @@ public class PlayerDamage : MonoBehaviour
     [Header("UI")]
     public Image HpBar;                 // 체력바
     public Text HpText;                 // 체력 텍스트
+    public GameObject deathPanel;
 
     [Header("Data")]
     public int curHp;                   // 현재 체력
@@ -34,11 +35,9 @@ public class PlayerDamage : MonoBehaviour
     readonly string bossAttackTag = "BossAttack"; // 보스 공격 태그
     readonly string greatSword = "GreatSword";
 
-    // 오디오 클립
-    public AudioClip hitSound;
-    public AudioClip deathSound;
-
-    public GameObject deathPanel;
+    // 사운드
+    AudioClip hitSound;
+    AudioClip deathSound;    
 
     private void Awake()
     {
@@ -110,9 +109,14 @@ public class PlayerDamage : MonoBehaviour
             animator.SetTrigger(hashHit); // 피격 애니메이션 재생
             animator.SetFloat(hashSpeed, 0f); // 피격 애니메이션 실행시 움직이지 않도록 멈춤
         }
-            
+
         // 에너미AI로부터 데미지 값을 받아옴(+ 랜덤하게 0~9사이 데미지 추가)
-        int _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
+        int _damage = 0;
+        
+        if(Enemy.CompareTag("ENEMY"))
+            _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f));
+        else if(Enemy.CompareTag(greatSword) || Enemy.CompareTag("Magic"))
+            _damage = 50;
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
         source.PlayOneShot(hitSound, 1.5f);
@@ -183,7 +187,7 @@ public class PlayerDamage : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // 몬스터에게 공격을 맞았다면
-        if(other.CompareTag(M_AttackTag))
+        if(other.CompareTag(M_AttackTag) || other.CompareTag(greatSword))
         {
             // 죽었거나 피격 상태 라면 실행하지 않음
             if (isDie ||
@@ -191,7 +195,20 @@ public class PlayerDamage : MonoBehaviour
             playerState.state == PlayerState.State.HIT)
                 return;
             // 에너미 정보를 넘김(데미지 값만큼 체력이 달아야하기 때문)
-            GameObject EnemyInfo = other.GetComponentInParent<MonsterAI>().gameObject;
+            GameObject EnemyInfo = null;
+            if (other.CompareTag(M_AttackTag))
+            {
+                EnemyInfo = other.GetComponentInParent<MonsterAI>().gameObject;
+            }
+            if (other.CompareTag(greatSword))
+            {
+                EnemyInfo = other.gameObject;
+            }
+            if (other.CompareTag("Magic"))
+            {
+                EnemyInfo = other.gameObject;
+            }
+
             StartCoroutine(Hit(EnemyInfo));
             // 체력이 0이하가 되면 Die코루틴 실행
             if (curHp <= 0)
