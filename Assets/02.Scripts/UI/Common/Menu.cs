@@ -35,6 +35,7 @@ public class Menu : MonoBehaviour
     }
     void Update()
     {
+        if (UIManager.instance.isEnd) return;
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             if (UIManager.instance.activeShop || UIManager.instance.activeInven || UIManager.instance.activeEquip)

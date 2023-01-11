@@ -52,7 +52,7 @@ public class PlayerStat : MonoBehaviour
             initHP = 100;
         maxHP = initHP;
 
-        speed = 20f;
+        speed = 10f;
         //currentHP = maxHP;
 
         // 기본 장비에 따라 영향을 받을 예정(기본 장비 없는 경우 수정)

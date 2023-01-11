@@ -85,17 +85,17 @@ public class PlayerDamage : MonoBehaviour
 
     void Update()
     {
-        // 체력 감소 테스트 및 회복을 위한 테스트용 함수
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            curHp -= 10;
-            animator.SetTrigger(hashHit);
-            animator.SetFloat(hashSpeed, 0f);
-            hpUpdate();
-            playerState.state = PlayerState.State.HIT;
-            if (curHp <= 0)
-                StartCoroutine(Die());
-        }
+        //// 체력 감소 테스트 및 회복을 위한 테스트용 함수
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    curHp -= 10;
+        //    animator.SetTrigger(hashHit);
+        //    animator.SetFloat(hashSpeed, 0f);
+        //    hpUpdate();
+        //    playerState.state = PlayerState.State.HIT;
+        //    if (curHp <= 0)
+        //        StartCoroutine(Die());
+        //}
             
     }
 
@@ -117,6 +117,8 @@ public class PlayerDamage : MonoBehaviour
             _damage = (int)(Enemy.GetComponent<MonsterAI>().damage + Random.Range(0f, 9f)) -PlayerStat.instance.def;
         else if(Enemy.CompareTag(greatSword) || Enemy.CompareTag("Magic"))
             _damage = 50 - PlayerStat.instance.def;
+        _damage = Mathf.Clamp(_damage, 0, 9999);
+
         curHp -= _damage;           // 현재 체력을 데미지 만큼 감소
         ShowDamageEffect(_damage);  // 데미지 이펙트 출력
         source.PlayOneShot(hitSound, 1.5f);
