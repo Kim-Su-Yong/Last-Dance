@@ -121,16 +121,16 @@ public class BossAttacks : MonoBehaviour
         switch (rand)
         {
             case 0:
-                anim.SetTrigger("CastMagicSwords"); // 하늘에서 마법 검 소환
+                anim.SetTrigger("SuperSpinner"); // 2페이즈 전용 공격기
                 break;
             case 1:
-                anim.SetTrigger("Casting"); // 지면 강타
-                break;
-            case 2:
                 anim.SetTrigger("Dash");
                 break;
-            case 3:
+            case 2:
                 anim.SetTrigger("DoubleDash");
+                break;
+            case 3:
+                anim.SetTrigger("Casting"); // 지면 강타
                 break;
             case 4:
                 anim.SetTrigger("Spell"); // 파이어볼
@@ -142,12 +142,11 @@ public class BossAttacks : MonoBehaviour
                 anim.SetTrigger("Fishing"); // 먼 거리에서 마법 검 공격
                 break;
             case 7:
-                anim.SetTrigger("SuperSpinner"); // 2페이즈 전용 공격기
+                anim.SetTrigger("CastMagicSwords"); // 하늘에서 마법 검 소환
                 break;
             default:
                 break;
         }
-
         action = "Wait"; // 공격이 재실행되지 않도록 함
     }
 
@@ -180,32 +179,33 @@ public class BossAttacks : MonoBehaviour
                 anim.SetTrigger("Combo"); // 연타 공격
                 break;
             case 4:
-                anim.SetTrigger("Casting"); // 지면 강타
-                break;
-            case 5:
                 anim.SetTrigger("Combo1"); // 다른 연타 공격
                 break;
-            case 6:
-                anim.SetTrigger("Spell"); // 파이어볼
-                break;
-            case 7:
-                anim.SetTrigger("AuraCast"); // 오오라 캐스팅 공격
-                break;
-            case 8:
+            case 5:
                 anim.SetTrigger("ForwardAttack");
                 break;
-            case 9:
-                anim.SetTrigger("Scream");
-                break;
-                // 해당 위치부터 2페이즈 전용 공격기
-            case 10:
+            case 6:
                 anim.SetTrigger("Impact");
                 break;
-            case 11:
+            case 7:
                 anim.SetTrigger("Strong");
                 break;
-            case 12:
+            case 8:
+                anim.SetTrigger("Casting"); // 지면 강타
+                break;
+            case 9:
                 anim.SetTrigger("JumpAttack");
+                break;
+
+                // 해당 위치부터 2페이즈 전용 공격기
+            case 10:
+                anim.SetTrigger("Spell"); // 파이어볼
+                break;
+            case 11:
+                anim.SetTrigger("AuraCast"); // 오오라 캐스팅 공격
+                break;
+            case 12:
+                anim.SetTrigger("Scream");
                 break;
             default:
                 break;

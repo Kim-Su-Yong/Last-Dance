@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BossAI : MonoBehaviour
 {
-    public float maxHp = 200f; // 최대 체력
+    public float maxHp = 500f; // 최대 체력
     public float curHp = 0f; // 현재 체력
 
     public float damage = 20f;
