@@ -22,6 +22,13 @@ public class TitleManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         //thetitle.gameObject.SetActive(true);
     }
+    public void StartGame()
+    {
+        theSound.Play(click_sound);
+        themenu.gameObject.SetActive(false);
+        thetitle.gameObject.SetActive(false);
+        SceneLoader.Instance.LoadScene("MainScene");
+    }
     public void SaveGame()
     {
         theSound.Play(click_sound);
@@ -31,7 +38,6 @@ public class TitleManager : MonoBehaviour
     {
         theSound.Play(click_sound);
         themenu.gameObject.SetActive(false);
-        thetitle.gameObject.SetActive(false);
         SceneLoader.Instance.LoadScene("MainScene");
     }
     public void ExitGame()
