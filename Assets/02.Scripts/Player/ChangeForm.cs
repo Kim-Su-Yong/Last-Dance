@@ -52,6 +52,11 @@ public class ChangeForm : MonoBehaviour
         coolImg.enabled = false;
     }
 
+    private void OnEnable()
+    {
+        Time.timeScale = 1f;
+    }
+
     void Update()
     {
         if (GetComponent<PlayerDamage>().isDie) return;

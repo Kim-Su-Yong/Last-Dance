@@ -85,17 +85,17 @@ public class PlayerDamage : MonoBehaviour
 
     void Update()
     {
-        // 체력 감소 테스트 및 회복을 위한 테스트용 함수
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            curHp -= 10;
-            animator.SetTrigger(hashHit);
-            animator.SetFloat(hashSpeed, 0f);
-            hpUpdate();
-            playerState.state = PlayerState.State.HIT;
-            if (curHp <= 0)
-                StartCoroutine(Die());
-        }
+        //// 체력 감소 테스트 및 회복을 위한 테스트용 함수
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    curHp -= 10;
+        //    animator.SetTrigger(hashHit);
+        //    animator.SetFloat(hashSpeed, 0f);
+        //    hpUpdate();
+        //    playerState.state = PlayerState.State.HIT;
+        //    if (curHp <= 0)
+        //        StartCoroutine(Die());
+        //}
             
     }
 
