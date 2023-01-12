@@ -85,12 +85,12 @@ public class SaveNLoad : MonoBehaviour
         data.playerZ = thePlayer.transform.position.z; //현재 캐릭터의 Z좌표값 저장
 
         data.playerLv = thePlayerStat.character_Lv; //현재 캐릭터의 레벨 저장
-        data.playerHP = thePlayerStat.maxHP; //현재 캐릭터의 캐릭터 최대 hp 저장
+        data.playerHP = thePlayerStat.maxHP2; //현재 캐릭터의 캐릭터 최대 hp 저장
         data.playerCurrentHP = playerDamage.curHp; //현재 캐릭터의 현재 hp 저장
         data.playerCurrentEXP = thePlayerStat.currentEXP; //현재 캐릭터의 경험치 저장
-        data.playerATK = thePlayerStat.atk; //현재 캐릭터의 공격력 저장
-        data.playerDEF = thePlayerStat.def; //현재 캐릭터의 방어력 저장
-        data.playerSPD = thePlayerStat.speed; //현재 캐릭터의 이동속도 저장
+        data.playerATK = thePlayerStat.atk2; //현재 캐릭터의 공격력 저장
+        data.playerDEF = thePlayerStat.def2; //현재 캐릭터의 방어력 저장
+        data.playerSPD = thePlayerStat.speed2; //현재 캐릭터의 이동속도 저장
         data.playerMoney = thePlayerStat.money; //현재 캐릭터의 소지금 저장
         data.isPotion = thePotion.PotionBuy;
         data.isChest = theChest.ChestBuy;

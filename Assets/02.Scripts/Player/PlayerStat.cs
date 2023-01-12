@@ -13,9 +13,13 @@ public class PlayerStat : MonoBehaviour
 
     public int initHP;          // 시작 체력
     public int maxHP;           // 최대 체력
+    public int maxHP2;
     public int atk;             // 공격력
+    public int atk2;
     public int def;             // 방어력
+    public int def2;
     public float speed;         // 이동 속도
+    public float speed2;
     public float critical;      // 크리티컬 확률-뺄 가능성 높음
 
     public GameObject LevelUpEffect;    // 레벨 업 시 이펙트
@@ -51,13 +55,17 @@ public class PlayerStat : MonoBehaviour
         else
             initHP = 100;
         maxHP = initHP;
+        maxHP2 = maxHP;
 
         speed = 10f;
+        speed2 = speed;
         //currentHP = maxHP;
 
         // 기본 장비에 따라 영향을 받을 예정(기본 장비 없는 경우 수정)
         atk = 5;
+        atk2 = atk;
         def = 5;
+        def2 = def;
 
         critical = 25f;
 
@@ -100,10 +108,13 @@ public class PlayerStat : MonoBehaviour
         // 스텟 증가
         maxHP += 10;        // 레벨업 시 최대 체력 증가
                             // UI 변경사항 적용(체력바)
+        maxHP2 = maxHP;
         GetComponent<PlayerDamage>().curHp = maxHP; // 현재 체력을 최대체력으로 변경(레벨업시 풀피 회복)
         GetComponent<PlayerDamage>().hpUpdate();
         atk++;              // 공격력 증가
+        atk2 = atk;
         def++;              // 방어력 증가
+        def2 = def;
     }
 
     public void expUpdate()
