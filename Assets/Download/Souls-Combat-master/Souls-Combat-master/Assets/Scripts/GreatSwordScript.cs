@@ -18,9 +18,12 @@ public class GreatSwordScript : MonoBehaviour
     public bool betterColliders;
     public float damage = 20;
 
+    BossAI ai;
+
     private void Start()
     {
         damageDealer = this.GetComponent<DamageDealer>();
+        ai = GameObject.Find("Boss").GetComponent<BossAI>();
     }
 
     public struct BufferObj // 히트 박스 활성화
@@ -40,6 +43,8 @@ public class GreatSwordScript : MonoBehaviour
         {
             CheckTrail();
         }
+        if (ai.isDie)
+            GetComponent<BoxCollider>().enabled = false;
     }
 
     private void CheckTrail()
