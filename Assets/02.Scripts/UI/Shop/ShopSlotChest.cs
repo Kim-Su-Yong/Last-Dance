@@ -11,6 +11,7 @@ public class ShopSlotChest : MonoBehaviour
     private Button button2;
     public SoundManager theSound;
     public string click_sound;
+    public bool ChestBuy;
     void Awake()
     {
         theSound = FindObjectOfType<SoundManager>();
@@ -25,6 +26,7 @@ public class ShopSlotChest : MonoBehaviour
         {
             Inventory.instance.GetAnItem(231, 1);
             PlayerStat.instance.ChangeMoney(-4000);
+            ChestBuy = true;
             cantbuy();
         }
     }
@@ -32,5 +34,13 @@ public class ShopSlotChest : MonoBehaviour
     {
         button1.interactable = false;
         button2.interactable = false;
+    }
+    private void OnEnable()
+    {
+        if(ChestBuy)
+        {
+            button1.interactable = false;
+            button2.interactable = false;
+        }
     }
 }

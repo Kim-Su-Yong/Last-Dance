@@ -9,6 +9,13 @@ public class TitleManager : MonoBehaviour
     private GameObject themenu;
     private GameObject thetitle;
 
+    [SerializeField]
+    private GameObject theGame;
+    [SerializeField]
+    private GameObject theMapUI;
+    [SerializeField]
+    private GameObject theSkillUI;
+
     public string click_sound;
     void Start()
     {
@@ -20,7 +27,6 @@ public class TitleManager : MonoBehaviour
     private void OnEnable()
     {
         Cursor.lockState = CursorLockMode.None;
-        //thetitle.gameObject.SetActive(true);
     }
     public void StartGame()
     {
@@ -37,6 +43,9 @@ public class TitleManager : MonoBehaviour
     public void LoadGame()
     {
         theSound.Play(click_sound);
+        theGame.SetActive(false);
+        theMapUI.SetActive(false);
+        theSkillUI.SetActive(false);
         themenu.gameObject.SetActive(false);
         SceneLoader.Instance.LoadScene("MainScene");
     }

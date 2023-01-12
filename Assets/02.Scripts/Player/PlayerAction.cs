@@ -12,7 +12,6 @@ public class PlayerAction : MonoBehaviour
     GameObject scanObject;
     public SoundManager theSound;
     public string call_sound;
-    private SaveNLoad theSaveNLoad;
 
     void Interaction()
     {
@@ -47,10 +46,6 @@ public class PlayerAction : MonoBehaviour
     private void OnEnable()
     {
         //StartCoroutine(FindNearObject());
-    }
-    void Start()
-    {
-        theSaveNLoad = FindObjectOfType<SaveNLoad>();
     }
     private void OnTriggerStay(Collider other)
     {

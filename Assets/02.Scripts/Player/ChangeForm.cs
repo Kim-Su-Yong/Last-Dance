@@ -37,6 +37,16 @@ public class ChangeForm : MonoBehaviour
 
     // readonly
     readonly int hashForm = Animator.StringToHash("Form");
+
+    private GameObject theGameUI;
+    private GameObject theMap;
+    private GameObject theSkill;
+    private void Awake()
+    {
+        theGameUI = GameObject.Find("Canvas_UI").transform.GetChild(0).gameObject;
+        theMap = GameObject.Find("Canvas_UI").transform.GetChild(1).gameObject;
+        theSkill = GameObject.Find("Canvas_UI").transform.GetChild(4).gameObject;
+    }
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -55,8 +65,10 @@ public class ChangeForm : MonoBehaviour
     private void OnEnable()
     {
         Time.timeScale = 1f;
+        theGameUI.SetActive(true);
+        theMap.SetActive(true);
+        theSkill.SetActive(true);
     }
-
     void Update()
     {
         if (GetComponent<PlayerDamage>().isDie) return;
