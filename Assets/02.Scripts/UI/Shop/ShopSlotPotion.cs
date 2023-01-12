@@ -11,7 +11,8 @@ public class ShopSlotPotion : MonoBehaviour
     private Button button2;
     public SoundManager theSound;
     public string click_sound;
-    void Start()
+    public bool PotionBuy;
+    void Awake()
     {
         theSound = FindObjectOfType<SoundManager>();
         button = GetComponent<Button>();
@@ -25,6 +26,7 @@ public class ShopSlotPotion : MonoBehaviour
         {
             Inventory.instance.GetAnItem(111, 1);
             PlayerStat.instance.ChangeMoney(-400); //소지금에서 400원 감소
+            PotionBuy = true;
             cantbuy();
         }
     }
@@ -32,5 +34,13 @@ public class ShopSlotPotion : MonoBehaviour
     {
         button1.interactable = false;
         button2.interactable = false;
+    }
+    private void OnEnable()
+    {
+        if(PotionBuy)
+        {
+            button1.interactable = false;
+            button2.interactable = false;
+        }
     }
 }

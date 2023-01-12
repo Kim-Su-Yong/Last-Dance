@@ -11,6 +11,7 @@ public class ShopSlotWeapon : MonoBehaviour
     private Button button2;
     public SoundManager theSound;
     public string click_sound;
+    public bool WeaponBuy;
     void Awake()
     {
         theSound = FindObjectOfType<SoundManager>();
@@ -25,6 +26,7 @@ public class ShopSlotWeapon : MonoBehaviour
         {
             Inventory.instance.GetAnItem(211, 1);
             PlayerStat.instance.ChangeMoney(-4000);
+            WeaponBuy = true;
             cantbuy();
         }
     }
@@ -32,5 +34,13 @@ public class ShopSlotWeapon : MonoBehaviour
     {
         button1.interactable = false;
         button2.interactable = false;
+    }
+    private void OnEnable()
+    {
+        if (WeaponBuy)
+        {
+            button1.interactable = false;
+            button2.interactable = false;
+        }
     }
 }

@@ -27,6 +27,11 @@ public class SaveNLoad : MonoBehaviour
 
         public List<int> playerItemInventory; //플레이어 인벤토리
         public List<int> playerItemInventoryCount; //플레이어 인벤토리 아이템 수
+
+        public bool isPotion;
+        public bool isWeapon;
+        public bool isChest;
+        public bool isBoots;
     }
     private PlayerAction thePlayer;
     private PlayerStat thePlayerStat;
@@ -36,6 +41,14 @@ public class SaveNLoad : MonoBehaviour
     private SoundManager theSound;
     public static SaveNLoad Instance;
     private SaveNLoad savenload;
+    public ShopSlotPotion thePotion;
+    public ShopSlotWeapon theWeapon;
+    public ShopSlotChest theChest;
+    public ShopSlotBoots theBoots;
+    public GameObject theShopPotion;
+    public GameObject theShopChest;
+    public GameObject theShopWeapon;
+    public GameObject theShopBoots;
 
     public Data data;
 
@@ -58,6 +71,14 @@ public class SaveNLoad : MonoBehaviour
         thePlayerStat = FindObjectOfType<PlayerStat>();
         theInven = FindObjectOfType<Inventory>();
         theSound = FindObjectOfType<SoundManager>();
+        theShopPotion = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+        theShopChest = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(1).gameObject;
+        theShopWeapon = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(2).gameObject;
+        theShopBoots = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(3).gameObject;
+        thePotion = theShopPotion.GetComponent<ShopSlotPotion>();
+        theChest = theShopChest.GetComponent<ShopSlotChest>();
+        theWeapon = theShopWeapon.GetComponent<ShopSlotWeapon>();
+        theBoots = theShopBoots.GetComponent<ShopSlotBoots>();
 
         data.playerX = thePlayer.transform.position.x; //현재 캐릭터의 X좌표값 저장
         data.playerY = thePlayer.transform.position.y; //현재 캐릭터의 Y좌표값 저장
@@ -71,6 +92,10 @@ public class SaveNLoad : MonoBehaviour
         data.playerDEF = thePlayerStat.def; //현재 캐릭터의 방어력 저장
         data.playerSPD = thePlayerStat.speed; //현재 캐릭터의 이동속도 저장
         data.playerMoney = thePlayerStat.money; //현재 캐릭터의 소지금 저장
+        data.isPotion = thePotion.PotionBuy;
+        data.isChest = theChest.ChestBuy;
+        data.isWeapon = theWeapon.WeaponBuy;
+        data.isBoots = theBoots.BootsBuy;
 
         Debug.Log("기초 데이터 성공");
 
@@ -105,6 +130,14 @@ public class SaveNLoad : MonoBehaviour
             thePlayerStat = FindObjectOfType<PlayerStat>();
             playerDamage = FindObjectOfType<PlayerDamage>();
             theInven = FindObjectOfType<Inventory>();
+            theShopPotion = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject;
+            theShopChest = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(1).gameObject;
+            theShopWeapon = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(2).gameObject;
+            theShopBoots = GameObject.Find("Canvas_UI").transform.GetChild(2).gameObject.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.transform.GetChild(3).gameObject;
+            thePotion = theShopPotion.GetComponent<ShopSlotPotion>();
+            theChest = theShopChest.GetComponent<ShopSlotChest>();
+            theWeapon = theShopWeapon.GetComponent<ShopSlotWeapon>();
+            theBoots = theShopBoots.GetComponent<ShopSlotBoots>();
 
             vector.Set(data.playerX, data.playerY, data.playerZ); //데이터에 저장된 플레이어의 x,y,z 값으로 설정
             thePlayer.transform.position = vector;
@@ -119,6 +152,10 @@ public class SaveNLoad : MonoBehaviour
             FindObjectOfType<PlayerDamage>().hpUpdate(); //데이터에 있는 HP로 변경되었으니 그에 따른 UI도 업데이트
             thePlayerStat.money = data.playerMoney; //데이터에 있는 소지금을 플레이어 소지금에 넣어줌
             thePlayerStat.moneyText.text = thePlayerStat.money.ToString();
+            thePotion.PotionBuy = data.isPotion;
+            theChest.ChestBuy = data.isChest;
+            theWeapon.WeaponBuy = data.isWeapon;
+            theBoots.BootsBuy = data.isBoots;
 
             Debug.Log("로드 완료!");
 
