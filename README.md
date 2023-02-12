@@ -1,2 +1,2 @@
-# EndSmile-Studio
-EndSmile-Studio Unity Team Project
+# Last-Dance
+Last-Dance Unity Team Project
