@@ -11,7 +11,7 @@
  
 ![폴더](https://user-images.githubusercontent.com/108743218/227779712-70491ad4-f1be-47c4-856c-c091d0e603ce.png)
 
-### 📘 GitLab History
+### 📘 Gitb History
 GitHub에서 작업한 History 내용을 스크린샷으로 저장하여 첨부합니다.   
 GitHub을 사용한 이유는 SourceTree나 GitHub Desktop를 활용하여 Team Project로 관리하기 위해서 입니다.   
 Merge 및 프로젝트 관리는 '김수용'이 담당하였습니다.   
